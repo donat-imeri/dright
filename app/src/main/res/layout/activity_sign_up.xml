@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUpActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/lbl_slogan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Make your decision"
+            tools:layout_editor_absoluteX="163dp"
+            tools:layout_editor_absoluteY="30dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="30dp"/>
+
+        <ImageView
+            android:id="@+id/img_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="128dp"
+            tools:layout_editor_absoluteY="61dp"
+            tools:srcCompat="@tools:sample/avatars[0]"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_slogan"
+            android:layout_marginTop="30dp"/>
+
+
+        <TextView
+            android:id="@+id/lbl_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email:"
+            app:layout_constraintLeft_toLeftOf="@id/txt_email"
+            app:layout_constraintTop_toBottomOf="@id/img_logo"
+            android:layout_marginTop="30dp"/>
+
+        <EditText
+            android:id="@+id/txt_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="example@domain.com"
+            android:inputType="textPersonName"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_email" />
+
+
+        <TextView
+            android:id="@+id/lbl_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Full name:"
+            app:layout_constraintLeft_toLeftOf="@id/txt_email"
+            app:layout_constraintTop_toBottomOf="@id/txt_email"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/txt_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="example@domain.com"
+            android:inputType="textPersonName"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_name" />
+
+        <TextView
+            android:id="@+id/lbl_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password:"
+            app:layout_constraintLeft_toLeftOf="@id/txt_password"
+            app:layout_constraintTop_toBottomOf="@id/txt_name"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/txt_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_password"/>
+
+
+
+        <TextView
+            android:id="@+id/lbl_password_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password:"
+            app:layout_constraintLeft_toLeftOf="@id/txt_password"
+            app:layout_constraintTop_toBottomOf="@id/txt_password"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/txt_password_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_password_confirm"/>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="Create Account"
+            app:layout_constraintTop_toBottomOf="@id/txt_password_confirm"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</ScrollView>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/txt_dilema_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Type your dilema here..."
+            android:background="@drawable/rounded_border_edittext"
+            android:layout_margin="20dp"
+            android:padding="20dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Option 1"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"/>
+
+        <LinearLayout
+            android:id="@+id/layout_add_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:src="@drawable/add_option_img"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add an option"/>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select priority"
+            android:layout_marginTop="20dp" />
+        <SeekBar
+            android:id="@+id/sb_priority"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:min="0"
+            android:max="10"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select timeout"
+            android:layout_marginTop="20dp"/>
+        <SeekBar
+            android:id="@+id/sb_timeout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:min="0"
+            android:max="10"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
+        <CheckBox
+            android:id="@+id/chb_stay_anonymous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stay anonymous"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:id="@+id/lbl_total_docent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total docents: $0.0"
+            android:layout_marginTop="20dp"/>
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_marginTop="20dp"/>
+
+
+    </LinearLayout>
+
+
+</ScrollView>

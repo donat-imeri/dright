@@ -2,7 +2,7 @@ package com.dright;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-//login
+//loginActivity
 public class LoginActivity extends AppCompatActivity {
 
     @Override

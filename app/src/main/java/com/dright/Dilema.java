@@ -1,0 +1,89 @@
+package com.dright;
+
+import java.util.List;
+
+public class Dilema {
+    private String dilemaName;
+    private String dilemaDescription;
+    private List<String> dilemaOptions;
+    private List<String> dilemaCategories;
+    private UserProfile dilemaAsker;
+    private int dilemaPriority;
+    private long dilemaTimeOut;
+    private boolean stayAnonymous;
+
+    public Dilema(String dilemaName, String dilemaDescription, List<String> dilemaOptions, List<String> dilemaCategories, UserProfile dilemaAsker, int dilemaPriority, long dilemaTimeOut, boolean stayAnonymous) {
+        this.dilemaName = dilemaName;
+        this.dilemaDescription = dilemaDescription;
+        this.dilemaOptions = dilemaOptions;
+        this.dilemaCategories = dilemaCategories;
+        this.dilemaAsker = dilemaAsker;
+        this.dilemaPriority = dilemaPriority;
+        this.dilemaTimeOut = dilemaTimeOut;
+        this.stayAnonymous = stayAnonymous;
+    }
+
+    public String getDilemaName() {
+        return dilemaName;
+    }
+
+    public void setDilemaName(String dilemaName) {
+        this.dilemaName = dilemaName;
+    }
+
+    public String getDilemaDescription() {
+        return dilemaDescription;
+    }
+
+    public void setDilemaDescription(String dilemaDescription) {
+        this.dilemaDescription = dilemaDescription;
+    }
+
+    public List<String> getDilemaOptions() {
+        return dilemaOptions;
+    }
+
+    public void setDilemaOptions(List<String> dilemaOptions) {
+        this.dilemaOptions = dilemaOptions;
+    }
+
+    public List<String> getDilemaCategories() {
+        return dilemaCategories;
+    }
+
+    public void setDilemaCategories(List<String> dilemaCategories) {
+        this.dilemaCategories = dilemaCategories;
+    }
+
+    public UserProfile getDilemaAsker() {
+        return dilemaAsker;
+    }
+
+    public void setDilemaAsker(UserProfile dilemaAsker) {
+        this.dilemaAsker = dilemaAsker;
+    }
+
+    public int getDilemaPriority() {
+        return dilemaPriority;
+    }
+
+    public void setDilemaPriority(int dilemaPriority) {
+        this.dilemaPriority = dilemaPriority;
+    }
+
+    public long getDilemaTimeOut() {
+        return dilemaTimeOut;
+    }
+
+    public void setDilemaTimeOut(long dilemaTimeOut) {
+        this.dilemaTimeOut = dilemaTimeOut;
+    }
+
+    public boolean isStayAnonymous() {
+        return stayAnonymous;
+    }
+
+    public void setStayAnonymous(boolean stayAnonymous) {
+        this.stayAnonymous = stayAnonymous;
+    }
+}

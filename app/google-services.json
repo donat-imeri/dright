@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "547049967998",
+    "firebase_url": "https://decisionmaking-e772a.firebaseio.com",
+    "project_id": "decisionmaking-e772a",
+    "storage_bucket": "decisionmaking-e772a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547049967998:android:6790ee0cb7a6e98b",
+        "android_client_info": {
+          "package_name": "com.dright"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "547049967998-i054k4r56rcqsj40ff186n7hknqdfp79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJNaVYOZ97im382C9S4HhDC7UpxLzGTMw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "547049967998-i054k4r56rcqsj40ff186n7hknqdfp79.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

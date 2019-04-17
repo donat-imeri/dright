@@ -3,7 +3,6 @@ package com.dright;
 import java.util.List;
 
 public class Dilema {
-    private String dilemaName;
     private String dilemaDescription;
     private List<String> dilemaOptions;
     private List<String> dilemaCategories;
@@ -12,8 +11,7 @@ public class Dilema {
     private long dilemaTimeOut;
     private boolean stayAnonymous;
 
-    public Dilema(String dilemaName, String dilemaDescription, List<String> dilemaOptions, List<String> dilemaCategories, UserProfile dilemaAsker, int dilemaPriority, long dilemaTimeOut, boolean stayAnonymous) {
-        this.dilemaName = dilemaName;
+    public Dilema(String dilemaDescription, List<String> dilemaOptions, List<String> dilemaCategories, UserProfile dilemaAsker, int dilemaPriority, long dilemaTimeOut, boolean stayAnonymous) {
         this.dilemaDescription = dilemaDescription;
         this.dilemaOptions = dilemaOptions;
         this.dilemaCategories = dilemaCategories;
@@ -21,14 +19,6 @@ public class Dilema {
         this.dilemaPriority = dilemaPriority;
         this.dilemaTimeOut = dilemaTimeOut;
         this.stayAnonymous = stayAnonymous;
-    }
-
-    public String getDilemaName() {
-        return dilemaName;
-    }
-
-    public void setDilemaName(String dilemaName) {
-        this.dilemaName = dilemaName;
     }
 
     public String getDilemaDescription() {

@@ -10,7 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:background="@drawable/gradient_background"
+        >
 
         <EditText
             android:id="@+id/txt_dilema_description"
@@ -20,35 +22,13 @@
             android:background="@drawable/rounded_border_edittext"
             android:layout_margin="20dp"
             android:padding="20dp"/>
-
-
-        <android.support.constraint.ConstraintLayout
+        
+        <LinearLayout
+            android:id="@+id/options_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/txt_option_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Option 1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="40dp"/>
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/add_image"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="@id/txt_option_1"
-                android:layout_marginRight="10dp"
-                />
-        </android.support.constraint.ConstraintLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
 
 
         <LinearLayout
@@ -66,16 +46,31 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add an option"/>
+                android:text="Add an option"
+                android:textColor="@color/colorWhite"/>
 
         </LinearLayout>
 
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select priority"
-            android:layout_marginTop="20dp" />
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select priority"
+                android:textColor="@color/colorWhite"/>
+
+            <ImageView
+                android:layout_width="30sp"
+                android:layout_height="20sp"
+                android:src="@drawable/priority_icon"/>
+
+        </LinearLayout>
+
         <SeekBar
             android:id="@+id/sb_priority"
             android:layout_width="match_parent"
@@ -86,11 +81,27 @@
             android:layout_marginRight="20dp"
             />
 
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="center">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select timeout"
-            android:layout_marginTop="20dp"/>
+            android:textColor="@color/colorWhite"/>
+
+        <ImageView
+            android:layout_width="30sp"
+            android:layout_height="20sp"
+            android:src="@drawable/time_icon"/>
+
+    </LinearLayout>
+
         <SeekBar
             android:id="@+id/sb_timeout"
             android:layout_width="match_parent"
@@ -105,7 +116,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Stay anonymous"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorWhite"/>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -120,7 +132,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:text="Priority: "/>
+                android:text="Priority: "
+                android:textColor="@color/colorWhite"/>
 
             <TextView
                 android:id="@+id/lbl_priority_value"
@@ -130,7 +143,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/lbl_priority_text"
                 android:text="Low"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -138,7 +152,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/lbl_timout_type"
-                android:text="Timeout: " />
+                android:text="Timeout: "
+                android:textColor="@color/colorWhite"/>
 
             <!--
             <EditText
@@ -162,6 +177,7 @@
                 android:text="3 minutes"
                 android:textStyle="bold"
                 android:layout_marginRight="20sp"
+                android:textColor="@color/colorWhite"
                 />
 
         </android.support.constraint.ConstraintLayout>
@@ -171,7 +187,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Total docents: $0.0"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorWhite"/>
 
         <Button
             android:id="@+id/btn_submit"
@@ -182,6 +199,7 @@
             android:layout_marginBottom="100dp"
             android:background="@color/colorPrimary"
             android:textColor="@color/colorWhite"
+            android:padding="20dp"
             />
     </LinearLayout>
 </ScrollView>

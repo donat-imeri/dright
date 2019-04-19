@@ -20,28 +20,25 @@
 
     <ImageView
         android:id="@+id/img_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="128dp"
-        tools:layout_editor_absoluteY="61dp"
-        tools:srcCompat="@tools:sample/avatars[0]"
+        android:layout_width="200sp"
+        android:layout_height="100sp"
+        android:src="@drawable/logo"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lbl_slogan"
         android:layout_marginTop="30dp"/>
-
 
     <TextView
         android:id="@+id/lbl_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Email:"
-        app:layout_constraintLeft_toLeftOf="@id/txt_email"
+        app:layout_constraintLeft_toLeftOf="@id/txt_login_email"
         app:layout_constraintTop_toBottomOf="@id/img_logo"
         android:layout_marginTop="30dp"/>
 
     <EditText
-        android:id="@+id/txt_email"
+        android:id="@+id/txt_login_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -56,12 +53,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Password:"
-        app:layout_constraintLeft_toLeftOf="@id/txt_password"
-        app:layout_constraintTop_toBottomOf="@id/txt_email"
+        app:layout_constraintLeft_toLeftOf="@id/txt_login_password"
+        app:layout_constraintTop_toBottomOf="@id/txt_login_email"
         android:layout_marginTop="10dp"/>
 
     <EditText
-        android:id="@+id/txt_password"
+        android:id="@+id/txt_login_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -73,14 +70,26 @@
 
 
     <Button
+        android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:text="Log in"
-        app:layout_constraintTop_toBottomOf="@id/txt_password"
+        app:layout_constraintTop_toBottomOf="@id/txt_login_password"
         android:layout_marginTop="10dp"
         android:paddingLeft="50dp"
         android:paddingRight="50dp"/>
+
+
+    <TextView
+        android:id="@+id/lbl_create_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create a new account"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_login"
+        android:layout_marginTop="10dp"/>
 
 </android.support.constraint.ConstraintLayout>

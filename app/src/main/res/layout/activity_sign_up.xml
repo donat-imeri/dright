@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SignUpActivity">
+    tools:context=".SignUpActivity"
+    android:background="@drawable/gradient_background">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        >
 
         <TextView
             android:id="@+id/lbl_slogan"
@@ -20,15 +22,14 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp"
+            android:textColor="@color/colorWhite"/>
 
         <ImageView
             android:id="@+id/img_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="128dp"
-            tools:layout_editor_absoluteY="61dp"
-            tools:srcCompat="@tools:sample/avatars[0]"
+            android:layout_width="200sp"
+            android:layout_height="100sp"
+            android:src="@drawable/logo_white"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lbl_slogan"
@@ -42,7 +43,8 @@
             android:text="Email:"
             app:layout_constraintLeft_toLeftOf="@id/txt_email"
             app:layout_constraintTop_toBottomOf="@id/img_logo"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp"
+            android:textColor="@color/colorWhite"/>
 
         <EditText
             android:id="@+id/txt_email"
@@ -53,7 +55,9 @@
             android:inputType="textPersonName"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lbl_email" />
+            app:layout_constraintTop_toBottomOf="@id/lbl_email"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite" />
 
 
         <TextView
@@ -63,18 +67,21 @@
             android:text="Full name:"
             app:layout_constraintLeft_toLeftOf="@id/txt_email"
             app:layout_constraintTop_toBottomOf="@id/txt_email"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorWhite" />
 
         <EditText
             android:id="@+id/txt_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="example@domain.com"
+            android:hint="Decision Maker "
             android:inputType="textPersonName"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lbl_name" />
+            app:layout_constraintTop_toBottomOf="@id/lbl_name"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite" />
 
         <TextView
             android:id="@+id/lbl_password"
@@ -83,7 +90,9 @@
             android:text="Password:"
             app:layout_constraintLeft_toLeftOf="@id/txt_password"
             app:layout_constraintTop_toBottomOf="@id/txt_name"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorWhite"
+            />
 
         <EditText
             android:id="@+id/txt_password"
@@ -91,9 +100,12 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
+            android:hint="Not 123456"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lbl_password"/>
+            app:layout_constraintTop_toBottomOf="@id/lbl_password"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite" />
 
 
 
@@ -104,7 +116,9 @@
             android:text="Password:"
             app:layout_constraintLeft_toLeftOf="@id/txt_password"
             app:layout_constraintTop_toBottomOf="@id/txt_password"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorWhite"
+            />
 
         <EditText
             android:id="@+id/txt_password_confirm"
@@ -112,21 +126,27 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
+            android:hint="Not 123456"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lbl_password_confirm"/>
+            app:layout_constraintTop_toBottomOf="@id/lbl_password_confirm"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite" />
 
 
         <Button
+            android:id="@+id/btn_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:text="Create Account"
             app:layout_constraintTop_toBottomOf="@id/txt_password_confirm"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:paddingLeft="50dp"
             android:paddingRight="50dp"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/colorWhite"
             />
 
     </android.support.constraint.ConstraintLayout>

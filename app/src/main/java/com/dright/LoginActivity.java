@@ -83,9 +83,12 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void updateUI(FirebaseUser fbUser){
-        Intent goToLogin=new Intent(LoginActivity.this, DecisionsAcitivity.class);
-        goToLogin.putExtra("fbUser",fbUser);
-        startActivity(goToLogin);
+        if (fbUser!=null){
+            Intent goToDecisionsAcitivity=new Intent(LoginActivity.this, DecisionsAcitivity.class);
+            goToDecisionsAcitivity.putExtra("fbUser",fbUser);
+            startActivity(goToDecisionsAcitivity);
+        }
+
     }
 
 }

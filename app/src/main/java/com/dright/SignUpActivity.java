@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,18 +25,21 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText txtPassword;
     private EditText txtPasswordConfirm;
     private Button signUp;
+    private TextView goToLogin;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         txtEmail=findViewById(R.id.txt_email);
         txtFullName=findViewById(R.id.txt_name);
         txtPassword=findViewById(R.id.txt_password);
         txtPasswordConfirm=findViewById(R.id.txt_password_confirm);
+        goToLogin=findViewById(R.id.lbl_have_account);
         signUp=findViewById(R.id.btn_signup);
 
         signUp.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +67,13 @@ public class SignUpActivity extends AppCompatActivity {
                         });
             }
         });
+
+        goToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -75,8 +86,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void updateUI(FirebaseUser fbUser){
-        Intent goToLogin=new Intent(SignUpActivity.this, DecisionsAcitivity.class);
-        goToLogin.putExtra("fbUser",fbUser);
-        finish();
+        if (fbUser!=null){
+            Intent goToLogin=new Intent(SignUpActivity.this, DecisionsAcitivity.class);
+            goToLogin.putExtra("fbUser",fbUser);
+            finish();
+        }
     }
 }

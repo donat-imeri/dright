@@ -69,6 +69,11 @@ public class DecisionsAcitivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        System.exit(0);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

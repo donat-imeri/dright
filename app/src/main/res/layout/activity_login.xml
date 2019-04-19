@@ -1,95 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
-
-    <TextView
-        android:id="@+id/lbl_slogan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Make your decision"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="30dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="30dp"/>
-
-    <ImageView
-        android:id="@+id/img_logo"
-        android:layout_width="200sp"
-        android:layout_height="100sp"
-        android:src="@drawable/logo"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lbl_slogan"
-        android:layout_marginTop="30dp"/>
-
-    <TextView
-        android:id="@+id/lbl_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email:"
-        app:layout_constraintLeft_toLeftOf="@id/txt_login_email"
-        app:layout_constraintTop_toBottomOf="@id/img_logo"
-        android:layout_marginTop="30dp"/>
-
-    <EditText
-        android:id="@+id/txt_login_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="example@domain.com"
-        android:inputType="textPersonName"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lbl_email" />
-
-    <TextView
-        android:id="@+id/lbl_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password:"
-        app:layout_constraintLeft_toLeftOf="@id/txt_login_password"
-        app:layout_constraintTop_toBottomOf="@id/txt_login_email"
-        android:layout_marginTop="10dp"/>
-
-    <EditText
-        android:id="@+id/txt_login_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lbl_password"
-        />
+    android:background="@drawable/gradient_background">
 
 
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:text="Log in"
-        app:layout_constraintTop_toBottomOf="@id/txt_login_password"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"/>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".LoginActivity">
+
+        <TextView
+            android:id="@+id/lbl_slogan"
+            android:layout_width="300sp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Login to start a new style for making decisions"
+            android:textSize="20sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/colorWhite"/>
+
+        <ImageView
+            android:id="@+id/img_logo"
+            android:layout_width="250sp"
+            android:layout_height="110sp"
+            android:src="@drawable/logo_white"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_slogan"
+            android:layout_marginTop="30dp"/>
+
+        <TextView
+            android:id="@+id/lbl_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email:"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/txt_login_email"
+            app:layout_constraintTop_toBottomOf="@id/img_logo"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/colorPrimary"/>
+
+        <EditText
+            android:id="@+id/txt_login_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="example@domain.com"
+            android:inputType="textPersonName"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_email"
+            android:layout_marginLeft="30sp"
+            android:layout_marginRight="30sp"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/solidCircle"/>
+
+        <TextView
+            android:id="@+id/lbl_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password:"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/txt_login_password"
+            app:layout_constraintTop_toBottomOf="@id/txt_login_email"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorPrimary"/>
+
+        <EditText
+            android:id="@+id/txt_login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:hint="yourpassword"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_password"
+            android:layout_marginLeft="30sp"
+            android:layout_marginRight="30sp"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/solidCircle"/>
 
 
-    <TextView
-        android:id="@+id/lbl_create_account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create a new account"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_login"
-        android:layout_marginTop="10dp"/>
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="Log in"
+            app:layout_constraintTop_toBottomOf="@id/txt_login_password"
+            android:layout_marginTop="20sp"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/colorWhite"/>
 
-</android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/lbl_create_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create a new account"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_login"
+            android:layout_marginTop="30sp"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/lbl_forgot_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forgot you password?"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_create_account"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="30sp"
+            android:layout_marginTop="20sp"
+            android:textColor="@color/colorWhite"/>
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

@@ -16,9 +16,8 @@
             android:id="@+id/lbl_slogan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Make your decision"
-            tools:layout_editor_absoluteX="163dp"
-            tools:layout_editor_absoluteY="30dp"
+            android:text="Thank you for deciding to sign up!"
+            android:textSize="20sp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -27,8 +26,8 @@
 
         <ImageView
             android:id="@+id/img_logo"
-            android:layout_width="200sp"
-            android:layout_height="100sp"
+            android:layout_width="250sp"
+            android:layout_height="110sp"
             android:src="@drawable/logo_white"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -44,11 +43,11 @@
             app:layout_constraintLeft_toLeftOf="@id/txt_email"
             app:layout_constraintTop_toBottomOf="@id/img_logo"
             android:layout_marginTop="30dp"
-            android:textColor="@color/colorWhite"/>
+            android:textColor="@color/colorPrimary"/>
 
         <EditText
             android:id="@+id/txt_email"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="example@domain.com"
@@ -56,8 +55,10 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lbl_email"
+            android:layout_marginLeft="30sp"
+            android:layout_marginRight="30sp"
             android:textColor="@color/colorWhite"
-            android:textColorHint="@color/colorWhite" />
+            android:textColorHint="@color/solidCircle" />
 
 
         <TextView
@@ -68,11 +69,11 @@
             app:layout_constraintLeft_toLeftOf="@id/txt_email"
             app:layout_constraintTop_toBottomOf="@id/txt_email"
             android:layout_marginTop="10dp"
-            android:textColor="@color/colorWhite" />
+            android:textColor="@color/colorPrimary" />
 
         <EditText
             android:id="@+id/txt_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Decision Maker "
@@ -80,8 +81,10 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lbl_name"
+            android:layout_marginLeft="30sp"
+            android:layout_marginRight="30sp"
             android:textColor="@color/colorWhite"
-            android:textColorHint="@color/colorWhite" />
+            android:textColorHint="@color/solidCircle" />
 
         <TextView
             android:id="@+id/lbl_password"
@@ -91,21 +94,23 @@
             app:layout_constraintLeft_toLeftOf="@id/txt_password"
             app:layout_constraintTop_toBottomOf="@id/txt_name"
             android:layout_marginTop="10dp"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorPrimary"
             />
 
         <EditText
             android:id="@+id/txt_password"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
-            android:hint="Not 123456"
+            android:hint="Not123456"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lbl_password"
+            android:layout_marginLeft="30sp"
+            android:layout_marginRight="30sp"
             android:textColor="@color/colorWhite"
-            android:textColorHint="@color/colorWhite" />
+            android:textColorHint="@color/solidCircle" />
 
 
 
@@ -117,21 +122,23 @@
             app:layout_constraintLeft_toLeftOf="@id/txt_password"
             app:layout_constraintTop_toBottomOf="@id/txt_password"
             android:layout_marginTop="10dp"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorPrimary"
             />
 
         <EditText
             android:id="@+id/txt_password_confirm"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword"
-            android:hint="Not 123456"
+            android:hint="Not123456"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lbl_password_confirm"
+            android:layout_marginLeft="30sp"
+            android:layout_marginRight="30sp"
             android:textColor="@color/colorWhite"
-            android:textColorHint="@color/colorWhite" />
+            android:textColorHint="@color/solidCircle" />
 
 
         <Button
@@ -148,6 +155,21 @@
             android:background="@color/colorPrimary"
             android:textColor="@color/colorWhite"
             />
+
+        <TextView
+            android:id="@+id/lbl_have_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Have an account? Login"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_signup"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="30sp"
+            android:layout_marginBottom="30sp"
+            android:textColor="@color/colorWhite" />
+
+
 
     </android.support.constraint.ConstraintLayout>
 

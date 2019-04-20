@@ -20,8 +20,20 @@ public class ProfileFragment extends Fragment {
     TextView currentaddress;
     TextView currentphone;
     TextView currentfacebook;
+    TextView currentfollowers;
+    TextView currentfollowing;
+    TextView currentemail;
+    TextView currenttwitter;
+
+
     public static String fulltvname = null;
     public static String fulltvaddress = null;
+    public static String email = null;
+    public static String facebook = null;
+    public static String followers = null;
+    public static String following = null;
+    public static String twitter = null;
+    public static String phone = null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,21 +42,21 @@ public class ProfileFragment extends Fragment {
         currentaddress  = ProfileView.findViewById(R.id.tv_address);
         currentphone    = ProfileView.findViewById(R.id.txt_current_phone);
         currentfacebook = ProfileView.findViewById(R.id.current_facebook);
+        currentemail = ProfileView.findViewById(R.id.txt_current_email);
+        currenttwitter = ProfileView.findViewById(R.id.current_twitter);
+        currentfollowers = ProfileView.findViewById(R.id.followers);
+        currentfollowing = ProfileView.findViewById(R.id.following);
 
-        if(EditProfileFragment.fullname != null) {
-            currentfullname.setText(EditProfileFragment.fullname.toString());
-            fulltvname = currentfullname.getText().toString();
-        }
-        if(EditProfileFragment.address != null) {
-            currentaddress.setText(EditProfileFragment.address.toString());
-            fulltvaddress = currentaddress.getText().toString();
-        }
-        if(EditProfileFragment.phone != null) {
-            currentphone.setText(EditProfileFragment.phone.toString());
-        }
-        if(EditProfileFragment.facebookaccount != null) {
-            currentfacebook.setText(EditProfileFragment.facebookaccount.toString());
-        }
+
+
+        currentfullname.setText(fulltvname);
+        currentaddress.setText(fulltvaddress);
+        currentphone.setText(phone);
+        currentfacebook.setText(facebook);
+        currentemail.setText(email);
+        currentfollowers.setText(followers);
+        currentfollowing.setText(following);
+        currenttwitter.setText(twitter);
 
 
 

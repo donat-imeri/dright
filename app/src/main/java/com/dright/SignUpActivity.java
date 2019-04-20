@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -26,6 +28,10 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText txtPasswordConfirm;
     private Button signUp;
     private TextView goToLogin;
+
+    public static String fullname = null;
+    public static String email = null;
+
 
 
     @Override
@@ -51,15 +57,22 @@ public class SignUpActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
+                                    fullname = txtFullName.getText().toString();
+                                    email = txtEmail.getText().toString();
                                     Log.d("Success", "createUserWithEmail:success");
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    updateUI(user);
+                                    Intent intent = new Intent(getBaseContext(),LoginActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                    //FirebaseUser user = mAuth.getCurrentUser();
+                                    //updateUI(user);
+                                    //db.child("User1").setValue("useri1");
+
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("", "createUserWithEmail:failure", task.getException());
                                     Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
-                                    updateUI(null);
+
                                 }
 
                                 // ...
@@ -71,6 +84,8 @@ public class SignUpActivity extends AppCompatActivity {
         goToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(),LoginActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -81,15 +96,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser!=null)
-        updateUI(currentUser);
     }
 
-    public void updateUI(FirebaseUser fbUser){
-        if (fbUser!=null){
-            Intent goToLogin=new Intent(SignUpActivity.this, DecisionsAcitivity.class);
-            goToLogin.putExtra("fbUser",fbUser);
-            finish();
-        }
-    }
+
 }

@@ -38,6 +38,11 @@ public class MyProfileActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        FragmentManager fragmentActivity = getSupportFragmentManager();
+
+        fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
+                , new ProfileFragment()).commit();
+
     }
 
     @Override
@@ -76,30 +81,20 @@ public class MyProfileActivity extends AppCompatActivity
 
         FragmentManager fragmentActivity = getSupportFragmentManager();
 
-        if (id == R.id.nav_edit_myprofile) {
+        if(id == R.id.nav_myprofile)
+        {
+            fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
+                    , new ProfileFragment()).commit();
+        }
+        else if (id == R.id.nav_edit_myprofile) {
             fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                     , new EditProfileFragment()).commit();
         } else if (id == R.id.nav_followers_myprofile) {
             fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                     , new FollowersProfileFragment()).commit();
-        } else if (id == R.id.nav_following_myprofile) {
+        } else {
             fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                     , new FollowingProfileFragment()).commit();
-        } else if (id == R.id.nav_share) {
-            setContentView(R.layout.activity_my_profile);
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-
-            drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
-            toggle.syncState();
-
-            navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -5,31 +5,23 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_myprofile"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="My Profile" />
+        <item
             android:id="@+id/nav_edit_myprofile"
             android:icon="@drawable/ic_menu_manage"
             android:title="Edit Profile" />
         <item
             android:id="@+id/nav_followers_myprofile"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_share"
             android:title="Followers" />
         <item
             android:id="@+id/nav_following_myprofile"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_share"
             android:title="Following" />
 
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
 
 </menu>

@@ -64,10 +64,10 @@ public class MyProfileActivity extends AppCompatActivity
                 ProfileFragment.twitter = dataSnapshot.child("twitter").getValue().toString();
                 ProfileFragment.facebook = dataSnapshot.child("facebook").getValue().toString();
 
-                ProfileFragment.following = dataSnapshot.child("following").getValue().toString();
-                ProfileFragment.followers = dataSnapshot.child("followers").getValue().toString();
+                ProfileFragment.following = String.valueOf(dataSnapshot.child("following").getChildrenCount());
+                ProfileFragment.followers = String.valueOf(dataSnapshot.child("followers").getChildrenCount());
 
-                Log.d("vlera",dataSnapshot.child("name").getValue().toString());
+
             }
 
             @Override

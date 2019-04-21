@@ -2,9 +2,11 @@ package com.dright;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,11 +56,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ((TextView)holder.ProfileView.findViewById(R.id.txt_user)).setText(profileModel.name);
         ((TextView)holder.ProfileView.findViewById(R.id.txt_user_hash))
                 .setText(profileModel.hash);
-        holder.ProfileView.findViewById(R.id.txt_user_hash).setVisibility(0);
+        holder.ProfileView.findViewById(R.id.txt_user_hash).setVisibility(View.INVISIBLE);
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(),((TextView) holder.ProfileView.findViewById(R.id.txt_user_hash)).getText().toString(),Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext,OtherUsersProfile.class);
+                Log.d("lol",((TextView) holder.ProfileView.findViewById(R.id.txt_user_hash)).getText().toString());
+                intent.putExtra("profilekey",((TextView) holder.ProfileView.findViewById(R.id.txt_user_hash)).getText().toString());
+                mContext.startActivity(intent);
             }
         });
 

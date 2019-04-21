@@ -108,7 +108,7 @@ public class SignUpActivity extends AppCompatActivity {
         newUser.child("phone").setValue("");
         newUser.child("twitter").setValue("");
         newUser.child("facebook").setValue("");
-        newUser.child("followers").setValue("0");
-        newUser.child("following").setValue("0");
+        newUser.child("followers");
+        newUser.child("following");
     }
 }

@@ -72,8 +72,8 @@ public class EditProfileFragment extends Fragment {
                 address = dataSnapshot.child("address").getValue().toString();
                 phone = dataSnapshot.child("phone").getValue().toString();
                 facebookaccount = dataSnapshot.child("facebook").getValue().toString();
-                followers = dataSnapshot.child("followers").getValue().toString();
-                following = dataSnapshot.child("following").getValue().toString();
+                followers = String.valueOf(dataSnapshot.child("followers").getChildrenCount());
+                following = String.valueOf(dataSnapshot.child("following").getChildrenCount());
                 tvname.setText(fullname);
                 tvaddress.setText(address);
                 currentfollowers.setText(followers);

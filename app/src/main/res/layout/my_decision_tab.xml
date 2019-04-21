@@ -1,215 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorWhite">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/colorWhite">
 
-        <EditText
-            android:id="@+id/txt_dilema_description"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type your dilema here..."
-            android:background="@drawable/rounded_border_edittext"
-            android:textColor="@color/colorWhite"
-            android:textColorHint="@color/solidCircle"
-            android:layout_margin="20dp"
-            android:padding="20dp"/>
-        
-        <LinearLayout
-            android:id="@+id/options_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/layout_add_option"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:gravity="center">
 
-            <ImageView
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:src="@drawable/add_option_img"/>
+            <EditText
+                android:id="@+id/txt_dilema_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Type your dilema here..."
+                android:background="@drawable/rounded_border_edittext"
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/solidCircle"
+                android:layout_margin="20dp"
+                android:padding="20dp"/>
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/options_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layout_add_option"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add an option" />
+                android:orientation="horizontal"
+                android:gravity="center">
 
-        </LinearLayout>
+                <ImageView
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:src="@drawable/add_option_img"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add an option" />
+
+            </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            android:gravity="center">
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select priority"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select priority"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <ImageView
+                    android:layout_width="30sp"
+                    android:layout_height="20sp"
+                    android:src="@drawable/priority_icon"/>
+
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/sb_priority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:min="0"
+                android:max="5"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select timeout"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <ImageView
+                    android:layout_width="30sp"
+                    android:layout_height="20sp"
+                    android:src="@drawable/time_icon"/>
+
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/sb_timeout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:min="0"
+                android:max="6"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"/>
+
+            <CheckBox
+                android:id="@+id/chb_stay_anonymous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stay anonymous"
+                android:layout_marginTop="20dp"
                 android:textColor="@color/colorPrimaryDark"/>
 
-            <ImageView
-                android:layout_width="30sp"
-                android:layout_height="20sp"
-                android:src="@drawable/priority_icon"/>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:padding="20sp">
+
+                <TextView
+                    android:layout_marginLeft="20sp"
+                    android:id="@+id/lbl_priority_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:text="Priority: "
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <TextView
+                    android:id="@+id/lbl_priority_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/lbl_priority_text"
+                    android:text="Low"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/lbl_timout_type"
+                    android:text="Timeout: "
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <!--
+                <EditText
+                    android:id="@+id/txt_timeout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/lbl_timout_type"
+                    android:textStyle="bold"
+                    android:textSize="14dp"
+                    />
+                -->
+                <TextView
+                    android:id="@+id/lbl_timout_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:text="3 minutes"
+                    android:textStyle="bold"
+                    android:layout_marginRight="20sp"
+                    android:textColor="@color/colorPrimaryDark"
+                    />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/lbl_total_docent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total docents: $0.0"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <TextView
+                android:id="@+id/lbl_dilema_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You don't have enough docents"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/colorRed"
+                android:visibility="invisible"
+                android:layout_marginBottom="100sp"/>
 
         </LinearLayout>
-
-        <SeekBar
-            android:id="@+id/sb_priority"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:min="0"
-            android:max="5"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            />
-
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        android:gravity="center">
+        android:gravity="bottom"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50sp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select timeout"
-            android:textColor="@color/colorPrimaryDark"/>
-
-        <ImageView
-            android:layout_width="30sp"
-            android:layout_height="20sp"
-            android:src="@drawable/time_icon"/>
-
-    </LinearLayout>
-
-        <SeekBar
-            android:id="@+id/sb_timeout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:min="0"
-            android:max="6"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"/>
-
-        <CheckBox
-            android:id="@+id/chb_stay_anonymous"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stay anonymous"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/colorPrimaryDark"/>
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <android.support.design.widget.FloatingActionButton
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:background="@color/colorPrimary"
-            android:padding="20sp">
-
-            <TextView
-                android:layout_marginLeft="20sp"
-                android:id="@+id/lbl_priority_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:text="Priority: "
-                android:textColor="@color/colorPrimaryDark"/>
-
-            <TextView
-                android:id="@+id/lbl_priority_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/lbl_priority_text"
-                android:text="Low"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimaryDark"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/lbl_timout_type"
-                android:text="Timeout: "
-                android:textColor="@color/colorPrimaryDark"/>
-
-            <!--
-            <EditText
-                android:id="@+id/txt_timeout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/lbl_timout_type"
-                android:textStyle="bold"
-                android:textSize="14dp"
-                />
-            -->
-            <TextView
-                android:id="@+id/lbl_timout_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:text="3 minutes"
-                android:textStyle="bold"
-                android:layout_marginRight="20sp"
-                android:textColor="@color/colorPrimaryDark"
-                />
-
-        </android.support.constraint.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/lbl_total_docent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total docents: $0.0"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/colorPrimaryDark"/>
-
-        <TextView
-            android:id="@+id/lbl_dilema_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="You don't have enough docents"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/colorRed"
-            android:visibility="invisible"/>
-
-        <Button
             android:id="@+id/btn_submit"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Submit"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="100dp"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/colorWhite"
-            android:paddingLeft="40sp"
-            android:paddingRight="40sp" />
+            android:layout_height="61dp"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/right_arrow"
+            app:backgroundTint="@color/colorPrimary"/>
+
     </LinearLayout>
-</ScrollView>
+
+</RelativeLayout>
+
+

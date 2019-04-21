@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +36,7 @@ import java.util.List;
 public class MyDecisionsTab extends Fragment {
     public final static int RC_IMAGE=1;
 
-    private Button btnSubmit;
+    private FloatingActionButton btnSubmit;
     private CheckBox chbAnonymous;
     private LinearLayout addOption, optionsLayout;
     private EditText dilemaDescription;
@@ -63,7 +64,6 @@ public class MyDecisionsTab extends Fragment {
         optionCounter=0;
         imageUri=null;
         currentView=null;
-        btnSubmit=(Button)activity.findViewById(R.id.btn_submit);
         chbAnonymous=(CheckBox)activity.findViewById(R.id.chb_stay_anonymous);
         addOption=(LinearLayout) activity.findViewById(R.id.layout_add_option);
         optionsLayout=(LinearLayout) activity.findViewById(R.id.options_layout);
@@ -74,6 +74,7 @@ public class MyDecisionsTab extends Fragment {
         txtPriority=(TextView) activity.findViewById(R.id.lbl_priority_value);
         txtTimeout=(TextView) activity.findViewById(R.id.lbl_timout_type);
         lblError=(TextView) activity.findViewById(R.id.lbl_dilema_error);
+        btnSubmit = (FloatingActionButton) activity.findViewById(R.id.btn_submit);
         fb=FirebaseDatabase.getInstance();
         auth=FirebaseAuth.getInstance();
         userDocents=null;

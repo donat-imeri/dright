@@ -1,6 +1,7 @@
 package com.dright;
 
 import android.content.Intent;
+import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -66,20 +67,14 @@ public class DecisionsAcitivity extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DecisionsAcitivity.this, MyProfileActivity.class);
-                startActivity(intent);
-            }
-        });
 
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        moveTaskToBack(true);
+        android.os.Process.killProcess(Process.myPid());
         System.exit(1);
     }
 
@@ -104,6 +99,9 @@ public class DecisionsAcitivity extends AppCompatActivity {
         else if(id==R.id.action_signout){
             FirebaseAuth.getInstance().signOut();
             finish();
+        }
+        else if (id==R.id.go_to_profile){
+            openProfileActivity();
         }
 
         return super.onOptionsItemSelected(item);

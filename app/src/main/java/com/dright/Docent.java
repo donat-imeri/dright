@@ -3,6 +3,10 @@ package com.dright;
 public class Docent {
     private int amount;
 
+    public Docent(){
+
+    }
+
     public Docent(int amount) {
         this.amount = amount;
     }
@@ -19,9 +23,16 @@ public class Docent {
     }
 
     public boolean removeDocent(int amount){
-        if( this.amount >0 && this.amount >=amount)
-        {
+        if (checkRemove(amount)){
             this.amount -= amount;
+            return true;
+        }
+        else return false;
+    }
+
+    public boolean checkRemove(int amount){
+        if( this.amount >=0 && this.amount >=amount)
+        {
             return true;
         }
         else{

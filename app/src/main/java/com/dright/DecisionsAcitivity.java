@@ -109,7 +109,7 @@ public class DecisionsAcitivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        System.exit(0);
+        System.exit(1);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class DecisionsAcitivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            openProfileActivity();
         }
         else if(id==R.id.action_signout){
             FirebaseAuth.getInstance().signOut();
@@ -136,6 +136,11 @@ public class DecisionsAcitivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public  void openProfileActivity(){
+        Intent profileIntent=new Intent(DecisionsAcitivity.this, MyProfileActivity.class);
+        startActivity(profileIntent);
     }
 
     /**

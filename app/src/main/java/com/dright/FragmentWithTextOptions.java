@@ -12,18 +12,14 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class FragmentWithTwoOptions extends Fragment implements Serializable {
+public class FragmentWithTextOptions extends Fragment implements Serializable {
     private TextView txtPostedBy;
     private TextView txt_option_1;
     private TextView txt_option_2;
@@ -34,8 +30,8 @@ public class FragmentWithTwoOptions extends Fragment implements Serializable {
     private Dilema objDilema;
     private List<String> objDilemaOptions;
 
-    public static FragmentWithTwoOptions newInstance(Dilema objDilema) {
-        FragmentWithTwoOptions fragment = new FragmentWithTwoOptions();
+    public static FragmentWithTextOptions newInstance(Dilema objDilema) {
+        FragmentWithTextOptions fragment = new FragmentWithTextOptions();
         Bundle args = new Bundle();
         args.putSerializable("objectDilema", (Serializable) objDilema);
         fragment.setArguments(args);
@@ -56,15 +52,7 @@ public class FragmentWithTwoOptions extends Fragment implements Serializable {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.fragment_two_options,container,false);
-        return ProfileView;
-
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Activity activity = getActivity();
-        relativeLayout = activity.findViewById(R.id.insideRelative);
+        relativeLayout = ProfileView.findViewById(R.id.insideRelative);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         objDilemaOptions = objDilema.getDilemaOptions();
@@ -78,27 +66,17 @@ public class FragmentWithTwoOptions extends Fragment implements Serializable {
 
 
         }
-        txtPostedBy = activity.findViewById(R.id.txtPostedBy);
-        txt_option_1 = activity.findViewById(R.id.txt_option_1);
-        txt_option_2 = activity.findViewById(R.id.txt_option_2);
-        txtComment = activity.findViewById(R.id.txtComment);
+        txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
+        txt_option_1 = ProfileView.findViewById(R.id.txt_option_1);
+        txt_option_2 = ProfileView.findViewById(R.id.txt_option_2);
+        txtComment = ProfileView.findViewById(R.id.txtComment);
 
         mDatabase = FirebaseDatabase.getInstance().getReference("dilema");
-        //readFromDatabase();
-        //changeUI();
-
+        return ProfileView;
 
     }
-/*
-    private void changeUI() {
-        try{
-            txt_option_1.setText();
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-*/
+
 /*
     public void readFromDatabase(){
         try{

@@ -20,6 +20,10 @@
             android:id="@+id/nav_following_myprofile"
             android:icon="@drawable/ic_menu_share"
             android:title="Following" />
+        <item
+            android:id="@+id/nav_search_profiles"
+            android:icon="@drawable/ic_menu_search"
+            android:title="Search Users" />
 
     </group>
 

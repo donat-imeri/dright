@@ -137,13 +137,28 @@ public class MyProfileActivity extends AppCompatActivity
         } else if (id == R.id.nav_followers_myprofile) {
             fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                     , new FollowersProfileFragment()).commit();
-        } else {
+        } else if(id == R.id.nav_following_myprofile){
             fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                     , new FollowingProfileFragment()).commit();
+        }
+        else{
+            fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
+                    , new SearchUsersFragment()).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+}
+class ProfileModel {
+
+    public String name;
+    public String hash;
+
+    public ProfileModel(String name, String hash) {
+        this.name = name;
+        this.hash = hash;
+
     }
 }

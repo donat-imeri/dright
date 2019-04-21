@@ -77,7 +77,7 @@ public class DilemaTab extends Fragment {
                 check = false;
                 return FragmentWithTextOptions.newInstance(mListDilema.get(position),false);
             }else{
-                return null;
+                return FragmentWithTextOptions.newInstance(mListDilema.get(position),true);
             }
 
         }

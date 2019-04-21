@@ -35,7 +35,7 @@ public class FragmentWithTextOptions extends Fragment implements Serializable {
     private boolean check = false;
     private Dilema objDilema;
     private List<String> objDilemaOptions;
-    private UserProfile userProfile;
+    //private UserProfile userProfile;
 
     public static FragmentWithTextOptions newInstance(Dilema objDilema, boolean checkImage) {
         FragmentWithTextOptions fragment = new FragmentWithTextOptions();
@@ -75,8 +75,8 @@ public class FragmentWithTextOptions extends Fragment implements Serializable {
         txtTitle.setText(objDilema.getDilemaDescription());
         if(!objDilema.isStayAnonymous())
         {
-            userProfile = objDilema.getDilemaAsker();
-            txtPostedBy.setText(userProfile.fullname);
+           // userProfile = objDilema.getDilemaAsker();
+            //txtPostedBy.setText(userProfile.fullname);
         }
         else {
             txtPostedBy.setText("Anonymous");

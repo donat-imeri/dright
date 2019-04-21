@@ -1,5 +1,6 @@
 package com.dright;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -62,6 +63,7 @@ public class DecisionsAcitivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                openProfileActivity();
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -72,7 +74,7 @@ public class DecisionsAcitivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        System.exit(0);
+        System.exit(1);
     }
 
     @Override
@@ -91,7 +93,7 @@ public class DecisionsAcitivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            openProfileActivity();
         }
         else if(id==R.id.action_signout){
             FirebaseAuth.getInstance().signOut();
@@ -99,6 +101,11 @@ public class DecisionsAcitivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public  void openProfileActivity(){
+        Intent profileIntent=new Intent(DecisionsAcitivity.this, MyProfileActivity.class);
+        startActivity(profileIntent);
     }
 
     /**

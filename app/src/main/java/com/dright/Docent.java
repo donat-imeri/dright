@@ -3,7 +3,8 @@ package com.dright;
 public class Docent {
     private int amount;
 
-    public Docent(int amount) {
+    public Docent(int amount)
+    {
         this.amount = amount;
     }
 

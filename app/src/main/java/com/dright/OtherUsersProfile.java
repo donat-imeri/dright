@@ -1,7 +1,5 @@
 package com.dright;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,14 +20,7 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-public class DecisionsAcitivity extends AppCompatActivity {
+public class OtherUsersProfile extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -45,76 +36,52 @@ public class DecisionsAcitivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private DatabaseReference db;
-    private FirebaseAuth currentUser;
+    public static String profilekey = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_decisions);
-
+        setContentView(R.layout.activity_other_users_profile);
+        if(getIntent().hasExtra("profilekey"))
+        {
+            profilekey = getIntent().getStringExtra("profilekey");
+            Log.d("lol2",profilekey);
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (ViewPager) findViewById(R.id.users_profile_container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        currentUser = FirebaseAuth.getInstance();
-        db= FirebaseDatabase.getInstance().getReference("Users/"+currentUser.getUid());
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild("name"))
-                {
-
-                }
-                else {
-                    db.child("name").setValue(SignUpActivity.fullname);
-                    db.child("address").setValue("");
-                    db.child("email").setValue(SignUpActivity.email);
-                    db.child("phone").setValue("");
-                    db.child("twitter").setValue("");
-                    db.child("facebook").setValue("");
-                    db.child("followers").setValue(null);
-                    db.child("following").setValue(null);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.users_profile_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(),MyProfileActivity.class);
-                startActivity(intent);
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
+
+
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        System.exit(0);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_decisions_acitivity, menu);
+        getMenuInflater().inflate(R.menu.menu_other_users_profile, menu);
         return true;
     }
 
@@ -128,10 +95,6 @@ public class DecisionsAcitivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }
-        else if(id==R.id.action_signout){
-            FirebaseAuth.getInstance().signOut();
-            finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -165,7 +128,7 @@ public class DecisionsAcitivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_decisions_acitivity, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_other_users_profile, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
@@ -188,11 +151,14 @@ public class DecisionsAcitivity extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position){
                 case 0:
-                    MyDecisionsTab myDecisionsTab=new MyDecisionsTab();
-                    return myDecisionsTab;
+                    OtherUsersProfileFragment otherUsersProfileFragment=new OtherUsersProfileFragment();
+                    return otherUsersProfileFragment;
                 case 1:
-                    DilemaTab dilemaTab=new DilemaTab();
-                    return dilemaTab;
+                    OtherUsersFollowersFragment otherUsersFollowersFragment = new OtherUsersFollowersFragment();
+                    return otherUsersFollowersFragment;
+                case 2:
+                    OtherUsersFollowingFragment otherUsersFollowingFragment = new OtherUsersFollowingFragment();
+                    return otherUsersFollowingFragment;
                 default:
                     return null;
             }
@@ -200,8 +166,8 @@ public class DecisionsAcitivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 2 total tab pages.
-            return 2;
+            // Show 3 total pages.
+            return 3;
         }
     }
 }

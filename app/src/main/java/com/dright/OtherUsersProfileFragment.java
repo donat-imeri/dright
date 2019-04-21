@@ -95,21 +95,28 @@ public class OtherUsersProfileFragment extends Fragment {
         mSubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                db= FirebaseDatabase.getInstance().getReference("Users").child(OtherUsersProfile.profilekey);
                 mSubscribe.setVisibility(View.INVISIBLE);
                 mSubscribe.setEnabled(false);
                 mUnsubscribe.setVisibility(View.VISIBLE);
                 mUnsubscribe.setEnabled(true);
                 db.child("followers").child(currentUser.getUid()).setValue("Subbed");
+                db= FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
+                db.child("following").child(OtherUsersProfile.profilekey).setValue("followed");
+
             }
         });
         mUnsubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                db= FirebaseDatabase.getInstance().getReference("Users").child(OtherUsersProfile.profilekey);
                 mUnsubscribe.setVisibility(View.INVISIBLE);
                 mUnsubscribe.setEnabled(false);
                 mSubscribe.setVisibility(View.VISIBLE);
                 mSubscribe.setEnabled(true);
                 db.child("followers").child(currentUser.getUid()).removeValue();
+                db= FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
+                db.child("following").child(OtherUsersProfile.profilekey).removeValue();
 
             }
         });

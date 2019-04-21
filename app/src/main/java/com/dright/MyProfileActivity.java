@@ -67,6 +67,7 @@ public class MyProfileActivity extends AppCompatActivity
                 ProfileFragment.following = String.valueOf(dataSnapshot.child("following").getChildrenCount());
                 ProfileFragment.followers = String.valueOf(dataSnapshot.child("followers").getChildrenCount());
 
+
             }
 
             @Override

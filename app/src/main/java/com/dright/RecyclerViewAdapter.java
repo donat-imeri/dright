@@ -56,7 +56,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ((TextView)holder.ProfileView.findViewById(R.id.txt_user)).setText(profileModel.name);
         ((TextView)holder.ProfileView.findViewById(R.id.txt_user_hash))
                 .setText(profileModel.hash);
-        holder.ProfileView.findViewById(R.id.txt_user_hash).setVisibility(0);
+        holder.ProfileView.findViewById(R.id.txt_user_hash).setVisibility(View.INVISIBLE);
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

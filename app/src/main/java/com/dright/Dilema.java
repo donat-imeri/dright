@@ -10,14 +10,15 @@ public class Dilema {
     private String dilemaAsker;
     private int dilemaPriority;
     private long dilemaTimeOut;
-    private boolean stayAnonymous;
+    private boolean stayAnonymous, dilemaText;
 
     public Dilema(){
 
     }
 
     public Dilema(String dilemaDescription, List<String> dilemaOptions, List<String> dilemaCategories,
-                  String dilemaAsker, int dilemaPriority, long dilemaTimeOut, boolean stayAnonymous, List<Integer> optionResults) {
+                  String dilemaAsker, int dilemaPriority, long dilemaTimeOut, boolean stayAnonymous,
+                  List<Integer> optionResults, boolean dilemaText) {
         this.dilemaDescription = dilemaDescription;
         this.dilemaOptions = dilemaOptions;
         this.dilemaCategories = dilemaCategories;
@@ -26,6 +27,8 @@ public class Dilema {
         this.dilemaTimeOut = dilemaTimeOut;
         this.stayAnonymous = stayAnonymous;
         this.optionsResults=optionResults;
+        this.dilemaText=dilemaText;
+
     }
 
     public String getDilemaDescription() {
@@ -91,5 +94,14 @@ public class Dilema {
     public void setOptionsResults(List<Integer> optionsResults) {
         this.optionsResults = optionsResults;
     }
+
+    public boolean isImageOptions() {
+        return dilemaText;
+    }
+
+    public void setImageOptions(boolean imageOptions) {
+        this.dilemaText = imageOptions;
+    }
+
 
 }

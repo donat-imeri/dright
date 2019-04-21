@@ -75,16 +75,13 @@ public class SearchUsersFragment extends Fragment {
 
 
         recyclerView = ProfileView.findViewById(R.id.recycler_view);
-        final RecyclerViewAdapter adapter = new RecyclerViewAdapter(ProfileView.getContext(),mUser);
+        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+        final RecyclerViewAdapter adapter = new RecyclerViewAdapter(recyclerView.getContext(),mUser);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(ProfileView.getContext()));
-        recyclerView.setVisibility(View.INVISIBLE);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
 
-
-                recyclerView.setVisibility(View.VISIBLE);
                 adapter.getFilter().filter(query);
                 return false;
             }

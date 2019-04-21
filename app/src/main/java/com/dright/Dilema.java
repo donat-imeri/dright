@@ -7,7 +7,7 @@ public class Dilema {
     private List<String> dilemaOptions;
     private List<String> dilemaCategories;
     private List<Integer> optionsResults;
-    private UserProfile dilemaAsker;
+    private String dilemaAsker;
     private int dilemaPriority;
     private long dilemaTimeOut;
     private boolean stayAnonymous;
@@ -17,7 +17,7 @@ public class Dilema {
     }
 
     public Dilema(String dilemaDescription, List<String> dilemaOptions, List<String> dilemaCategories,
-                  UserProfile dilemaAsker, int dilemaPriority, long dilemaTimeOut, boolean stayAnonymous, List<Integer> optionResults) {
+                  String dilemaAsker, int dilemaPriority, long dilemaTimeOut, boolean stayAnonymous, List<Integer> optionResults) {
         this.dilemaDescription = dilemaDescription;
         this.dilemaOptions = dilemaOptions;
         this.dilemaCategories = dilemaCategories;
@@ -52,11 +52,11 @@ public class Dilema {
         this.dilemaCategories = dilemaCategories;
     }
 
-    public UserProfile getDilemaAsker() {
+    public String getDilemaAsker() {
         return dilemaAsker;
     }
 
-    public void setDilemaAsker(UserProfile dilemaAsker) {
+    public void setDilemaAsker(String dilemaAsker) {
         this.dilemaAsker = dilemaAsker;
     }
 

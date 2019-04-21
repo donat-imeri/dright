@@ -159,7 +159,7 @@ public class MyDecisionsTab extends Fragment {
                 }
 
                 Dilema newDilema=new Dilema(String.valueOf(dilemaDescription.getText()), listOptions(optionsLayout),
-                        null, null, sbPriority.getProgress(), sbTimeout.getProgress(),
+                        null, auth.getUid(), sbPriority.getProgress(), sbTimeout.getProgress(),
                         checkAnonimity(), listOptionResults);
 
                 DatabaseReference table=fb.getReference("Dilema");

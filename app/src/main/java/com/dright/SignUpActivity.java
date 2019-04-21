@@ -104,6 +104,11 @@ public class SignUpActivity extends AppCompatActivity {
         UserProfile user=new UserProfile(email, name, 0, d);
         DatabaseReference newUser=fb.child(userId);
         newUser.setValue(user);
-
+        newUser.child("address").setValue("");
+        newUser.child("phone").setValue("");
+        newUser.child("twitter").setValue("");
+        newUser.child("facebook").setValue("");
+        newUser.child("followers").setValue("0");
+        newUser.child("following").setValue("0");
     }
 }

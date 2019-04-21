@@ -1,12 +1,12 @@
 package com.dright;
 
 public class UserProfile {
-    public String getFullname() {
-        return fullname;
+    public String getName() {
+        return name;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setName(String fullname) {
+        this.name = fullname;
     }
 
     public String getEmail() {
@@ -33,12 +33,12 @@ public class UserProfile {
         this.docents = docents;
     }
 
-    private String fullname, email;
+    private String name, email;
     int userRate;
     Docent docents;
 
-    public UserProfile(String email, String fullname, int userRate, Docent Docents){
-        this.fullname=fullname;
+    public UserProfile(String email, String name, int userRate, Docent Docents){
+        this.name=name;
         this.email=email;
         this.docents=Docents;
         this.userRate=userRate;

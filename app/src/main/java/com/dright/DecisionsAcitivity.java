@@ -45,8 +45,6 @@ public class DecisionsAcitivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private DatabaseReference db;
-    private FirebaseAuth currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,32 +60,6 @@ public class DecisionsAcitivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        currentUser = FirebaseAuth.getInstance();
-        db= FirebaseDatabase.getInstance().getReference("Users/"+currentUser.getUid());
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild("name"))
-                {
-
-                }
-                else {
-                    db.child("name").setValue(SignUpActivity.fullname);
-                    db.child("address").setValue("");
-                    db.child("email").setValue(SignUpActivity.email);
-                    db.child("phone").setValue("");
-                    db.child("twitter").setValue("");
-                    db.child("facebook").setValue("");
-                    db.child("followers").setValue("0");
-                    db.child("following").setValue("0");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
@@ -98,9 +70,8 @@ public class DecisionsAcitivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(),MyProfileActivity.class);
+                Intent intent = new Intent(DecisionsAcitivity.this, MyProfileActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 

@@ -2,41 +2,47 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/textView"
+        android:background="#65DCE5"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
         android:text="Category: "
         android:layout_marginTop="10dp"
         android:id="@+id/lblCategory"
         android:textSize="15dp"/>
-    <TextView
+
+    <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txtCategory"
-        android:layout_marginTop="10dp"
+        android:id="@+id/spinner"
         android:layout_toRightOf="@+id/lblCategory"
+        android:layout_below="@+id/textView"
         android:layout_marginLeft="5dp"
-        android:textSize="15dp"
-        android:text="Football"/>
-    <TextView
-        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lblPostedBy"
         android:layout_below="@+id/lblCategory"
-        android:layout_marginTop="10dp"
-        android:text="Posted by "
-        android:textSize="15dp"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/lblPostedBy"
-        android:layout_below="@+id/txtCategory"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="5dp"
-        android:id="@+id/txtPostedBy"
-        android:textSize="15dp"
-        />
+        android:layout_marginTop="20dp">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vpPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v4.view.PagerTabStrip
+                android:id="@+id/pager_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                />
+        </android.support.v4.view.ViewPager>
+    </ScrollView>
 
 </RelativeLayout>

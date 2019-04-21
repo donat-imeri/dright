@@ -1,6 +1,5 @@
 package com.dright;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,7 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,19 +24,24 @@ import java.util.List;
 
 public class FragmentWithTextOptions extends Fragment implements Serializable {
     private TextView txtPostedBy;
-    private TextView txt_option_1;
-    private TextView txt_option_2;
+    private RadioGroup radioGroup;
     private EditText txtComment;
+    private TextView txtTitle;
     private RelativeLayout relativeLayout;
+    private Button btnVote;
     private DatabaseReference mDatabase;
+    private boolean checkImage = true;
+    private String rdbText = null;
     private boolean check = false;
     private Dilema objDilema;
     private List<String> objDilemaOptions;
+    private UserProfile userProfile;
 
-    public static FragmentWithTextOptions newInstance(Dilema objDilema) {
+    public static FragmentWithTextOptions newInstance(Dilema objDilema, boolean checkImage) {
         FragmentWithTextOptions fragment = new FragmentWithTextOptions();
         Bundle args = new Bundle();
         args.putSerializable("objectDilema", (Serializable) objDilema);
+        args.putBoolean("checkImage",checkImage);
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,6 +51,7 @@ public class FragmentWithTextOptions extends Fragment implements Serializable {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         objDilema = (Dilema) getArguments().getSerializable("objectDilema");
+        checkImage = getArguments().getBoolean("checkImage");
 
     }
 
@@ -51,12 +60,81 @@ public class FragmentWithTextOptions extends Fragment implements Serializable {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ProfileView = inflater.inflate(R.layout.fragment_two_options,container,false);
+        ProfileView = inflater.inflate(R.layout.fragment_text_options,container,false);
         relativeLayout = ProfileView.findViewById(R.id.insideRelative);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
+        radioGroup = ProfileView.findViewById(R.id.radiogroup);
+        btnVote = ProfileView.findViewById(R.id.btnVote);
         objDilemaOptions = objDilema.getDilemaOptions();
-        for(int i=0;i < objDilemaOptions.size();i++){
+
+
+
+        txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
+        txtComment = ProfileView.findViewById(R.id.txtComment);
+        txtTitle = ProfileView.findViewById(R.id.txtTitle);
+        txtTitle.setText(objDilema.getDilemaDescription());
+        if(!objDilema.isStayAnonymous())
+        {
+            userProfile = objDilema.getDilemaAsker();
+            txtPostedBy.setText(userProfile.fullname);
+        }
+        else {
+            txtPostedBy.setText("Anonymous");
+        }
+
+
+        //mDatabase = FirebaseDatabase.getInstance().getReference("dilema");
+        addRadioButtons(objDilemaOptions.size());
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                for(int i=0; i < group.getChildCount(); i++){
+                    RadioButton rdBtn = (RadioButton) group.getChildAt(i);
+                    if(rdBtn.getId() == checkedId){
+                        check = true;
+                        if(!checkImage) {
+                            rdbText = rdBtn.getText().toString();
+                        }
+                        else {
+                            //qitu duhet me marr pathin e ikones se radio butonit te selektum!!
+                        }
+                    }
+                }
+            }
+        });
+
+        btnVote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(check ){
+
+                }
+
+            }
+        });
+        return ProfileView;
+
+    }
+
+    private void addRadioButtons(int size){
+        for (int row = 0; row < 1; row++) {
+            RadioGroup ll = new RadioGroup(getActivity());
+            ll.setOrientation(LinearLayout.HORIZONTAL);
+
+            for (int i = 1; i <= size; i++) {
+                RadioButton rdbtn = new RadioButton(getActivity());
+                rdbtn.setId(View.generateViewId());
+                rdbtn.setText(objDilemaOptions.get(i));
+                ll.addView(rdbtn);
+            }
+            ((ViewGroup) ProfileView.findViewById(R.id.radiogroup)).addView(ll);
+        }
+
+        /*for(int i=0;i < size;i++){
+
+
+
             TextView txtView = new TextView(getActivity());
             txtView.setId(i+1);
             txtView.setPadding(30,30,30,30);
@@ -66,14 +144,7 @@ public class FragmentWithTextOptions extends Fragment implements Serializable {
 
 
         }
-        txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
-        txt_option_1 = ProfileView.findViewById(R.id.txt_option_1);
-        txt_option_2 = ProfileView.findViewById(R.id.txt_option_2);
-        txtComment = ProfileView.findViewById(R.id.txtComment);
-
-        mDatabase = FirebaseDatabase.getInstance().getReference("dilema");
-        return ProfileView;
-
+*/
     }
 
 

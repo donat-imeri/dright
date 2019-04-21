@@ -2,30 +2,136 @@ package com.dright;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DilemaTab extends Fragment {
     private TextView txtCategory;
-    private TextView txtPostedBy;
+    private View view;
+    private List<Dilema> listDilema ;
+    private FragmentPagerAdapter adapterViewPager;
+    private Spinner spinner;
+    private DatabaseReference mDatabase;
+    private static boolean check = false;
+    private String[] itemsCategory = {"All", "Food","Sport", "Clothes"};
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.dilema_tab, container, false);
+        view=inflater.inflate(R.layout.dilema_tab, container, false);
+        spinner = view.findViewById(R.id.spinner);
+
+       // ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, itemsCategory);
+        spinner.setAdapter(new ArrayAdapter<String>(getActivity().getApplicationContext(),
+                android.R.layout.simple_list_item_1 , itemsCategory));
+        mDatabase = FirebaseDatabase.getInstance().getReference("dilema");
+
+
+        ViewPager vpPager = (ViewPager) view.findViewById(R.id.vpPager);
+        adapterViewPager = new MyPagerAdapter(getChildFragmentManager(),listDilema);
+        vpPager.setAdapter(adapterViewPager);
+        vpPager.setPageTransformer(true, new RotateUpTransformer());
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Activity activity = getActivity();
 
-        txtCategory = activity.findViewById(R.id.txtCategory);
-        txtPostedBy = activity.findViewById(R.id.txtPostedBy);
+    public static class MyPagerAdapter extends FragmentPagerAdapter {
+        private List<Dilema> mListDilema;
 
+        public MyPagerAdapter(FragmentManager fragmentManager, List<Dilema> mListDilema) {
+            super(fragmentManager);
+            this.mListDilema = mListDilema;
+        }
+
+        // Returns total number of pages
+        @Override
+        public int getCount() {
+            return mListDilema.size();
+        }
+
+        // Returns the fragment to display for that page
+        @Override
+        public Fragment getItem(int position) {
+
+
+            if(check) {
+                check = false;
+                return FragmentWithTextOptions.newInstance(mListDilema.get(position),false);
+            }else{
+                return null;
+            }
+
+        }
+
+        // Returns the page title for the top indicator
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "";
+        }
+
+    }
+
+
+    public void readFromDatabase(){
+        try{
+            listDilema = new ArrayList<>();
+
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        if(ds.hasChild("dilemaText")) {
+                            if(ds.child("dilemaText").getValue(Boolean.class)) {
+                                check = true;
+                            }
+                            else{
+                                check = false;
+                            }
+                        }
+                        if(ds.hasChild("dilemaCategory")){
+                            if(spinner.getSelectedItem().toString().equalsIgnoreCase(ds.child("dilemaCategory").getValue(String.class))){
+                                Dilema objD = (Dilema) ds.getValue();
+                                listDilema.add(objD);
+                            }
+                            else  if(spinner.getSelectedItem().toString().equalsIgnoreCase("All")){
+                                Dilema objD = (Dilema) ds.getValue();
+                                listDilema.add(objD);
+                            }
+                        }
+                    }
+
+                }
+
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }

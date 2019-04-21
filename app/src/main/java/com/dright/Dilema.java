@@ -10,8 +10,9 @@ public class Dilema {
     private int dilemaPriority;
     private long dilemaTimeOut;
     private boolean stayAnonymous;
+    private boolean dilemaText;
 
-    public Dilema(String dilemaDescription, List<String> dilemaOptions, List<String> dilemaCategories, UserProfile dilemaAsker, int dilemaPriority, long dilemaTimeOut, boolean stayAnonymous) {
+    public Dilema(String dilemaDescription, List<String> dilemaOptions, List<String> dilemaCategories, UserProfile dilemaAsker, int dilemaPriority, long dilemaTimeOut, boolean stayAnonymous, boolean dilemaText) {
         this.dilemaDescription = dilemaDescription;
         this.dilemaOptions = dilemaOptions;
         this.dilemaCategories = dilemaCategories;
@@ -19,6 +20,15 @@ public class Dilema {
         this.dilemaPriority = dilemaPriority;
         this.dilemaTimeOut = dilemaTimeOut;
         this.stayAnonymous = stayAnonymous;
+        this.dilemaText = dilemaText;
+    }
+
+    public boolean isDilemaText() {
+        return dilemaText;
+    }
+
+    public void setDilemaText(boolean dilemaText) {
+        this.dilemaText = dilemaText;
     }
 
     public String getDilemaDescription() {

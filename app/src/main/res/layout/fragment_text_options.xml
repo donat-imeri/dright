@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -15,6 +16,16 @@
             android:text="Posted by: "
             android:textSize="14dp"
             />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtTitle"
+            android:layout_below="@+id/lblPostedBy"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:textSize="16dp"
+            android:textColor="@android:color/black"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,29 +38,17 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lblPostedBy"
+            android:layout_below="@+id/txtTitle"
             android:layout_marginTop="10dp"
             android:id="@+id/insideRelative"
             android:background="#65DCE5"
             >
-            <TextView
+            <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txt_option_1"
-                android:textSize="20dp"
-                android:padding="30dp"
-                android:hint="Option 1"
-                android:textColor="@android:color/black"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txt_option_2"
-                android:layout_below="@+id/txt_option_1"
-                android:padding="30dp"
-                android:layout_marginTop="5dp"
-                android:textSize="20dp"
-                android:hint="Option 2"
-                android:textColor="@android:color/black"/>
+                android:id="@+id/radiogroup">
+
+            </RadioGroup>
 
         </RelativeLayout>
 
@@ -61,6 +60,20 @@
             android:layout_marginTop="10dp"
             android:padding="10dp"
             android:id="@+id/txtComment"/>
-    </ScrollView>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Vote"
+            android:textSize="16dp"
+            android:id="@+id/btnVote"
+            android:layout_below="@+id/txtComment"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/holo_blue_light"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"/>
 
-</RelativeLayout>
+
+
+    </RelativeLayout>
+</ScrollView>

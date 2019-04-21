@@ -191,6 +191,15 @@
             android:layout_marginTop="20dp"
             android:textColor="@color/colorPrimaryDark"/>
 
+        <TextView
+            android:id="@+id/lbl_dilema_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You don't have enough docents"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorRed"
+            android:visibility="invisible"/>
+
         <Button
             android:id="@+id/btn_submit"
             android:layout_width="wrap_content"
@@ -200,7 +209,7 @@
             android:layout_marginBottom="100dp"
             android:background="@color/colorPrimary"
             android:textColor="@color/colorWhite"
-            android:padding="20dp"
-            />
+            android:paddingLeft="40sp"
+            android:paddingRight="40sp" />
     </LinearLayout>
 </ScrollView>

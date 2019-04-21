@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -26,6 +28,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText txtPasswordConfirm;
     private Button signUp;
     private TextView goToLogin;
+    private DatabaseReference fb;
 
 
     @Override
@@ -41,6 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
         txtPasswordConfirm=findViewById(R.id.txt_password_confirm);
         goToLogin=findViewById(R.id.lbl_have_account);
         signUp=findViewById(R.id.btn_signup);
+        fb=FirebaseDatabase.getInstance().getReference("Users");
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("Success", "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    putUserOnDatabase(mAuth.getUid(), txtFullName.getText().toString(), txtEmail.getText().toString());
                                     updateUI(user);
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -91,5 +96,14 @@ public class SignUpActivity extends AppCompatActivity {
             goToLogin.putExtra("fbUser",fbUser);
             finish();
         }
+    }
+
+    public void putUserOnDatabase(String userId, String name, String email){
+        Log.d("userID", userId);
+        Docent d=new Docent(0);
+        UserProfile user=new UserProfile(email, name, 0, d);
+        DatabaseReference newUser=fb.child(userId);
+        newUser.setValue(user);
+
     }
 }

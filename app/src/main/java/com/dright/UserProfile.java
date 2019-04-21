@@ -1,17 +1,50 @@
 package com.dright;
 
-import android.media.Image;
-
 public class UserProfile {
-    String fullname;
-    int id, userRate, dimes;
-    Image userImage;
+    public String getFullname() {
+        return fullname;
+    }
 
-    public void UserProfile(String fullname,int id, int userRate, int dimes, Image userImage){
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getUserRate() {
+        return userRate;
+    }
+
+    public void setUserRate(int userRate) {
+        this.userRate = userRate;
+    }
+
+    public Docent getDocents() {
+        return docents;
+    }
+
+    public void setDocents(Docent docents) {
+        this.docents = docents;
+    }
+
+    private String fullname, email;
+    int userRate;
+    Docent docents;
+
+    public UserProfile(String email, String fullname, int userRate, Docent Docents){
         this.fullname=fullname;
-        this.userImage=userImage;
-        this.dimes=dimes;
-        this.id=id;
+        this.email=email;
+        this.docents=Docents;
         this.userRate=userRate;
+    }
+
+    public UserProfile(){
+
     }
 }

@@ -24,17 +24,6 @@
         android:paddingBottom="10dp"/>
 
     <ImageView
-        android:id="@+id/icon_insert_image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/add_image_white"
-        app:layout_constraintTop_toTopOf="@id/txt_option_1"
-        app:layout_constraintBottom_toBottomOf="@id/txt_option_1"
-        app:layout_constraintRight_toRightOf="@id/txt_option_1"
-        android:layout_marginRight="5dp"
-        />
-
-    <ImageView
         android:id="@+id/icon_remove"
         android:layout_width="20dp"
         android:layout_height="20dp"

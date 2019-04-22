@@ -58,6 +58,20 @@
             </LinearLayout>
 
 
+            <com.dright.ExpandableHeightGridView
+                android:id="@+id/image_options_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:columnWidth="120dp"
+                android:gravity="center"
+                android:numColumns="2"
+                android:background="@drawable/gradient_background">
+
+            </com.dright.ExpandableHeightGridView>
+
+
+
             <LinearLayout
                 android:id="@+id/options_layout"
                 android:layout_width="match_parent"

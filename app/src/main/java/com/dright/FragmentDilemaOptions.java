@@ -16,13 +16,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
 import java.util.List;
 
 
-public class FragmentWithTextOptions extends Fragment implements Serializable {
+public class FragmentDilemaOptions extends Fragment implements Serializable {
     private TextView txtPostedBy;
     private RadioGroup radioGroup;
     private EditText txtComment;
@@ -35,10 +34,11 @@ public class FragmentWithTextOptions extends Fragment implements Serializable {
     private boolean check = false;
     private Dilema objDilema;
     private List<String> objDilemaOptions;
+    private List<Integer> objDilemaOptionsResults;
     private String dilemaAsker;
 
-    public static FragmentWithTextOptions newInstance(Dilema objDilema, boolean checkImage) {
-        FragmentWithTextOptions fragment = new FragmentWithTextOptions();
+    public static FragmentDilemaOptions newInstance(Dilema objDilema, boolean checkImage) {
+        FragmentDilemaOptions fragment = new FragmentDilemaOptions();
         Bundle args = new Bundle();
         args.putSerializable("objectDilema", (Serializable) objDilema);
         args.putBoolean("checkImage",checkImage);
@@ -66,7 +66,7 @@ public class FragmentWithTextOptions extends Fragment implements Serializable {
         radioGroup = ProfileView.findViewById(R.id.radiogroup);
         btnVote = ProfileView.findViewById(R.id.btnVote);
         objDilemaOptions = objDilema.getDilemaOptions();
-
+        objDilemaOptionsResults = objDilema.getOptionsResults();
 
 
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
@@ -108,12 +108,28 @@ public class FragmentWithTextOptions extends Fragment implements Serializable {
             @Override
             public void onClick(View v) {
                 if(check ){
+                    if(rdbText != null){
+                        updateOptionsResult(rdbText);
+                    }
 
                 }
 
             }
         });
         return ProfileView;
+
+    }
+
+    private void updateOptionsResult(String rdbText){
+        for(int i=0; i <objDilemaOptions.size(); i++)
+        {
+            if(rdbText.equalsIgnoreCase(objDilemaOptions.get(i)))
+            {
+                int resOption = objDilemaOptionsResults.get(i);
+                resOption += 1;
+                objDilemaOptionsResults.set(i,resOption);
+            }
+        }
 
     }
 

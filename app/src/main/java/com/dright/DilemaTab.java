@@ -1,6 +1,5 @@
 package com.dright;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,10 +39,10 @@ public class DilemaTab extends Fragment {
         view=inflater.inflate(R.layout.dilema_tab, container, false);
         spinner = view.findViewById(R.id.spinner);
 
-       // ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, itemsCategory);
         spinner.setAdapter(new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 android.R.layout.simple_list_item_1 , itemsCategory));
         mDatabase = FirebaseDatabase.getInstance().getReference("dilema");
+        readFromDatabase();
 
 
         ViewPager vpPager = (ViewPager) view.findViewById(R.id.vpPager);
@@ -75,9 +74,9 @@ public class DilemaTab extends Fragment {
 
             if(check) {
                 check = false;
-                return FragmentWithTextOptions.newInstance(mListDilema.get(position),false);
+                return FragmentDilemaOptions.newInstance(mListDilema.get(position),false);
             }else{
-                return FragmentWithTextOptions.newInstance(mListDilema.get(position),true);
+                return FragmentDilemaOptions.newInstance(mListDilema.get(position),true);
             }
 
         }

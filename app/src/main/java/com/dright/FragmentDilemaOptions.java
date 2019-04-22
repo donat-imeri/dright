@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
 import java.util.List;
@@ -128,6 +129,7 @@ public class FragmentDilemaOptions extends Fragment implements Serializable {
                 int resOption = objDilemaOptionsResults.get(i);
                 resOption += 1;
                 objDilemaOptionsResults.set(i,resOption);
+                objDilema.setOptionsResults(objDilemaOptionsResults);
             }
         }
 
@@ -205,4 +207,11 @@ public class FragmentDilemaOptions extends Fragment implements Serializable {
         }
     }
     */
+private void updateDatabase(){
+    try{
+        mDatabase = FirebaseDatabase.getInstance().getReference("dilema");
+    }catch (Exception e){
+        e.printStackTrace();
+    }
+}
 }

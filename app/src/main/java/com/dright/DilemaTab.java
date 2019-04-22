@@ -42,8 +42,8 @@ public class DilemaTab extends Fragment {
         spinner.setAdapter(new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 android.R.layout.simple_list_item_1 , itemsCategory));
         mDatabase = FirebaseDatabase.getInstance().getReference("dilema");
-        readFromDatabase();
-
+        //readFromDatabase();
+        readFromDb();
 
         ViewPager vpPager = (ViewPager) view.findViewById(R.id.vpPager);
         adapterViewPager = new MyPagerAdapter(getChildFragmentManager(),listDilema);
@@ -132,5 +132,41 @@ public class DilemaTab extends Fragment {
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+    private  void readFromDb(){
+        try{
+            listDilema = new ArrayList<>();
+
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        if(ds.hasChild("dilemaText")) {
+                            if(ds.child("dilemaText").getValue(Boolean.class)) {
+                                check = true;
+                            }
+                            else{
+                                check = false;
+                            }
+                        }
+                        Dilema objD = (Dilema) ds.getValue();
+                        listDilema.add(objD);
+                    }
+
+                }
+
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 }

@@ -95,11 +95,11 @@ public class Dilema {
         this.optionsResults = optionsResults;
     }
 
-    public boolean isImageOptions() {
+    public boolean isDilemaText() {
         return dilemaText;
     }
 
-    public void setImageOptions(boolean imageOptions) {
+    public void setDilemaText(boolean imageOptions) {
         this.dilemaText = imageOptions;
     }
 

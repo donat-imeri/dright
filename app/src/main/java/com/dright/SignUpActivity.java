@@ -110,5 +110,8 @@ public class SignUpActivity extends AppCompatActivity {
         newUser.child("facebook").setValue("");
         newUser.child("followers");
         newUser.child("following");
+        newUser.child("decisionInProgess");
+        newUser.child("decisionsMade");
+
     }
 }

@@ -27,6 +27,51 @@
                 android:layout_margin="20dp"
                 android:padding="20dp"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Options Type"
+                android:textColor="@color/colorPrimaryDark"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TEXT"
+                    android:layout_marginRight="10sp"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <Switch
+                    android:id="@+id/switch_is_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:layout_width="50sp"
+                    android:layout_height="50sp"
+                    android:layout_marginLeft="10sp"
+                    android:src="@drawable/add_image"/>
+            </LinearLayout>
+
+
+            <com.dright.ExpandableHeightGridView
+                android:id="@+id/image_options_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:columnWidth="120dp"
+                android:gravity="center"
+                android:numColumns="2"
+                android:background="@drawable/gradient_background">
+
+            </com.dright.ExpandableHeightGridView>
+
+
+
             <LinearLayout
                 android:id="@+id/options_layout"
                 android:layout_width="match_parent"
@@ -54,6 +99,13 @@
 
             </LinearLayout>
 
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark"
+                android:layout_marginTop="10sp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -85,11 +137,27 @@
                 />
 
 
+            <TextView
+                android:id="@+id/lbl_priority_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Low"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <View
+                android:id="@+id/divider_2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark"
+                android:layout_marginTop="10sp"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10sp"
                 android:gravity="center">
 
                 <TextView
@@ -105,14 +173,85 @@
 
             </LinearLayout>
 
-            <SeekBar
-                android:id="@+id/sb_timeout"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:min="0"
-                android:max="6"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginLeft="10sp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DAYS"
+                        android:layout_gravity="center"
+                        android:textColor="@color/colorPrimaryDark"/>
+
+                    <NumberPicker
+                        android:id="@+id/pick_days"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorPrimary">
+                    </NumberPicker>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginLeft="10sp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="HOURS"
+                        android:layout_gravity="center"
+                        android:textColor="@color/colorPrimaryDark"/>
+
+                    <NumberPicker
+                        android:id="@+id/pick_hours"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorPrimary">
+                    </NumberPicker>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginRight="10sp"
+                    android:layout_marginLeft="10sp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MINUTES"
+                        android:layout_gravity="center"
+                        android:textColor="@color/colorPrimaryDark"/>
+
+                    <NumberPicker
+                        android:id="@+id/pick_minutes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/colorPrimary">
+                    </NumberPicker>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider_3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark"
+                android:layout_marginTop="10sp"/>
 
             <CheckBox
                 android:id="@+id/chb_stay_anonymous"
@@ -122,69 +261,7 @@
                 android:layout_marginTop="20dp"
                 android:textColor="@color/colorPrimaryDark"/>
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:padding="20sp">
 
-                <TextView
-                    android:layout_marginLeft="20sp"
-                    android:id="@+id/lbl_priority_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    android:text="Priority: "
-                    android:textColor="@color/colorPrimaryDark"/>
-
-                <TextView
-                    android:id="@+id/lbl_priority_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@id/lbl_priority_text"
-                    android:text="Low"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorPrimaryDark"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toLeftOf="@+id/lbl_timout_type"
-                    android:text="Timeout: "
-                    android:textColor="@color/colorPrimaryDark"/>
-
-                <!--
-                <EditText
-                    android:id="@+id/txt_timeout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/lbl_timout_type"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    />
-                -->
-                <TextView
-                    android:id="@+id/lbl_timout_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:text="3 minutes"
-                    android:textStyle="bold"
-                    android:layout_marginRight="20sp"
-                    android:textColor="@color/colorPrimaryDark"
-                    />
-
-            </android.support.constraint.ConstraintLayout>
 
             <TextView
                 android:id="@+id/lbl_total_docent"

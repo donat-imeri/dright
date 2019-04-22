@@ -35,6 +35,7 @@ public class MyProfileActivity extends AppCompatActivity
     NavigationView navigationView;
     private DatabaseReference db;
     private FirebaseAuth currentUser;
+    Runnable run;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,16 +76,21 @@ public class MyProfileActivity extends AppCompatActivity
 
             }
         });
-
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        handler.removeCallbacks(run);
+        run = new Runnable() {
             @Override
             public void run() {
                 FragmentManager fragmentActivity = getSupportFragmentManager();
                 fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                         , new ProfileFragment()).commit();
+                Log.d("runnable","thirret");
             }
-        },500);
+        };
+
+        handler.postDelayed(run,300);
+
+
 
 
 

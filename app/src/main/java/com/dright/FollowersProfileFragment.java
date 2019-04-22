@@ -40,28 +40,27 @@ public class FollowersProfileFragment extends Fragment {
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        String follower = ds.getKey().toString();
+                        db = FirebaseDatabase.getInstance().getReference("Users").child(follower);
+                        db.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                fullname = dataSnapshot.child("name").getValue().toString();
+                                ProfileModel profileModel = new ProfileModel(fullname, hash);
+                                mFollowers.add(profileModel);
+                                Log.d("modeli", "sa");
+                            }
 
-                for(DataSnapshot ds : dataSnapshot.getChildren())
-                {
-                    String follower = ds.getKey().toString();
-                    db= FirebaseDatabase.getInstance().getReference("Users").child(follower);
-                    db.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            fullname = dataSnapshot.child("name").getValue().toString();
-                            ProfileModel profileModel = new ProfileModel(fullname,hash);
-                            mFollowers.add(profileModel);
-                            Log.d("modeli","sa");
-                        }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                        Log.d("follower", follower);
 
-                        }
-                    });
-                    Log.d("follower",follower);
+                    }
 
-                }
 
             }
 

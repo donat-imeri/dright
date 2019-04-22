@@ -33,6 +33,8 @@ public class OtherUsersProfileFragment extends Fragment {
     TextView userFollowing;
     private DatabaseReference db;
     private FirebaseAuth currentUser;
+    String fullname= null;
+    String hash = null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -95,14 +97,15 @@ public class OtherUsersProfileFragment extends Fragment {
         mSubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db= FirebaseDatabase.getInstance().getReference("Users").child(OtherUsersProfile.profilekey);
+                db = FirebaseDatabase.getInstance().getReference("Users").child(OtherUsersProfile.profilekey);
                 mSubscribe.setVisibility(View.INVISIBLE);
                 mSubscribe.setEnabled(false);
                 mUnsubscribe.setVisibility(View.VISIBLE);
                 mUnsubscribe.setEnabled(true);
                 db.child("followers").child(currentUser.getUid()).setValue("Subbed");
-                db= FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
+                db = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
                 db.child("following").child(OtherUsersProfile.profilekey).setValue("followed");
+
 
             }
         });
@@ -117,6 +120,7 @@ public class OtherUsersProfileFragment extends Fragment {
                 db.child("followers").child(currentUser.getUid()).removeValue();
                 db= FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
                 db.child("following").child(OtherUsersProfile.profilekey).removeValue();
+
 
             }
         });

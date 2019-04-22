@@ -10,7 +10,9 @@ public class Dilema {
     private String dilemaAsker;
     private int dilemaPriority;
     private long dilemaTimeOut;
-    private boolean stayAnonymous, dilemaText;
+
+    private boolean stayAnonymous, dilemaText, hasFinished;
+    private long timeCreate;
 
     public Dilema(){
 
@@ -18,7 +20,7 @@ public class Dilema {
 
     public Dilema(String dilemaDescription, List<String> dilemaOptions, List<String> dilemaCategories,
                   String dilemaAsker, int dilemaPriority, long dilemaTimeOut, boolean stayAnonymous,
-                  List<Integer> optionResults, boolean dilemaText) {
+                  List<Integer> optionResults, boolean dilemaText, long timeCreate, boolean hasFinished) {
         this.dilemaDescription = dilemaDescription;
         this.dilemaOptions = dilemaOptions;
         this.dilemaCategories = dilemaCategories;
@@ -28,6 +30,8 @@ public class Dilema {
         this.stayAnonymous = stayAnonymous;
         this.optionsResults=optionResults;
         this.dilemaText=dilemaText;
+        this.timeCreate=timeCreate;
+        this.hasFinished=hasFinished;
 
     }
 
@@ -95,12 +99,24 @@ public class Dilema {
         this.optionsResults = optionsResults;
     }
 
-    public boolean isImageOptions() {
+    public boolean isDilemaText() {
         return dilemaText;
     }
 
-    public void setImageOptions(boolean imageOptions) {
-        this.dilemaText = imageOptions;
+    public boolean isHasFinished() {
+        return hasFinished;
+    }
+
+    public void setHasFinished(boolean hasFinished) {
+        this.hasFinished = hasFinished;
+    }
+
+    public long getTimeCreate() {
+        return timeCreate;
+    }
+
+    public void setTimeCreate(long timeCreate) {
+        this.timeCreate = timeCreate;
     }
 
 

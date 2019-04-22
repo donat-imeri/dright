@@ -244,9 +244,10 @@ public class MyDecisionsTab extends Fragment {
         }
 
 
+        long actualTime=Calendar.getInstance().getTimeInMillis();
         Dilema newDilema=new Dilema(String.valueOf(dilemaDescription.getText()), optionsList,
                 null, auth.getUid(), sbPriority.getProgress(), calculateTimeout(),
-                checkAnonimity(), listOptionResults, checkTextImage());
+                checkAnonimity(), listOptionResults, checkTextImage(), actualTime, false);
 
         DatabaseReference table=fb.getReference("Dilema");
         DatabaseReference newRow=table.push();

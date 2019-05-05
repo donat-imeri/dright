@@ -31,6 +31,8 @@ public class OtherUsersFollowingFragment extends Fragment {
     RecyclerView recyclerView;
     String hash = null;
     String fullname = null;
+    String profilepic = null;
+    String address = null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,7 +52,10 @@ public class OtherUsersFollowingFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             fullname = dataSnapshot.child("name").getValue().toString();
-                            ProfileModel profileModel = new ProfileModel(fullname,hash);
+                            profilepic = dataSnapshot.child("imageURL").getValue().toString();
+                            address = dataSnapshot.child("address").getValue().toString();
+                            hash = dataSnapshot.getKey();
+                            ProfileModel profileModel = new ProfileModel(fullname,profilepic,address,hash);
                             mOtherFollowing.add(profileModel);
                             Log.d("modeli2","sa");
                         }

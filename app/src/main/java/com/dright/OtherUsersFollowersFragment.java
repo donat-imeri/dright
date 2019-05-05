@@ -31,9 +31,11 @@ public class OtherUsersFollowersFragment extends Fragment {
     RecyclerView recyclerView;
     String hash = null;
     String fullname = null;
+    String profilepic = null;
     boolean once = true;
     int count=0;
     int currentcount=0;
+    String address = null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,9 +69,11 @@ public class OtherUsersFollowersFragment extends Fragment {
                        db.addListenerForSingleValueEvent(new ValueEventListener() {
                            @Override
                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                               String name = dataSnapshot.child("name").getValue(String.class);
-                               Log.d("valuevalue", name);
-                               ProfileModel profileModel = new ProfileModel(name, "");
+                               fullname = dataSnapshot.child("name").getValue(String.class);
+                               profilepic = dataSnapshot.child("imageURL").getValue().toString();
+                               address = dataSnapshot.child("address").getValue().toString();
+                               hash = dataSnapshot.getKey();
+                               ProfileModel profileModel = new ProfileModel(fullname,profilepic,address,hash);
                                mOtherFollowers.add(profileModel);
                                recyclerView = ProfileView.findViewById(R.id.other_followers_recycler_view);
                                final RecyclerViewAdapter adapter = new RecyclerViewAdapter(recyclerView.getContext(), mOtherFollowers);
@@ -106,8 +110,6 @@ public class OtherUsersFollowersFragment extends Fragment {
             }
 
         });
-
-
 
 
         return ProfileView;

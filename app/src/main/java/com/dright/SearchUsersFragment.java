@@ -42,10 +42,12 @@ public class SearchUsersFragment extends Fragment {
 
 
         sv = ProfileView.findViewById(R.id.mSearchText);
-        db.addValueEventListener(new ValueEventListener() {
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                mUser.clear();
+                keys.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     String userkey = ds.getKey().toString();
@@ -56,7 +58,9 @@ public class SearchUsersFragment extends Fragment {
                 for (int i = 0; i < keys.size(); i++) {
                     String hash = keys.get(i);
                     String name = dataSnapshot.child(keys.get(i)).child("name").getValue(String.class);
-                    ProfileModel profileModel = new ProfileModel(name, hash);
+                    String profilepic = dataSnapshot.child(keys.get(i)).child("imageURL").getValue(String.class);
+                    String address = dataSnapshot.child(keys.get(i)).child("address").getValue(String.class);
+                    ProfileModel profileModel = new ProfileModel(name,profilepic,address,hash);
                     mUser.add(i,profileModel);
                     Log.d("hash", hash);
                     Log.d("name", name);

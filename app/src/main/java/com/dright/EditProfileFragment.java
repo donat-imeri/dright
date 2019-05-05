@@ -1,5 +1,10 @@
 package com.dright;
 
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -11,16 +16,38 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+
+import id.zelory.compressor.Compressor;
+
+import static android.app.Activity.RESULT_OK;
 
 public class EditProfileFragment extends Fragment {
 
@@ -46,6 +73,19 @@ public class EditProfileFragment extends Fragment {
     private DatabaseReference db;
     private FirebaseAuth currentUser;
 
+    StorageReference storageReference;
+    public static int IMAGE_REQUEST = 1;
+
+    private Uri taskUri;
+    private Uri imageUri;
+    private StorageTask uploadTask;
+    ImageView profilePicture;
+
+    FloatingActionButton fabEditPicture;
+    public String imageUrl;
+    byte[] thumb_byte_data;
+    Bitmap thumb_bitmap;
+    ByteArrayOutputStream baos;
 
     @Nullable
     @Override
@@ -57,7 +97,9 @@ public class EditProfileFragment extends Fragment {
         newaddress = ProfileView.findViewById(R.id.txt_input_address);
         newphone = ProfileView.findViewById(R.id.txt_input_phone);
         newfacebook = ProfileView.findViewById(R.id.txt_input_facebook);
-
+        fabEditPicture = ProfileView.findViewById(R.id.floatingActionButton);
+        storageReference = FirebaseStorage.getInstance().getReference("profile_pic");
+        profilePicture = ProfileView.findViewById(R.id.profile_image);
         tvname = ProfileView.findViewById(R.id.tv_name);
         tvaddress = ProfileView.findViewById(R.id.tv_address);
 
@@ -74,10 +116,14 @@ public class EditProfileFragment extends Fragment {
                 facebookaccount = dataSnapshot.child("facebook").getValue().toString();
                 followers = String.valueOf(dataSnapshot.child("followers").getChildrenCount());
                 following = String.valueOf(dataSnapshot.child("following").getChildrenCount());
+                imageUrl = dataSnapshot.child("imageURL").getValue().toString();
                 tvname.setText(fullname);
                 tvaddress.setText(address);
                 currentfollowers.setText(followers);
                 currentfollowing.setText(following);
+                if(!imageUrl.equals(""))
+                    Picasso.with(getContext()).load(imageUrl).transform(new CircleTransform()).into(profilePicture);
+
 
             }
 
@@ -87,7 +133,12 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-
+        fabEditPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImage();
+            }
+        });
 
 
 
@@ -135,4 +186,104 @@ public class EditProfileFragment extends Fragment {
         return ProfileView;
 
     }
-}
+
+    private void openImage() {
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent,IMAGE_REQUEST);
+    }
+
+    private String getFileExtension(Uri imageUri)
+    {
+        ContentResolver contentResolver = getContext().getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(this.imageUri));
+
+    }
+    private void uploadImage()
+    {
+        final ProgressDialog pd = new ProgressDialog(getContext());
+        pd.setMessage("Uploading");
+        pd.show();
+
+        if(imageUri != null) {
+
+            //getting imageUri and store in file. and compress to bitmap
+                final StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
+                Log.d("insidetry","yep");
+                uploadTask = fileReference.putFile(imageUri);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        if (taskSnapshot.getMetadata() != null) {
+                            if (taskSnapshot.getMetadata().getReference() != null) {
+                                Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();
+                                result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+
+                                            imageUrl = uri.toString();
+                                            Picasso.with(getContext()).load(imageUrl).transform(new CircleTransform()).into(profilePicture);
+                                            db = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
+                                            db.child("imageURL").setValue(imageUrl);
+                                            Log.d("urlurl", imageUrl);
+
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            //taskUri = task.getResult();
+                            //String mUri = String.valueOf(taskUri);
+
+                            db = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put("imageURL", imageUrl);
+                            db.updateChildren(map);
+                            pd.dismiss();
+
+                        } else {
+                            Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                            ;
+
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        ;
+                    }
+                });
+            }
+        else{
+            Toast.makeText(getContext(),"No Image",Toast.LENGTH_SHORT).show();;
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == IMAGE_REQUEST && resultCode == RESULT_OK
+        && data != null && data.getData() != null)
+        {
+            imageUri = data.getData();
+            if(uploadTask != null && uploadTask.isInProgress())
+            {
+                Toast.makeText(getContext(),"Upload in progress",Toast.LENGTH_SHORT).show();;
+            }
+            else
+            {
+                uploadImage();
+                Log.d("urlurl", imageUri.toString());
+            }
+                // Picasso.with(getContext()).load(imageUri).into(profilePicture);
+            }
+        }
+    }
+

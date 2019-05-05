@@ -54,41 +54,14 @@ public class MyProfileActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ProfileFragment.fulltvname = dataSnapshot.child("name").getValue().toString();
-                ProfileFragment.fulltvaddress = dataSnapshot.child("address").getValue().toString();
 
-                ProfileFragment.email = dataSnapshot.child("email").getValue().toString();
-                ProfileFragment.phone = dataSnapshot.child("phone").getValue().toString();
-                ProfileFragment.twitter = dataSnapshot.child("twitter").getValue().toString();
-                ProfileFragment.facebook = dataSnapshot.child("facebook").getValue().toString();
-
-                ProfileFragment.following = String.valueOf(dataSnapshot.child("following").getChildrenCount());
-                ProfileFragment.followers = String.valueOf(dataSnapshot.child("followers").getChildrenCount());
+        FragmentManager fragmentActivity = getSupportFragmentManager();
+        fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
+                , new ProfileFragment()).commit();
+        Log.d("runnable","thirret");
 
 
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        Handler handler = new Handler();
-        handler.removeCallbacks(run);
-        run = new Runnable() {
-            @Override
-            public void run() {
-                FragmentManager fragmentActivity = getSupportFragmentManager();
-                fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
-                        , new ProfileFragment()).commit();
-                Log.d("runnable","thirret");
-            }
-        };
-
-        handler.postDelayed(run,300);
 
 
 
@@ -161,10 +134,46 @@ class ProfileModel {
 
     public String name;
     public String hash;
+    public String image;
+    public String address;
 
-    public ProfileModel(String name, String hash) {
+
+    public ProfileModel(String name, String image , String address, String hash) {
         this.name = name;
         this.hash = hash;
+        this.address = address;
+        this.image = image;
 
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public String getImage() {
+        return image;
     }
 }

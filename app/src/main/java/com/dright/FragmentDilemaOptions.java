@@ -28,7 +28,7 @@ import java.util.List;
 import static android.support.constraint.Constraints.TAG;
 
 
-public class FragmentDilemaOptions extends Fragment  {
+public class FragmentDilemaOptions extends Fragment  implements Serializable{
     private TextView txtPostedBy;
     private RadioGroup radioGroup;
     private EditText txtComment;
@@ -50,7 +50,7 @@ public class FragmentDilemaOptions extends Fragment  {
     public static FragmentDilemaOptions newInstance(Dilema objDilema, boolean checkImage) {
         FragmentDilemaOptions fragment = new FragmentDilemaOptions();
         Bundle args = new Bundle();
-        args.putParcelable("objectDilema", objDilema);
+        args.putSerializable("objectDilema", objDilema);
         args.putBoolean("checkImage",checkImage);
         fragment.setArguments(args);
         return fragment;
@@ -60,7 +60,7 @@ public class FragmentDilemaOptions extends Fragment  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        objDilema = (Dilema) getArguments().getParcelable("objectDilema");
+        objDilema = (Dilema) getArguments().getSerializable("objectDilema");
         checkImage = getArguments().getBoolean("checkImage");
 
     }

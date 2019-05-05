@@ -38,13 +38,14 @@
             android:textSize="14dp"
             android:id="@+id/txtPostedBy"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_below="@+id/txtTitle"
-            android:layout_marginTop="10dp"
-            android:id="@+id/insideRelative"
-            android:background="#3797CF"
+            android:id="@+id/insideLinear"
+            android:layout_marginTop="20dp"
+
             >
             <RadioGroup
                 android:layout_width="match_parent"
@@ -53,13 +54,13 @@
 
             </RadioGroup>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Write a comment"
-            android:layout_below="@+id/insideRelative"
+            android:layout_below="@+id/insideLinear"
             android:layout_marginTop="10dp"
             android:padding="10dp"
             android:id="@+id/txtComment"/>

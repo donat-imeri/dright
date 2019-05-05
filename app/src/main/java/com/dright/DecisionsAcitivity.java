@@ -94,7 +94,8 @@ public class DecisionsAcitivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            openProfileActivity();
+            Intent helpIntent=new Intent(DecisionsAcitivity.this, HelpItemListActivity.class);
+            startActivity(helpIntent);
         }
         else if(id==R.id.action_signout){
             FirebaseAuth.getInstance().signOut();

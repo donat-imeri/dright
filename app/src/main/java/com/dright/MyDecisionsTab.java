@@ -13,8 +13,11 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.Layout;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +63,7 @@ public class MyDecisionsTab extends Fragment {
     private EditText dilemaDescription;
     private SeekBar sbPriority;
     private Switch isImageOption;
-    private TextView lblDocents, txtPriority, lblError;
+    private TextView lblDocents, txtPriority, lblError, lblError2, lblError3;
     private NumberPicker pckMinutes, pckHours, pckDays;
     private int optionCounter;
     private boolean reseted;
@@ -97,9 +100,12 @@ public class MyDecisionsTab extends Fragment {
         lblDocents = (TextView) activity.findViewById(R.id.lbl_total_docent);
         txtPriority = (TextView) activity.findViewById(R.id.lbl_priority_value);
         lblError = (TextView) activity.findViewById(R.id.lbl_dilema_error);
+        lblError2 = (TextView) activity.findViewById(R.id.lbl_dilema_error2);
+        lblError3 = (TextView) activity.findViewById(R.id.lbl_dilema_error3);
         pckMinutes = (NumberPicker) activity.findViewById(R.id.pick_minutes);
         pckMinutes.setMinValue(0);
         pckMinutes.setMaxValue(59);
+        pckMinutes.setValue(30);
         pckHours = (NumberPicker) activity.findViewById(R.id.pick_hours);
         pckHours.setMinValue(0);
         pckHours.setMaxValue(23);
@@ -136,6 +142,33 @@ public class MyDecisionsTab extends Fragment {
         });
 
 
+        //Dilema not described
+        dilemaDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (dilemaValid(dilemaDescription.getText().toString())){
+                    btnSubmit.setEnabled(true);
+                    btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+                    lblError3.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    btnSubmit.setEnabled(false);
+                    btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRed)));
+                    lblError3.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         sbPriority.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -163,6 +196,12 @@ public class MyDecisionsTab extends Fragment {
 
             }
         });
+
+        pckMinutes.setOnValueChangedListener(new TimeoutChangeListener());
+        pckHours.setOnValueChangedListener(new TimeoutChangeListener());
+        pckDays.setOnValueChangedListener(new TimeoutChangeListener());
+
+
 
 
         //Image or text switch listener
@@ -303,8 +342,12 @@ public class MyDecisionsTab extends Fragment {
         int hours=pckHours.getValue();
         int minutes=pckMinutes.getValue();
 
-        int totalTimeInMinutes=((hours*60)*days)+(hours*60)+minutes;
+        int totalTimeInMinutes=((24*60)*days)+(hours*60)+minutes;
         return totalTimeInMinutes;
+    }
+    private boolean timeoutValid(long timeMilis){
+        if (timeMilis>=3) return true;
+        else return false;
     }
     private boolean checkTextImage(){
         return isImageOption.isChecked();
@@ -339,6 +382,28 @@ public class MyDecisionsTab extends Fragment {
             optionsList.add(String.valueOf(option.getText()));
         }
         return optionsList;
+    }
+    private boolean dilemaValid(String dilemaText){
+        if (dilemaText.length()>5){
+            return true;
+        }
+        else return false;
+    }
+
+    class TimeoutChangeListener implements NumberPicker.OnValueChangeListener{
+
+        @Override
+        public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+            if (timeoutValid(calculateTimeout())){
+                lblError2.setVisibility(View.INVISIBLE);
+                btnSubmit.setEnabled(true);
+                btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));            }
+            else{
+                lblError2.setVisibility(View.VISIBLE);
+                btnSubmit.setEnabled(false);
+                btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRed)));
+            }
+        }
     }
 
 }

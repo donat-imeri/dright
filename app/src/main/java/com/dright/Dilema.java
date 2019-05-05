@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.io.Serializable;
 import java.util.List;
 
-public class Dilema implements Parcelable {
+public class Dilema implements Serializable {
     private String dilemaDescription;
     private List<String> dilemaOptions;
     private List<String> dilemaCategories;
@@ -52,17 +52,7 @@ public class Dilema implements Parcelable {
         timeCreate = in.readLong();
     }
 
-    public static final Creator<Dilema> CREATOR = new Creator<Dilema>() {
-        @Override
-        public Dilema createFromParcel(Parcel in) {
-            return new Dilema(in);
-        }
 
-        @Override
-        public Dilema[] newArray(int size) {
-            return new Dilema[size];
-        }
-    };
 
     public String getDilemaDescription() {
         return dilemaDescription;
@@ -149,32 +139,5 @@ public class Dilema implements Parcelable {
     }
 
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
-        /*private String dilemaDescription;
-    private List<String> dilemaOptions;
-    private List<String> dilemaCategories;
-    private List<Integer> optionsResults;
-    private String dilemaAsker;
-    private int dilemaPriority;
-    private long dilemaTimeOut;
-
-    private boolean stayAnonymous, dilemaText, hasFinished;
-    private long timeCreate;*/
-        dest.writeString(dilemaDescription);
-        dest.writeList(dilemaOptions);
-        dest.writeList(dilemaCategories);
-        dest.writeList(optionsResults);
-        dest.writeString(dilemaAsker);
-        dest.writeInt(dilemaPriority);
-        dest.writeLong(dilemaTimeOut);
-        dest.writeLong(timeCreate);
-
-    }
 }

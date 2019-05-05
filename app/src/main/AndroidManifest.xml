@@ -12,6 +12,9 @@
         android:roundIcon="@mipmap/new_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".SlideUpActivity">
+
+        </activity>
         <activity
             android:name=".MyProfileActivity"
             android:label="@string/title_activity_my_profile"

@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dright">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,25 +15,50 @@
         <activity
             android:name=".MyProfileActivity"
             android:label="@string/title_activity_my_profile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".LoginActivity" android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".SignUpActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
         <activity
+            android:name=".SignUpActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".DecisionsAcitivity"
             android:label="@string/title_activity_decisions_acitivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".OtherUsersProfile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HelpItemListActivity"
+            android:label="@string/title_helpitem_list"
+            android:parentActivityName=".DecisionsAcitivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dright.DecisionsAcitivity" />
+        </activity>
+        <activity
+            android:name=".HelpItemDetailActivity"
+            android:label="@string/title_helpitem_detail"
+            android:parentActivityName=".HelpItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dright.HelpItemListActivity" />
+        </activity>
+        <activity
+            android:name=".DecisionDetailsActivity"
+            android:label="@string/title_activity_decision_details"
+            android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
     </application>
 

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".DecisionDetailsActivity"
+    tools:showIn="@layout/activity_decision_details"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_dilema_description_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_border_edittext"
+            android:textColor="@color/colorWhite"
+            android:text="This is some text"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginRight="20sp"
+            android:padding="20dp"/>
+
+        <LinearLayout
+            android:id="@+id/layout_option_results"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginRight="20sp"
+            android:layout_marginLeft="20sp">
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_spin_wheel_arrow"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_marginTop="15sp"
+            android:layout_gravity="center"
+            android:src="@drawable/down_arrow"
+            android:visibility="invisible"/>
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/graph_results"
+            android:layout_width="300sp"
+            android:layout_height="300sp"
+            android:layout_gravity="center"
+            >
+
+        </com.github.mikephil.charting.charts.PieChart>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Not feeling satisfied with the results?!"
+            android:layout_gravity="center"
+            android:layout_marginTop="30sp"
+            android:layout_marginBottom="10sp"/>
+
+        <Button
+            android:id="@+id/btn_spin_the_wheel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Spin the wheel"
+            android:paddingLeft="30sp"
+            android:paddingRight="30sp"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/colorWhite"/>
+
+    </LinearLayout>
+
+
+
+
+
+</android.support.v4.widget.NestedScrollView>

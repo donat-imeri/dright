@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layout_text_option_results"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@drawable/rounded_border_option"
+        android:backgroundTint="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20sp"
+        >
+
+    <TextView
+        android:id="@+id/txt_option_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="An option with some text in it. Could be even longer than this or maybe even more"
+        android:padding="15sp"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/img_option_result"
+            android:src="@drawable/add_image"
+            android:layout_height="200sp"
+            android:layout_width="200sp"
+            app:layout_constraintTop_toBottomOf="@id/txt_option_description"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_margin="10sp" />
+
+    <SeekBar
+        android:id="@+id/skb_text_option_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/img_option_result"
+        android:layout_marginRight="100sp"
+        android:layout_marginLeft="20sp"
+        />
+    <TextView
+        android:id="@+id/txt_text_option_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_option_result"
+        android:text="50%"
+        android:layout_marginRight="50sp"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>

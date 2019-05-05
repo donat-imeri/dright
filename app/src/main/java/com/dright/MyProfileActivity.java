@@ -1,30 +1,19 @@
 package com.dright;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class MyProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -59,13 +48,6 @@ public class MyProfileActivity extends AppCompatActivity
         fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                 , new ProfileFragment()).commit();
         Log.d("runnable","thirret");
-
-
-
-
-
-
-
 
     }
 
@@ -120,7 +102,7 @@ public class MyProfileActivity extends AppCompatActivity
             fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                     , new FollowingProfileFragment()).commit();
         }
-        else{
+        else {
             fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                     , new SearchUsersFragment()).commit();
         }

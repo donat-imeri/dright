@@ -22,7 +22,6 @@
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
         <activity
             android:name=".SignUpActivity"
@@ -30,7 +29,9 @@
         <activity
             android:name=".DecisionsAcitivity"
             android:label="@string/title_activity_decisions_acitivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity
             android:name=".OtherUsersProfile"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -39,11 +40,6 @@
             android:label="@string/title_helpitem_list"
             android:parentActivityName=".DecisionsAcitivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dright.DecisionsAcitivity" />
@@ -61,7 +57,11 @@
             android:name=".DecisionDetailsActivity"
             android:label="@string/title_activity_decision_details"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

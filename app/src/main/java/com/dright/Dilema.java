@@ -1,8 +1,12 @@
 package com.dright;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class Dilema {
+public class Dilema implements Parcelable {
     private String dilemaDescription;
     private List<String> dilemaOptions;
     private List<String> dilemaCategories;
@@ -34,6 +38,31 @@ public class Dilema {
         this.hasFinished=hasFinished;
 
     }
+
+    protected Dilema(Parcel in) {
+        dilemaDescription = in.readString();
+        dilemaOptions = in.createStringArrayList();
+        dilemaCategories = in.createStringArrayList();
+        dilemaAsker = in.readString();
+        dilemaPriority = in.readInt();
+        dilemaTimeOut = in.readLong();
+        stayAnonymous = in.readByte() != 0;
+        dilemaText = in.readByte() != 0;
+        hasFinished = in.readByte() != 0;
+        timeCreate = in.readLong();
+    }
+
+    public static final Creator<Dilema> CREATOR = new Creator<Dilema>() {
+        @Override
+        public Dilema createFromParcel(Parcel in) {
+            return new Dilema(in);
+        }
+
+        @Override
+        public Dilema[] newArray(int size) {
+            return new Dilema[size];
+        }
+    };
 
     public String getDilemaDescription() {
         return dilemaDescription;
@@ -120,4 +149,32 @@ public class Dilema {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        /*private String dilemaDescription;
+    private List<String> dilemaOptions;
+    private List<String> dilemaCategories;
+    private List<Integer> optionsResults;
+    private String dilemaAsker;
+    private int dilemaPriority;
+    private long dilemaTimeOut;
+
+    private boolean stayAnonymous, dilemaText, hasFinished;
+    private long timeCreate;*/
+        dest.writeString(dilemaDescription);
+        dest.writeList(dilemaOptions);
+        dest.writeList(dilemaCategories);
+        dest.writeList(optionsResults);
+        dest.writeString(dilemaAsker);
+        dest.writeInt(dilemaPriority);
+        dest.writeLong(dilemaTimeOut);
+        dest.writeLong(timeCreate);
+
+    }
 }

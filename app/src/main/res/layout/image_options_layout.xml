@@ -5,6 +5,14 @@
     >
 
     <ImageView
+        android:id="@+id/img_option_1"
+        android:src="@drawable/add_image"
+        android:layout_height="200sp"
+        android:layout_width="200sp"
+        android:layout_margin="10sp"
+        android:scaleType="centerCrop"/>
+
+    <ImageView
         android:id="@+id/icon_remove"
         android:layout_width="20dp"
         android:layout_height="20dp"
@@ -12,11 +20,5 @@
         android:src="@drawable/delete"
         />
 
-    <ImageView
-        android:id="@+id/img_option_1"
-        android:src="@drawable/add_image"
-        android:layout_height="200sp"
-        android:layout_width="200sp"
-        android:layout_margin="10sp"/>
 
 </RelativeLayout>

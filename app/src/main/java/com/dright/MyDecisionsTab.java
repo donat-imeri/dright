@@ -260,18 +260,15 @@ public class MyDecisionsTab extends Fragment {
             @Override
             public void onClick(View v) {
                 //Change user docents
+                btnSubmit.setEnabled(false);
                 userDocents.removeDocent(sbPriority.getProgress());
                 userDocentsReference.setValue(userDocents);
 
-                Log.d("Opsion",optionsList.size()+"");
                 //Fill in the options list
-                if (checkTextImage()){
-                    pushChanges();
-                }
-                else{
+                if (!checkTextImage()){
                     optionsList=listOptions(optionsLayout);
-                    pushChanges();
                 }
+                pushChanges();
 
             }
         });
@@ -289,7 +286,7 @@ public class MyDecisionsTab extends Fragment {
         long actualTime=Calendar.getInstance().getTimeInMillis();
         Dilema newDilema=new Dilema(String.valueOf(dilemaDescription.getText()), optionsList,
                 null, auth.getUid(), sbPriority.getProgress(), calculateTimeout(),
-                checkAnonimity(), listOptionResults, checkTextImage(), actualTime, false);
+                checkAnonimity(), listOptionResults, !checkTextImage(), actualTime, false);
 
         DatabaseReference table=fb.getReference("Dilema");
         DatabaseReference newRow=table.push();
@@ -298,6 +295,8 @@ public class MyDecisionsTab extends Fragment {
 
         DatabaseReference addDilemaToUser=fb.getReference("Users/"+auth.getUid());
         addDilemaToUser.child("dilemasInProgress").push().setValue(newRow.getKey());
+
+        getActivity().finish();
     }
 
     @Override

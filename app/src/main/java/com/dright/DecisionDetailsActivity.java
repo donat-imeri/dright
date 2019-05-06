@@ -91,6 +91,8 @@ public class DecisionDetailsActivity extends AppCompatActivity {
 
                 layoutOptionResults.removeAllViews();
                 List<PieEntry> entries = new ArrayList<>();
+                List<Integer> colorsArray=new ArrayList<>();
+
                 for (int i=0;i<myDilema.getDilemaOptions().size(); i++) {
                     View textOptionResult= getLayoutInflater().inflate(R.layout.text_options_result_layout,null);
                     TextView optionTextResult=textOptionResult.findViewById(R.id.txt_text_option_result);
@@ -101,34 +103,37 @@ public class DecisionDetailsActivity extends AppCompatActivity {
                     optionTextResult.setText(myDilema.getOptionsResults().get(i)+"%");
                     optionTextResultSeekBar.setProgress(myDilema.getOptionsResults().get(i));
 
-                    Log.d("Aaaa", "ketu eshte"+"aaaa");
-
-                    if(!myDilema.isDilemaText()){
+                    if(myDilema.isDilemaText()){
                         optionText.setText(myDilema.getDilemaOptions().get(i));
                         optionImage.setVisibility(View.GONE);
                     }
                     else{
                         String s=myDilema.getDilemaOptions().get(i);
-                        Log.d("Shperhaj","aaaa"+s);
                         Glide.with(optionText.getContext()).
-                        load(s).into(optionImage);
+                        load(s).override(400,400).
+                                into(optionImage);
                         optionText.setVisibility(View.GONE);
                     }
 
                     if (max==myDilema.getOptionsResults().get(i)){
                         ConstraintLayout cl=textOptionResult.findViewById(R.id.layout_text_option_results);
-                        cl.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
+                        cl.setBackground(getResources().getDrawable(R.drawable.rounded_border_green));
+                        entries.add(new PieEntry((float)myDilema.getOptionsResults().get(i), "Most voted"));
+                        colorsArray.add(i, getResources().getColor(R.color.colorGreen));
+                    }
+                    else{
+                        entries.add(new PieEntry((float)myDilema.getOptionsResults().get(i), "Option "+(i+1)));
+                        colorsArray.add(i, getResources().getIntArray(R.array.piechartcolors)[i]);
                     }
 
                     layoutOptionResults.addView(textOptionResult);
 
-                    entries.add(new PieEntry((float)myDilema.getOptionsResults().get(i), myDilema.getDilemaOptions().get(i)));
                 }
                 PieDataSet set = new PieDataSet(entries, "");
                 set.setSliceSpace(3);
                 set.setSelectionShift(5);
 
-                set.setColors(new int[] { R.color.colorWhite, R.color.colorPrimary, R.color.colorRed, R.color.colorRed }, getBaseContext());
+                set.setColors(colorsArray);
                 PieData data = new PieData(set);
 
                 graphResults.setData(data);

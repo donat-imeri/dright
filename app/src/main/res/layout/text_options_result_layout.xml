@@ -7,7 +7,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_text_option_results"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@drawable/rounded_border_option"
+        android:background="@drawable/rounded_border_no_color"
         android:backgroundTint="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,12 +25,13 @@
         <ImageView
             android:id="@+id/img_option_result"
             android:src="@drawable/add_image"
-            android:layout_height="200sp"
-            android:layout_width="200sp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             app:layout_constraintTop_toBottomOf="@id/txt_option_description"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_margin="10sp" />
+            android:layout_margin="10sp"
+            android:scaleType="centerCrop"/>
 
     <SeekBar
         android:id="@+id/skb_text_option_result"

@@ -78,7 +78,7 @@ public class DecisionDetailsActivity extends AppCompatActivity {
         //intent from which this is called sends the key to access this dilema
         //Now accessing manualy a dilema
 
-        String dilemaKey="-Le7e_QNK8j_WRA9eYPS";
+        String dilemaKey="-LeBHskAh6I1vEXuCTAO";
         dilemaRef=fb.getReference("Dilema/"+dilemaKey);
 
         dilemaRef.addValueEventListener(new ValueEventListener() {
@@ -98,11 +98,6 @@ public class DecisionDetailsActivity extends AppCompatActivity {
                     TextView optionText=textOptionResult.findViewById(R.id.txt_option_description);
                     ImageView optionImage=textOptionResult.findViewById(R.id.img_option_result);
 
-
-                    if (max==myDilema.getOptionsResults().get(i)){
-                        ConstraintLayout cl=textOptionResult.findViewById(R.id.layout_text_option_results);
-                        cl.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
-                    }
                     optionTextResult.setText(myDilema.getOptionsResults().get(i)+"%");
                     optionTextResultSeekBar.setProgress(myDilema.getOptionsResults().get(i));
 
@@ -120,6 +115,10 @@ public class DecisionDetailsActivity extends AppCompatActivity {
                         optionText.setVisibility(View.GONE);
                     }
 
+                    if (max==myDilema.getOptionsResults().get(i)){
+                        ConstraintLayout cl=textOptionResult.findViewById(R.id.layout_text_option_results);
+                        cl.setBackground(getResources().getDrawable(R.drawable.rounded_border_edittext));
+                    }
 
                     layoutOptionResults.addView(textOptionResult);
 

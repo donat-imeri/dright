@@ -37,7 +37,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -310,14 +313,31 @@ public class MyDecisionsTab extends Fragment {
                 imageAdapter.notifyDataSetChanged();
 
                 //Add image to storage
-                StorageReference newImage=imageRef.child(imageData.getLastPathSegment()+auth.getUid());
-                newImage.putFile(imageData).addOnSuccessListener(MyDecisionsTab.this.getActivity(), new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                final StorageReference newImage=imageRef.child(imageData.getLastPathSegment()+auth.getUid());
+                newImage.putFile(imageData).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Uri newImageStored=taskSnapshot.getUploadSessionUri();
-                        optionsList.add(newImageStored.toString());
-                        btnSubmit.setEnabled(true);
-                        btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+
+                        // Continue with the task to get the download URL
+                        return newImage.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
+
+                            optionsList.add(downloadUri.toString());
+                            btnSubmit.setEnabled(true);
+                            btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+
+                        } else {
+                            // Handle failures
+                            // ...
+                        }
                     }
                 });
             }

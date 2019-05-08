@@ -113,5 +113,6 @@ public class SignUpActivity extends AppCompatActivity {
         newUser.child("decisionInProgess");
         newUser.child("decisionsMade");
 
+        newUser.child("imageURL").setValue("");
     }
 }

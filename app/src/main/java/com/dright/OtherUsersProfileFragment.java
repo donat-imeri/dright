@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class OtherUsersProfileFragment extends Fragment {
     View ProfileView;
@@ -31,14 +33,17 @@ public class OtherUsersProfileFragment extends Fragment {
     TextView userPhone;
     TextView userFollowers;
     TextView userFollowing;
+    ImageView profilePicture;
     private DatabaseReference db;
     private FirebaseAuth currentUser;
+    String fullname= null;
+    String hash = null;
+    public String imageUrl;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.other_profile,container,false);
         currentUser = FirebaseAuth.getInstance();
-        db= FirebaseDatabase.getInstance().getReference("Users").child(OtherUsersProfile.profilekey);
         mSubscribe = ProfileView.findViewById(R.id.btn_follow);
         mUnsubscribe = ProfileView.findViewById(R.id.btn_unfollow);
 
@@ -50,7 +55,7 @@ public class OtherUsersProfileFragment extends Fragment {
         userEmail = ProfileView.findViewById(R.id.user_current_email);
         userFollowers = ProfileView.findViewById(R.id.user_followers);
         userFollowing = ProfileView.findViewById(R.id.user_following);
-
+        profilePicture = ProfileView.findViewById(R.id.other_users_profile);
 
 
 
@@ -58,7 +63,7 @@ public class OtherUsersProfileFragment extends Fragment {
         mUnsubscribe.setEnabled(false);
 
         Log.d("lol3", OtherUsersProfile.profilekey);
-
+        db= FirebaseDatabase.getInstance().getReference("Users").child(OtherUsersProfile.profilekey);
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -70,6 +75,11 @@ public class OtherUsersProfileFragment extends Fragment {
                 userEmail.setText(dataSnapshot.child("email").getValue().toString());
                 userFollowing.setText(String.valueOf(dataSnapshot.child("following").getChildrenCount()));
                 userFollowers.setText(String.valueOf(dataSnapshot.child("followers").getChildrenCount()));
+                imageUrl = dataSnapshot.child("imageURL").getValue().toString();
+                if(!imageUrl.equals(""))
+                {
+                    Picasso.with(getContext()).load(imageUrl).transform(new CircleTransform()).into(profilePicture);
+                }
                 if(dataSnapshot.child("followers").hasChild(currentUser.getUid()))
                 {
                     mSubscribe.setEnabled(false);
@@ -95,14 +105,15 @@ public class OtherUsersProfileFragment extends Fragment {
         mSubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db= FirebaseDatabase.getInstance().getReference("Users").child(OtherUsersProfile.profilekey);
+                db = FirebaseDatabase.getInstance().getReference("Users").child(OtherUsersProfile.profilekey);
                 mSubscribe.setVisibility(View.INVISIBLE);
                 mSubscribe.setEnabled(false);
                 mUnsubscribe.setVisibility(View.VISIBLE);
                 mUnsubscribe.setEnabled(true);
                 db.child("followers").child(currentUser.getUid()).setValue("Subbed");
-                db= FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
+                db = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
                 db.child("following").child(OtherUsersProfile.profilekey).setValue("followed");
+
 
             }
         });
@@ -117,6 +128,7 @@ public class OtherUsersProfileFragment extends Fragment {
                 db.child("followers").child(currentUser.getUid()).removeValue();
                 db= FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
                 db.child("following").child(OtherUsersProfile.profilekey).removeValue();
+
 
             }
         });

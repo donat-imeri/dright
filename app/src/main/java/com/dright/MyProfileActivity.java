@@ -1,30 +1,19 @@
 package com.dright;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class MyProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,6 +24,7 @@ public class MyProfileActivity extends AppCompatActivity
     NavigationView navigationView;
     private DatabaseReference db;
     private FirebaseAuth currentUser;
+    Runnable run;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,40 +43,11 @@ public class MyProfileActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ProfileFragment.fulltvname = dataSnapshot.child("name").getValue().toString();
-                ProfileFragment.fulltvaddress = dataSnapshot.child("address").getValue().toString();
 
-                ProfileFragment.email = dataSnapshot.child("email").getValue().toString();
-                ProfileFragment.phone = dataSnapshot.child("phone").getValue().toString();
-                ProfileFragment.twitter = dataSnapshot.child("twitter").getValue().toString();
-                ProfileFragment.facebook = dataSnapshot.child("facebook").getValue().toString();
-
-                ProfileFragment.following = String.valueOf(dataSnapshot.child("following").getChildrenCount());
-                ProfileFragment.followers = String.valueOf(dataSnapshot.child("followers").getChildrenCount());
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                FragmentManager fragmentActivity = getSupportFragmentManager();
-                fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
-                        , new ProfileFragment()).commit();
-            }
-        },500);
-
-
+        FragmentManager fragmentActivity = getSupportFragmentManager();
+        fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
+                , new ProfileFragment()).commit();
+        Log.d("runnable","thirret");
 
     }
 
@@ -141,7 +102,7 @@ public class MyProfileActivity extends AppCompatActivity
             fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                     , new FollowingProfileFragment()).commit();
         }
-        else{
+        else {
             fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                     , new SearchUsersFragment()).commit();
         }
@@ -155,10 +116,46 @@ class ProfileModel {
 
     public String name;
     public String hash;
+    public String image;
+    public String address;
 
-    public ProfileModel(String name, String hash) {
+
+    public ProfileModel(String name, String image , String address, String hash) {
         this.name = name;
         this.hash = hash;
+        this.address = address;
+        this.image = image;
 
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public String getImage() {
+        return image;
     }
 }

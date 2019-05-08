@@ -3,7 +3,6 @@ package com.dright.dummy;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.bumptech.glide.load.engine.Resource;
 import com.dright.R;
 
 import java.util.ArrayList;

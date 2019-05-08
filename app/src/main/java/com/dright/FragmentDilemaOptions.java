@@ -78,7 +78,6 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
 
-        relativeLayout = ProfileView.findViewById(R.id.relativeLayout);
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
         txtComment = ProfileView.findViewById(R.id.txtComment);
         txtTitle = ProfileView.findViewById(R.id.txtTitle);
@@ -260,7 +259,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
 
     private void addTextViews(Dilema objDil){
             for(int i=0; i<objDil.getDilemaOptions().size();i++){
-                final TextView tv = new TextView(getContext());
+                final TextView tv = new TextView(ProfileView.getContext());
                 tv.setLayoutParams(lparams);
                 tv.setText(objDil.getDilemaOptions().get(i));
                 tv.setId(i);
@@ -271,7 +270,6 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
                     public void onClick(View v) {
 
                         updateOptionsResult(tv.getText().toString());
-                        relativeLayout.removeAllViews();
                         showAnswers();
                     }
                 });

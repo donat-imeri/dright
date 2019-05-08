@@ -78,12 +78,12 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         linearLayout = ProfileView.findViewById(R.id.insideLinear);
         objDilemaOptions = objDilema.getDilemaOptions();
         objDilemaOptionsResults = objDilema.getOptionsResults();
-        relativeLayout = ProfileView.findViewById(R.id.relLayout);
+        relativeLayout = ProfileView.findViewById(R.id.rlLay);
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
         txtComment = ProfileView.findViewById(R.id.txtComment);
         txtTitle = ProfileView.findViewById(R.id.txtTitle);
 
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("DilemaVoters");
+        /*DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("DilemaVoters");
         DatabaseReference dbRef1 = dbRef.child(dilemaId);
         allVoters = new ArrayList<>();
         dbRef1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -110,8 +110,8 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
-
+        });*/
+        addStuff();
 
 
 
@@ -254,11 +254,12 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
     private void addTextViews(Dilema objDil){
             for(int i=0; i<objDil.getDilemaOptions().size();i++){
-                final ImageView tv = new ImageView(getContext());
+                final ImageView tv = new ImageView(ProfileView.getContext());
                 tv.setLayoutParams(lparams);
                 Glide.with(getActivity())
                         .load(objDil.getDilemaOptions().get(i))
                         .override(400,300)
+                        .centerCrop()
                         .into(tv);
                 tv.setId(i);
                 tv.setPadding(20,20,20,20);

@@ -61,8 +61,7 @@ public class MyProfileActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, DecisionsAcitivity.class);
-        startActivity(intent);
+        finish();
     }
 
 

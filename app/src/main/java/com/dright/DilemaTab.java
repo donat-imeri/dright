@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,7 +38,7 @@ public class DilemaTab extends Fragment {
     private List<Boolean> listDilemaCheck = new ArrayList<>();
     public static String currUser = "";
     private List<String> listDilemaId = new ArrayList<>();
-    private static List<String> listUserFollowing;
+    private List<String> listUserFollowing;
     private List<String> listDilemaVoters = new ArrayList<>();
 
     private List<String> mListDilemaVoters;
@@ -46,6 +47,7 @@ public class DilemaTab extends Fragment {
     private Spinner spinner;
     private ViewPager vpPager;
     private DatabaseReference mDatabase;
+    private FirebaseAuth auth;
     private static boolean check = false;
     private String[] itemsCategory = {"All", "Food","Sport", "Clothes"};
     @Nullable
@@ -64,11 +66,12 @@ public class DilemaTab extends Fragment {
         vpPager = (ViewPager) activity.findViewById(R.id.vpPager);
         spinner = activity.findViewById(R.id.spinner);
 
+        auth=FirebaseAuth.getInstance();
+
         spinner.setAdapter(new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 android.R.layout.simple_spinner_item, itemsCategory));
-        currUser = "2JwEcHmsESfJXHBMJsfRBuj4raU2";
+        currUser = auth.getUid();
         readUserFollowing();
-        hasVoted();
 
 
 
@@ -134,13 +137,14 @@ public class DilemaTab extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
         DatabaseReference mDatabase1 = mDatabase.child(currUser);
         DatabaseReference mDatabase2 = mDatabase1.child("following");
-        mDatabase2.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
 
                     listUserFollowing.add(ds.getKey());
                 }
+                hasVoted(listUserFollowing);
             }
 
             @Override
@@ -149,10 +153,10 @@ public class DilemaTab extends Fragment {
             }
         });
     }
-    private void hasVoted(){
+    private void hasVoted(final List<String> userFollowing){
         final List<String> voters = new ArrayList<>();
         DatabaseReference mDb1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-        mDb1.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDb1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
@@ -161,7 +165,7 @@ public class DilemaTab extends Fragment {
                     }
                 }
 
-                readFromDb(voters);
+                readFromDb(voters,userFollowing);
             }
 
             @Override
@@ -170,7 +174,7 @@ public class DilemaTab extends Fragment {
             }
         });
     }
-    private void readFromDb(final List<String> votedDilema){
+    private void readFromDb(final List<String> votedDilema, final List<String> userFollowing){
 
 
         Log.d(TAG, "readFromDatabase: inside ");

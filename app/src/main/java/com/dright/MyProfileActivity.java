@@ -1,5 +1,6 @@
 package com.dright;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -49,17 +50,19 @@ public class MyProfileActivity extends AppCompatActivity
                 , new ProfileFragment()).commit();
         Log.d("runnable","thirret");
 
+
+
+
+
+
+
+
     }
 
     @Override
     public void onBackPressed() {
-        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //if (drawer.isDrawerOpen(GravityCompat.START)) {
-          //  drawer.closeDrawer(GravityCompat.START);
-        //} else {
-          //  super.onBackPressed();
-        //}
-        setContentView(R.layout.activity_my_profile);
+        Intent intent = new Intent(this, DecisionsAcitivity.class);
+        startActivity(intent);
     }
 
 
@@ -102,9 +105,13 @@ public class MyProfileActivity extends AppCompatActivity
             fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                     , new FollowingProfileFragment()).commit();
         }
-        else {
+        else if(id == R.id.nav_search_profiles){
             fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
                     , new SearchUsersFragment()).commit();
+        }
+        else{
+            fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
+                    , new DilemmasinProgressFragment()).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -112,6 +119,7 @@ public class MyProfileActivity extends AppCompatActivity
         return true;
     }
 }
+
 class ProfileModel {
 
     public String name;
@@ -157,5 +165,52 @@ class ProfileModel {
 
     public String getImage() {
         return image;
+    }
+}
+
+class DilemmaModel
+{
+    public String description;
+    public String commentNumber;
+    public String timeLeft;
+    public String hash;
+
+    public DilemmaModel(String description, String commentNumber, String timeLeft, String hash) {
+        this.description = description;
+        this.commentNumber = commentNumber;
+        this.timeLeft = timeLeft;
+        this.hash = hash;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getCommentNumber() {
+        return commentNumber;
+    }
+
+    public String getTimeLeft() {
+        return timeLeft;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCommentNumber(String commentNumber) {
+        this.commentNumber = commentNumber;
+    }
+
+    public void setTimeLeft(String timeLeft) {
+        this.timeLeft = timeLeft;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 }

@@ -1,13 +1,8 @@
 package com.dright;
 
-import android.animation.Animator;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.method.Touch;
-import android.text.style.ClickableSpan;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -84,3 +79,54 @@ public class SlideUpActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
+class CommentsModel {
+
+    public String name;
+    public String hash;
+    public String image;
+    public String comment;
+
+
+    public CommentsModel(String name, String image , String comment, String hash) {
+        this.name = name;
+        this.image = image;
+        this.comment = comment;
+        this.hash = hash;
+
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+}
+
+

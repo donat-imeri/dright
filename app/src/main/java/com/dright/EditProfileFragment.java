@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,7 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Continuation;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,16 +36,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-
-import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -121,8 +114,8 @@ public class EditProfileFragment extends Fragment {
                 tvaddress.setText(address);
                 currentfollowers.setText(followers);
                 currentfollowing.setText(following);
-                if(!imageUrl.equals(""))
-                    Picasso.with(getContext()).load(imageUrl).transform(new CircleTransform()).into(profilePicture);
+                if(!imageUrl.equals(""));
+                    Glide.with(ProfileView.getContext()).load(imageUrl).apply(RequestOptions.circleCropTransform()).into(profilePicture);
 
 
             }
@@ -200,7 +193,7 @@ public class EditProfileFragment extends Fragment {
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(this.imageUri));
 
     }
-    private void uploadImage()
+    private void uploadImage(Bitmap bmp)
     {
         final ProgressDialog pd = new ProgressDialog(getContext());
         pd.setMessage("Uploading");
@@ -208,10 +201,14 @@ public class EditProfileFragment extends Fragment {
 
         if(imageUri != null) {
 
-            //getting imageUri and store in file. and compress to bitmap
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+                byte[] data = byteArrayOutputStream.toByteArray();
+                //getting imageUri and store in file. and compress to bitmap
                 final StorageReference fileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
                 Log.d("insidetry","yep");
-                uploadTask = fileReference.putFile(imageUri);
+
+                uploadTask = fileReference.putBytes(data);
                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -223,7 +220,7 @@ public class EditProfileFragment extends Fragment {
                                     public void onSuccess(Uri uri) {
 
                                             imageUrl = uri.toString();
-                                            Picasso.with(getContext()).load(imageUrl).transform(new CircleTransform()).into(profilePicture);
+                                            Glide.with(getContext()).load(imageUrl).apply(RequestOptions.circleCropTransform().fitCenter().override(100,100)).into(profilePicture);
                                             db = FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid());
                                             db.child("imageURL").setValue(imageUrl);
                                             Log.d("urlurl", imageUrl);
@@ -279,7 +276,8 @@ public class EditProfileFragment extends Fragment {
             }
             else
             {
-                uploadImage();
+                Bitmap bmp = ImagePicker.getImageFromResult(ProfileView.getContext(), resultCode, data);
+                uploadImage(bmp);
                 Log.d("urlurl", imageUri.toString());
             }
                 // Picasso.with(getContext()).load(imageUri).into(profilePicture);

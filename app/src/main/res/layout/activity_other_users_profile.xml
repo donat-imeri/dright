@@ -48,7 +48,12 @@
                 android:id="@+id/tab_following"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Following" />
+                android:text="Follow" />
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_dilemmas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Decisions" />
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>

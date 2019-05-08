@@ -1,11 +1,7 @@
 package com.dright;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,9 +13,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -66,11 +62,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         }
         else {
-            Picasso.with(holder.ProfileView.getContext()).load(profileModel.image).transform(new CircleTransform())
-                    .into((ImageView) holder.ProfileView.findViewById(R.id.user_profile_image));
+            Glide.with(holder.ProfileView.getContext()).load(profileModel.image).apply(RequestOptions.circleCropTransform()).
+                    into((ImageView) holder.ProfileView.findViewById(R.id.user_profile_image));
+
         }
         holder.ProfileView.findViewById(R.id.txt_user_hash).setVisibility(View.INVISIBLE);
-        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+        holder.parentLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(ProfileFragment.currentUser.getUid().equals(((TextView) holder.ProfileView.findViewById(R.id.txt_user_hash)).getText().toString())) {
@@ -109,7 +106,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
 
         private View ProfileView;
 

@@ -24,6 +24,10 @@
             android:id="@+id/nav_search_profiles"
             android:icon="@drawable/ic_menu_search"
             android:title="Search Users" />
+        <item
+            android:id="@+id/nav_dilemas_progress"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Dilemmas in Progress" />
 
     </group>
 

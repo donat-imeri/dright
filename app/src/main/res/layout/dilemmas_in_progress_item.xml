@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/dilemma_in_progress_layout"
+    android:paddingBottom="15dp">
+
+
+    <TextView
+        android:text="Dilemma 1 Description"
+        android:id="@+id/dilemma_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:layout_margin="10dp"
+        android:textColor="@color/colorBlack"/>
+
+
+    <TextView
+        android:text="5"
+        android:id="@+id/dilemma_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:layout_below="@+id/dilemma_description"
+        android:layout_toRightOf="@+id/dilemma_time_image"
+        android:layout_marginLeft="5dp"
+        />
+
+    <TextView
+        android:id="@+id/dilemma_text"
+        android:text="minutes left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:layout_below="@+id/dilemma_description"
+        android:layout_toRightOf="@+id/dilemma_time"
+        android:layout_marginLeft="5dp"
+        />
+
+    <ImageView
+        android:id="@+id/dilemma_time_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_dilemma_time"
+        android:layout_below="@+id/dilemma_description"
+        android:layout_marginLeft="10dp"
+        />
+    <ImageView
+        android:id="@+id/dilemma_comment_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_dilemma_comment"
+        android:layout_below="@+id/dilemma_description"
+        android:layout_toRightOf="@+id/dilemma_text"
+        android:layout_marginLeft="20dp"
+        />
+    <TextView
+        android:id="@+id/dilemma_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dilemma_description"
+        android:layout_toRightOf="@+id/dilemma_comment_image"
+        android:text="50"
+        android:layout_marginLeft="10dp"
+        android:textSize="16dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dilemma_description"
+        android:layout_toRightOf="@+id/dilemma_comment"
+        android:text=" comments"
+        android:textSize="16dp"
+        />
+    <TextView
+        android:id="@+id/dilemma_hash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="top|right"
+        android:visibility="invisible"/>
+
+</RelativeLayout>
+</android.support.v7.widget.CardView>

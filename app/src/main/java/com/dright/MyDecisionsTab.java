@@ -10,27 +10,18 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -39,9 +30,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -296,6 +285,10 @@ public class MyDecisionsTab extends Fragment {
         DatabaseReference addDilemaToUser=fb.getReference("Users/"+auth.getUid());
         addDilemaToUser.child("dilemasInProgress").push().setValue(newRow.getKey());
 
+        DatabaseReference table2=fb.getReference("DilemaVoters/"+newRow.getKey()+"/"+auth.getUid());
+        table2.setValue(true);
+
+
         getActivity().finish();
     }
 
@@ -375,6 +368,13 @@ public class MyDecisionsTab extends Fragment {
        return chbAnonymous.isChecked();
     }
     private void addOption(View layout, String text){
+        //Limit number of options
+        if (!checkTextImage()){
+            optionsList=listOptions(optionsLayout);
+        }
+        if(optionsList.size()>=8){
+            addOption.setVisibility(View.GONE);
+        }
 
         //If image
         if (checkTextImage()){
@@ -425,19 +425,24 @@ public class MyDecisionsTab extends Fragment {
         }
     }
 
-}
+    class RemoveOption implements View.OnClickListener {
+        private int index;
+        LinearLayout layout;
 
-class RemoveOption implements View.OnClickListener {
-    private int index;
-    LinearLayout layout;
+        public RemoveOption(int index, LinearLayout layout){
+            this.index=index;
+            this.layout=layout;
+        }
 
-    public RemoveOption(int index, LinearLayout layout){
-        this.index=index;
-        this.layout=layout;
+        @Override
+        public void onClick(View v) {
+            layout.removeView(layout.findViewById(index));
+            if (optionsList.size()>=8){
+                addOption.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
-    @Override
-    public void onClick(View v) {
-        layout.removeView(layout.findViewById(index));
-    }
 }
+
+

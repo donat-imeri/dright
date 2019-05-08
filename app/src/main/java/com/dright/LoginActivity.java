@@ -75,10 +75,14 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Check if user is signed in (non-null) and update UI accordingly
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        DilemaTab.currUser = currentUser.toString();
-        updateUI(currentUser);
+        if(currentUser!=null){
+            DilemaTab.currUser = currentUser.toString();
+            updateUI(currentUser);
+        }
+
 
     }
 

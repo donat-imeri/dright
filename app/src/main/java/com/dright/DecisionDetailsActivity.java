@@ -1,5 +1,6 @@
 package com.dright;
 
+import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -48,6 +50,7 @@ public class DecisionDetailsActivity extends AppCompatActivity {
     private Button btnSpinTheWheel;
     private TextView txtDilemaDescriptionResult;
     private ImageView imgSpinWheelArrow;
+    private RatingBar ratingBarResult;
     private CollapsingToolbarLayout toolbarTitle;
 
     @Override
@@ -64,6 +67,7 @@ public class DecisionDetailsActivity extends AppCompatActivity {
         btnSpinTheWheel=(Button) findViewById(R.id.btn_spin_the_wheel);
         txtDilemaDescriptionResult=(TextView) findViewById(R.id.txt_dilema_description_result);
         imgSpinWheelArrow=(ImageView) findViewById(R.id.img_spin_wheel_arrow);
+        ratingBarResult=(RatingBar) findViewById(R.id.rating_bar_result);
         graphResults=(PieChart)findViewById(R.id.graph_results);
         graphResults.setUsePercentValues(true);
         graphResults.setDrawHoleEnabled(true);
@@ -77,8 +81,10 @@ public class DecisionDetailsActivity extends AppCompatActivity {
 
         //intent from which this is called sends the key to access this dilema
         //Now accessing manualy a dilema
+        Intent intent=getIntent();
 
-        String dilemaKey="-LeBHskAh6I1vEXuCTAO";
+
+        String dilemaKey=intent.getStringExtra("dilema_hash");
         dilemaRef=fb.getReference("Dilema/"+dilemaKey);
 
         dilemaRef.addValueEventListener(new ValueEventListener() {
@@ -87,6 +93,7 @@ public class DecisionDetailsActivity extends AppCompatActivity {
                 myDilema=dataSnapshot.getValue(Dilema.class);
                 toolbarTitle.setTitle("Decision Details");
                 txtDilemaDescriptionResult.setText(myDilema.getDilemaDescription());
+                ratingBarResult.setRating(3.5f);
                 int max=calculateMax(myDilema.getOptionsResults());
 
                 layoutOptionResults.removeAllViews();

@@ -47,7 +47,7 @@ public class DilemmaRecyclerViewAdapter extends RecyclerView.Adapter<DilemmaRecy
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, DecisionsAcitivity.class); //DecisionDetails... se kam at klasen ende
+                Intent intent = new Intent(mContext, DecisionDetailsActivity.class); //DecisionDetails... se kam at klasen ende
                 intent.putExtra("dilema_hash",((TextView)holder.ProfileView.findViewById(R.id.dilemma_hash)).getText());
                 mContext.startActivity(intent);
             }

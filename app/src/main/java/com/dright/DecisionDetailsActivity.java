@@ -1,5 +1,6 @@
 package com.dright;
 
+import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -80,8 +81,10 @@ public class DecisionDetailsActivity extends AppCompatActivity {
 
         //intent from which this is called sends the key to access this dilema
         //Now accessing manualy a dilema
+        Intent intent=getIntent();
 
-        String dilemaKey="-LeBHskAh6I1vEXuCTAO";
+
+        String dilemaKey=intent.getStringExtra("dilema_hash");
         dilemaRef=fb.getReference("Dilema/"+dilemaKey);
 
         dilemaRef.addValueEventListener(new ValueEventListener() {

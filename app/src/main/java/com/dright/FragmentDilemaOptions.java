@@ -37,6 +37,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
     private EditText txtComment;
     private TextView txtTitle;
     private LinearLayout linearLayout;
+    private RelativeLayout relativeLayout;
     private DatabaseReference mDatabase;
     private static String rdbText = null;
     private String dilemaId;
@@ -77,7 +78,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
 
-
+        relativeLayout = ProfileView.findViewById(R.id.relativeLayout);
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
         txtComment = ProfileView.findViewById(R.id.txtComment);
         txtTitle = ProfileView.findViewById(R.id.txtTitle);
@@ -270,7 +271,8 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
                     public void onClick(View v) {
 
                         updateOptionsResult(tv.getText().toString());
-                        linearLayout.removeAllViews();
+                        relativeLayout.removeAllViews();
+                        showAnswers();
                     }
                 });
                 counter++;
@@ -283,6 +285,9 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
             mDatabase = FirebaseDatabase.getInstance().getReference("Dilema");
             DatabaseReference mDatabase1 = mDatabase.child(dilemaId);
             mDatabase1.child("optionsResults").setValue(optionsResults);
+            if(!txtComment.getText().equals("")){
+                mDatabase1.child("comment").setValue(txtComment.getText().toString());
+            }
             DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
             DatabaseReference db2 = db1.child(dilemaId);
             db2.child(DilemaTab.currUser).setValue("Voted");

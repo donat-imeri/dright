@@ -37,6 +37,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
     private EditText txtComment;
     private TextView txtTitle;
     private LinearLayout linearLayout;
+    private RelativeLayout relativeLayout;
     private String dilemaId;
     private DatabaseReference mDatabase;
     private static String rdbText = null;
@@ -77,7 +78,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         linearLayout = ProfileView.findViewById(R.id.insideLinear);
         objDilemaOptions = objDilema.getDilemaOptions();
         objDilemaOptionsResults = objDilema.getOptionsResults();
-
+        relativeLayout = ProfileView.findViewById(R.id.relativeLayout);
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
         txtComment = ProfileView.findViewById(R.id.txtComment);
         txtTitle = ProfileView.findViewById(R.id.txtTitle);
@@ -268,6 +269,8 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
                         updateOptionsResult(tv.getId());
                         Toast.makeText(getActivity(),"Click in imageVIew with id: "+tv.getId()+", just happened",Toast.LENGTH_LONG).show();
+                        relativeLayout.removeAllViews();
+                        showAnswers();
                     }
 
                 });
@@ -280,10 +283,12 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
             mDatabase = FirebaseDatabase.getInstance().getReference("Dilema");
             DatabaseReference mDatabase1 = mDatabase.child(dilemaId);
             mDatabase1.child("optionsResults").setValue(optionsResults);
+            if(!txtComment.getText().equals("")){
+                mDatabase1.child("comment").setValue(txtComment.getText().toString());
+            }
             DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
             DatabaseReference db2 = db1.child(dilemaId);
             db2.child(DilemaTab.currUser).setValue("Voted");
-            linearLayout.removeAllViews();
         }
 
 }

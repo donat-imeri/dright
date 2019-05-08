@@ -30,7 +30,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/relativeLayout"
+            android:id="@+id/relLayout"
             android:background="#ffffff"
             android:layout_below="@+id/lblPostedBy">
 

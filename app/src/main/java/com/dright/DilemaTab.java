@@ -33,10 +33,10 @@ public class DilemaTab extends Fragment {
     private static final String TAG = "DilemaTab";
     private TextView txtCategory;
     private View view;
-    private static List<Dilema> listDilema = new ArrayList<>();
-    private static List<Boolean> listDilemaCheck = new ArrayList<>();
+    private  List<Dilema> listDilema = new ArrayList<>();
+    private List<Boolean> listDilemaCheck = new ArrayList<>();
     public static String currUser = "";
-    private static List<String> listDilemaId = new ArrayList<>();
+    private List<String> listDilemaId = new ArrayList<>();
     private static List<String> listUserFollowing;
     private List<String> listDilemaVoters = new ArrayList<>();
 
@@ -171,18 +171,19 @@ public class DilemaTab extends Fragment {
         });
     }
     private void readFromDb(final List<String> votedDilema){
-        listDilema = new ArrayList<>();
-        listDilemaCheck = new ArrayList<>();
-        listDilemaId = new ArrayList<>();
+
 
         Log.d(TAG, "readFromDatabase: inside ");
 
         mDatabase = FirebaseDatabase.getInstance().getReference("Dilema/");
         Log.d(TAG, "readFromDatabase: " + mDatabase.getKey());
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                listDilema = new ArrayList<>();
+                listDilemaCheck = new ArrayList<>();
+                listDilemaId = new ArrayList<>();
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
                     Log.d(TAG, "onDataChange: inside for loop" + ds.getValue(Dilema.class).getDilemaDescription());
                     Log.d(TAG, "onDataChange: has Child: "+ ds.hasChild("dilemaText"));

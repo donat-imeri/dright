@@ -78,7 +78,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         linearLayout = ProfileView.findViewById(R.id.insideLinear);
         objDilemaOptions = objDilema.getDilemaOptions();
         objDilemaOptionsResults = objDilema.getOptionsResults();
-        relativeLayout = ProfileView.findViewById(R.id.relativeLayout);
+        relativeLayout = ProfileView.findViewById(R.id.relLayout);
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
         txtComment = ProfileView.findViewById(R.id.txtComment);
         txtTitle = ProfileView.findViewById(R.id.txtTitle);

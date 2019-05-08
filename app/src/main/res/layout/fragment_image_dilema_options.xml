@@ -7,6 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,29 +39,26 @@
             android:textSize="14dp"
             android:id="@+id/txtPostedBy"/>
 
-        <LinearLayout
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_below="@+id/txtTitle"
-            android:id="@+id/insideLinear"
             android:layout_marginTop="20dp"
-
-            >
-            <RadioGroup
+            android:id="@+id/scroll">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/radiogroup">
-
-            </RadioGroup>
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:id="@+id/insideLinear">
 
         </LinearLayout>
+        </HorizontalScrollView>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Write a comment"
-            android:layout_below="@+id/insideLinear"
+            android:layout_below="@+id/scroll"
             android:layout_marginTop="10dp"
             android:padding="10dp"
             android:id="@+id/txtComment"/>

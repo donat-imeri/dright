@@ -4,17 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-
-import static android.support.v4.view.ViewCompat.getRotation;
 
 public class ImagePicker {
 
@@ -42,7 +42,8 @@ public class ImagePicker {
             Log.d(TAG, "selectedImage: " + selectedImage);
 
             bm = getImageResized(context, selectedImage);
-
+            int rotation = getRotation(context, selectedImage, isCamera);
+            bm = rotate(bm, rotation);
         }
         return bm;
     }
@@ -84,6 +85,54 @@ public class ImagePicker {
     }
 
 
+    private static int getRotation(Context context, Uri imageUri, boolean isCamera) {
+        int rotation;
+        if (isCamera) {
+            rotation = getRotationFromCamera(context, imageUri);
+        } else {
+            rotation = getRotationFromGallery(context, imageUri);
+        }
+        Log.d(TAG, "Image rotation: " + rotation);
+        return rotation;
+    }
+
+    private static int getRotationFromCamera(Context context, Uri imageFile) {
+        int rotate = 0;
+        try {
+
+            context.getContentResolver().notifyChange(imageFile, null);
+            ExifInterface exif = new ExifInterface(imageFile.getPath());
+            int orientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotate = 270;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotate = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotate = 90;
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rotate;
+    }
+
+    public static int getRotationFromGallery(Context context, Uri imageUri) {
+        String[] columns = {MediaStore.Images.Media.ORIENTATION};
+        Cursor cursor = context.getContentResolver().query(imageUri, columns, null, null, null);
+        if (cursor == null) return 0;
+
+        cursor.moveToFirst();
+
+        int orientationColumnIndex = cursor.getColumnIndex(columns[0]);
+        return cursor.getInt(orientationColumnIndex);
+    }
 
 
     private static Bitmap rotate(Bitmap bm, int rotation) {

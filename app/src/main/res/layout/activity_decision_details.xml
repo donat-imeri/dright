@@ -44,4 +44,33 @@
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/dim_results"
+        android:alpha="0"
+        android:fitsSystemWindows="true"
+        android:background="@android:color/black"
+        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
+        />
+
+    <include
+        layout="@layout/content_slide_up"
+
+        />
+
+    <RelativeLayout
+        android:id="@+id/swipe_layout_results"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_gravity="bottom">
+
+        <ImageView
+            android:id="@+id/txt_swipeup_results"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/chat2" />
+    </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>

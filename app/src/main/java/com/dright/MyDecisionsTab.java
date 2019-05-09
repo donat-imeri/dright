@@ -58,7 +58,7 @@ public class MyDecisionsTab extends Fragment {
     private TextView lblDocents, txtPriority, lblError, lblError2, lblError3;
     private NumberPicker pckMinutes, pckHours, pckDays;
     private int optionCounter;
-    private boolean reseted;
+    private boolean reseted, error0, error1, error2;
     private Docent userDocents;
     public static List optionsList;
     private List<Uri> imageUriList;
@@ -149,11 +149,15 @@ public class MyDecisionsTab extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (dilemaValid(dilemaDescription.getText().toString())){
-                    btnSubmit.setEnabled(true);
-                    btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+                    if (!error1 && !error2){
+                        btnSubmit.setEnabled(true);
+                        btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+                    }
                     lblError3.setVisibility(View.INVISIBLE);
+                    error0=false;
                 }
                 else{
+                    error0=true;
                     btnSubmit.setEnabled(false);
                     btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRed)));
                     lblError3.setVisibility(View.VISIBLE);
@@ -168,10 +172,14 @@ public class MyDecisionsTab extends Fragment {
                 lblDocents.setText("Total docents: " + String.valueOf(calculateDocents(progress)) + "$");
 
                 if (userDocents.checkRemove(progress)) {
-                    btnSubmit.setEnabled(true);
-                    btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+                    if (!error0 && !error2){
+                        btnSubmit.setEnabled(true);
+                        btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+                    }
                     lblError.setVisibility(View.INVISIBLE);
+                    error1=false;
                 } else {
+                    error1=true;
                     btnSubmit.setEnabled(false);
                     btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRed)));
                     lblError.setVisibility(View.VISIBLE);
@@ -248,16 +256,24 @@ public class MyDecisionsTab extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Change user docents
-                btnSubmit.setEnabled(false);
-                userDocents.removeDocent(sbPriority.getProgress());
-                userDocentsReference.setValue(userDocents);
+                if (dilemaValid(dilemaDescription.getText().toString())){
+                    //Change user docents
+                    btnSubmit.setEnabled(false);
+                    userDocents.removeDocent(sbPriority.getProgress());
+                    userDocentsReference.setValue(userDocents);
 
-                //Fill in the options list
-                if (!checkTextImage()){
-                    optionsList=listOptions(optionsLayout);
+                    //Fill in the options list
+                    if (!checkTextImage()){
+                        optionsList=listOptions(optionsLayout);
+                    }
+                    pushChanges();
                 }
-                pushChanges();
+                else{
+                    error0=true;
+                    btnSubmit.setEnabled(false);
+                    btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRed)));
+                    lblError3.setVisibility(View.VISIBLE);
+                }
 
             }
         });
@@ -414,10 +430,15 @@ public class MyDecisionsTab extends Fragment {
         @Override
         public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
             if (timeoutValid(calculateTimeout())){
+                if (!error0 && !error1){
+                    btnSubmit.setEnabled(true);
+                    btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+                }
                 lblError2.setVisibility(View.INVISIBLE);
-                btnSubmit.setEnabled(true);
-                btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));            }
+                error2=false;
+            }
             else{
+                error2=true;
                 lblError2.setVisibility(View.VISIBLE);
                 btnSubmit.setEnabled(false);
                 btnSubmit.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRed)));

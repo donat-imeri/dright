@@ -54,6 +54,7 @@ public class DecisionsAcitivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -66,7 +67,6 @@ public class DecisionsAcitivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
 
     }
 
@@ -103,6 +103,9 @@ public class DecisionsAcitivity extends AppCompatActivity {
         }
         else if (id==R.id.go_to_profile){
             openProfileActivity();
+        }
+        else if (id==R.id.go_to_my_decisions){
+
         }
 
         return super.onOptionsItemSelected(item);

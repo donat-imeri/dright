@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.mancj.slideup.SlideUp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,13 @@ public class DecisionDetailsActivity extends AppCompatActivity {
     private ImageView imgSpinWheelArrow;
     private RatingBar ratingBarResult;
     private CollapsingToolbarLayout toolbarTitle;
+
+    //Swipe up
+    private SlideUp slideUp;
+    private View dim;
+    private View slideView;
+    private ImageView txtSwipe;
+    RelativeLayout swipelayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +184,46 @@ public class DecisionDetailsActivity extends AppCompatActivity {
                 Random random=new Random();
                 graphResults.setRotation((float)random.nextInt(361));
                 imgSpinWheelArrow.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+
+        //Swipe up
+        swipelayout = findViewById(R.id.swipe_layout_results);
+        slideView = findViewById(R.id.slideView);
+        dim = findViewById(R.id.dim_results);
+        txtSwipe = findViewById(R.id.txt_swipeup_results);
+        slideUp = new SlideUp(slideView);
+        slideUp.hideImmediately();
+
+
+        swipelayout.setOnTouchListener(new OnSwipeTouchListener(DecisionDetailsActivity.this)
+        {
+            public void onSwipeTop()
+            {
+                swipelayout.setVisibility(View.INVISIBLE);
+                slideUp.animateIn();
+
+            }
+        });
+
+        slideUp.setSlideListener(new SlideUp.SlideListener() {
+
+            @Override
+            public void onSlideDown(float v)
+            {
+
+                dim.setAlpha(1 - (v / 100));
+            }
+
+            @Override
+            public void onVisibilityChanged(int i) {
+                if (i == View.GONE)
+                {
+                    swipelayout.setVisibility(View.VISIBLE);
+                }
+
             }
         });
 

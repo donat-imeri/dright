@@ -4,6 +4,14 @@
     tools:context="com.dright.DecisionsAcitivity"
     >
     <item
+        android:id="@+id/go_to_my_decisions"
+        android:icon="@drawable/decision_making"
+        app:showAsAction="ifRoom"
+        android:title="Profile"
+        >
+    </item>
+
+    <item
         android:id="@+id/go_to_profile"
         android:icon="@drawable/profile"
         app:showAsAction="ifRoom"

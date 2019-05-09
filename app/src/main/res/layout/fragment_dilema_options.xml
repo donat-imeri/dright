@@ -109,7 +109,7 @@
             android:textSize="20dp" />
     </RelativeLayout>
 
-    <include layout="@layout/content_slide_up"
+    <include layout="@layout/dilema_content"
 
         />
 

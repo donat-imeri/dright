@@ -10,6 +10,8 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -56,12 +58,18 @@ public class DecisionDetailsActivity extends AppCompatActivity {
     private CollapsingToolbarLayout toolbarTitle;
 
     //Swipe up
-    private SlideUp slideUp;
+    public static SlideUp slideUp;
     private View dim;
-    private View slideView;
+    public static View slideView;
     private ImageView txtSwipe;
-    RelativeLayout swipelayout;
+    public static RelativeLayout swipelayout;
 
+    ArrayList<String> Users = new ArrayList<>();
+    ArrayList<String> Comments = new ArrayList<>();
+
+    ArrayList<CommentsModel> UserComments = new ArrayList<>();
+
+    RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +93,7 @@ public class DecisionDetailsActivity extends AppCompatActivity {
         graphResults.setRotationEnabled(true);
         Legend l=graphResults.getLegend();
         l.setEnabled(false);
-        Description d=graphResults.getDescription();
+        final Description d=graphResults.getDescription();
         d.setEnabled(false);
 
         //intent from which this is called sends the key to access this dilema
@@ -187,8 +195,46 @@ public class DecisionDetailsActivity extends AppCompatActivity {
             }
         });
 
+        dilemaRef = fb.getReference("DilemaComments/"+dilemaKey);
 
+        dilemaRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Users.add(ds.getKey().toString());
+                    Log.d("wow",Users.size()+"");
+                    Comments.add(ds.getValue().toString());
+                    Log.d("wow",Comments.size()+"");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        dilemaRef = fb.getReference("Users");
+        dilemaRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(int i=0;i<Users.size();i++)
+                {
+                    String username = dataSnapshot.child(Users.get(i)).child("name").getValue().toString();
+                    String imageUrl = dataSnapshot.child(Users.get(i)).child("imageURL").getValue().toString();
+                    String userhash = Users.get(i);
+                    String comment = Comments.get(i);
+                    CommentsModel commentsModel = new CommentsModel(username,imageUrl,comment,userhash);
+                    UserComments.add(i,commentsModel);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         //Swipe up
         swipelayout = findViewById(R.id.swipe_layout_results);
         slideView = findViewById(R.id.slideView);
@@ -196,6 +242,11 @@ public class DecisionDetailsActivity extends AppCompatActivity {
         txtSwipe = findViewById(R.id.txt_swipeup_results);
         slideUp = new SlideUp(slideView);
         slideUp.hideImmediately();
+
+        recyclerView = findViewById(R.id.dilemma_options_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+        final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
+        recyclerView.setAdapter(adapter);
 
 
         swipelayout.setOnTouchListener(new OnSwipeTouchListener(DecisionDetailsActivity.this)

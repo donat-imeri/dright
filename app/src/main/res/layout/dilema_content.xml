@@ -6,11 +6,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/content_slide_up"
     tools:context=".SlideUpActivity"
-    tools:showIn="@layout/activity_slide_up"
+    tools:showIn="@layout/fragment_dilema_options"
     >
 
     <LinearLayout
-        android:id="@+id/slideView"
+        android:id="@+id/slideView_fragment123"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
@@ -18,7 +18,6 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/dilemma_options_recycler_view"
             android:layout_width="match_parent"
-            android:layout_marginTop="30dp"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
 

@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mancj.slideup.SlideUp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,6 +52,11 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
     LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+
+    private SlideUp slideUpImage;
+    private View dimImage;
+    private View slideViewImage;
+    RelativeLayout swipelayoutImage;
     public static FragmentDilemaImageOptions newInstance(Dilema objDilema, String dilemaId) {
         FragmentDilemaImageOptions fragment = new FragmentDilemaImageOptions();
         Bundle args = new Bundle();
@@ -112,6 +118,46 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
             }
         });*/
         addStuff();
+
+        swipelayoutImage = ProfileView.findViewById(R.id.swipe_up_layout_dilema_image_options);
+        slideViewImage = ProfileView.findViewById(R.id.slideView_image_fragment);
+        dimImage = ProfileView.findViewById(R.id.dim_dilema_image_options);
+        slideUpImage = new SlideUp(slideViewImage);
+        slideUpImage.hideImmediately();
+
+
+
+
+
+
+        swipelayoutImage.setOnTouchListener(new OnSwipeTouchListener(ProfileView.getContext())
+        {
+            public void onSwipeTop()
+            {
+                swipelayoutImage.setVisibility(View.INVISIBLE);
+                slideUpImage.animateIn();
+
+            }
+        });
+
+        slideUpImage.setSlideListener(new SlideUp.SlideListener() {
+
+            @Override
+            public void onSlideDown(float v)
+            {
+
+                dimImage.setAlpha(1 - (v / 100));
+            }
+
+            @Override
+            public void onVisibilityChanged(int i) {
+                if (i == View.GONE)
+                {
+                    swipelayoutImage.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
 
 
 

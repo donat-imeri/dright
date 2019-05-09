@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mancj.slideup.SlideUp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,6 +51,11 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
     private String dilemaAsker;
     LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+    private SlideUp slideUp123;
+    private View dim123;
+    private View slideView123;
+    RelativeLayout swipelayout123;
 
     public static FragmentDilemaOptions newInstance(Dilema objDilema, String dilemaId) {
         FragmentDilemaOptions fragment = new FragmentDilemaOptions();
@@ -107,6 +113,47 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        Log.d("ciladileme",dilemaId);
+        swipelayout123 = ProfileView.findViewById(R.id.swipe_up_layout_dilema_options);
+        slideView123 = ProfileView.findViewById(R.id.slideView_fragment123);
+        dim123 = ProfileView.findViewById(R.id.dim_dilema_options);
+        slideUp123 = new SlideUp(slideView123);
+        slideUp123.hideImmediately();
+
+
+
+
+
+
+        swipelayout123.setOnTouchListener(new OnSwipeTouchListener(ProfileView.getContext())
+        {
+            public void onSwipeTop()
+            {
+                swipelayout123.setVisibility(View.INVISIBLE);
+                slideUp123.animateIn();
+
+            }
+        });
+
+        slideUp123.setSlideListener(new SlideUp.SlideListener() {
+
+            @Override
+            public void onSlideDown(float v)
+            {
+
+                dim123.setAlpha(1 - (v / 100));
+            }
+
+            @Override
+            public void onVisibilityChanged(int i) {
+                if (i == View.GONE)
+                {
+                    swipelayout123.setVisibility(View.VISIBLE);
+                }
 
             }
         });

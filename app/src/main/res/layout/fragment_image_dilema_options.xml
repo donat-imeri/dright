@@ -1,15 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff">
-    <RelativeLayout
+
+       <RelativeLayout
         android:layout_width="match_parent"
         android:background="#ffffff"
         android:layout_height="match_parent"
-        android:id="@+id/rlLay">
+        android:id="@+id/rlLay"
+        android:layout_marginBottom="60dp">
+           <FrameLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:id="@+id/dim_dilema_image_options"
+               android:alpha="0"
+               android:fitsSystemWindows="true"
+               android:background="@android:color/black"/>
+           <ScrollView
+               android:layout_width="match_parent"
+               android:layout_height="match_parent">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:orientation="vertical">
+
+
+
+
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -68,7 +89,31 @@
                 android:padding="10dp"
                 android:id="@+id/txtComment"/>
 
+               </LinearLayout>
 
-
+           </ScrollView>
     </RelativeLayout>
-</ScrollView>
+
+
+    <RelativeLayout
+        android:id="@+id/swipe_up_layout_dilema_image_options"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom">
+
+        <TextView
+            android:id="@+id/txt_swipeup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Swipe Up"
+            android:textSize="20dp" />
+    </RelativeLayout>
+    <include
+        layout="@layout/content_slide_up_image_fragment"
+
+        />
+
+
+
+</android.support.design.widget.CoordinatorLayout>

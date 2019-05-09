@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,6 +61,12 @@ public class MyProfileActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_profile_activity, menu);
+        return true;
+    }
+    @Override
     public void onBackPressed() {
         finish();
     }
@@ -75,11 +82,21 @@ public class MyProfileActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent helpIntent=new Intent(MyProfileActivity.this, HelpItemListActivity.class);
+            startActivity(helpIntent);
+        }
+        else if(id==R.id.action_signout){
+            FirebaseAuth.getInstance().signOut();
+            finish();
+        }
+        else if (id==R.id.go_to_dilemmas){
+            Intent intent = new Intent(MyProfileActivity.this,DecisionsAcitivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

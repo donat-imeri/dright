@@ -15,6 +15,8 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -74,6 +76,12 @@ public class MyDecisionsTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.my_decision_tab, container, false);
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_decision_details,menu);
+
     }
 
     @Override
@@ -291,6 +299,7 @@ public class MyDecisionsTab extends Fragment {
 
         getActivity().finish();
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

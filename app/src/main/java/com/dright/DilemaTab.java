@@ -64,12 +64,9 @@ public class DilemaTab extends Fragment {
         Activity activity = getActivity();
 
         vpPager = (ViewPager) activity.findViewById(R.id.vpPager);
-        spinner = activity.findViewById(R.id.spinner);
 
         auth=FirebaseAuth.getInstance();
 
-        spinner.setAdapter(new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                android.R.layout.simple_spinner_item, itemsCategory));
         currUser = auth.getUid();
         readUserFollowing();
 

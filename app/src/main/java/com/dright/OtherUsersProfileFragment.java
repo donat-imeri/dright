@@ -68,6 +68,7 @@ public class OtherUsersProfileFragment extends Fragment {
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 userName.setText(dataSnapshot.child("name").getValue().toString());
                 userAddress.setText(dataSnapshot.child("address").getValue().toString());
                 userPhone.setText(dataSnapshot.child("phone").getValue().toString());

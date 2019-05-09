@@ -4,22 +4,16 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/content_slide_up"
-    tools:context=".SlideUpActivity"
-    tools:showIn="@layout/fragment_dilema_options"
-    >
+    android:id="@+id/content_image_slide_up"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/fragment_image_dilema_options">
 
     <LinearLayout
-        android:id="@+id/slideView_fragment123"
+        android:id="@+id/slideView_image_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:orientation="vertical">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/dilemma_options_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </android.support.v7.widget.RecyclerView>
 
 
 

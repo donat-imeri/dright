@@ -40,6 +40,7 @@ public class DilemaTab extends Fragment {
     private List<String> listDilemaId = new ArrayList<>();
     private List<String> listUserFollowing;
     private List<String> listDilemaVoters = new ArrayList<>();
+    private List<Integer> listDilemaPriority = new ArrayList<>();
 
     private List<String> mListDilemaVoters;
 
@@ -188,6 +189,11 @@ public class DilemaTab extends Fragment {
                 listDilema = new ArrayList<>();
                 listDilemaCheck = new ArrayList<>();
                 listDilemaId = new ArrayList<>();
+                listDilemaPriority = new ArrayList<>();
+                List<Dilema> filteredDilema = new ArrayList<>();
+                List<Boolean> filteredCheckDilema = new ArrayList<>();
+                List<String> filteredId = new ArrayList<>();
+                List<Integer> filteredPriority = new ArrayList<>();
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
                     Log.d(TAG, "onDataChange: inside for loop" + ds.getValue(Dilema.class).getDilemaDescription());
                     Log.d(TAG, "onDataChange: has Child: "+ ds.hasChild("dilemaText"));
@@ -218,6 +224,7 @@ public class DilemaTab extends Fragment {
                                     check = false;
                                 }
                                 listDilemaId.add(ds.getKey());
+                                listDilemaPriority.add(ds.child("dilemaPriority").getValue(Integer.class));
                                 Dilema objD = ds.getValue(Dilema.class);
                                 listDilema.add(objD);
                                 listDilemaCheck.add(check);
@@ -235,12 +242,53 @@ public class DilemaTab extends Fragment {
 
                 }
 
-                adapterViewPager = new MyPagerAdapter(getChildFragmentManager(),listDilema, listDilemaCheck,listDilemaId);
-                Log.d(TAG, "onCreateView: Adapter " + adapterViewPager);
-                adapterViewPager.notifyDataSetChanged();
-                vpPager.setAdapter(adapterViewPager);
-                Log.d(TAG, "onCreateView: after setting adapter");
-                vpPager.setPageTransformer(true, new RotateUpTransformer());
+                Log.d(TAG, "onDataChange: listDilema size: "+listDilema.size());
+                int i=0;
+                while (listDilema.size() != 0){
+                    int max = listDilemaPriority.get(i);
+                    String dilemaId = listDilemaId.get(i);
+                    Dilema objDilema = listDilema.get(i);
+                    boolean dilemaCheck = listDilemaCheck.get(i);
+                    int k = 0;
+
+                    for(int j=0; j<listDilema.size();j++)
+                    {
+                        if(listDilemaPriority.get(j)>max){
+                            max = listDilemaPriority.get(j);
+                            dilemaId = listDilemaId.get(j);
+                            dilemaCheck = listDilemaCheck.get(j);
+                            objDilema = listDilema.get(j);
+                            Log.d(TAG, "onDataChange: listDilemacheck(j): "+dilemaCheck);
+                            k=j;
+                            Log.d(TAG, "onDataChange: k = "+k+ "\t j="+j);
+                            Log.d(TAG, "onDataChange: listDilemaCheck(k): "+listDilemaCheck.get(k));
+                        }
+
+                    }
+
+                    listDilemaPriority.remove(k);
+                    listDilema.remove(objDilema);
+                    listDilemaId.remove(dilemaId);
+                    listDilemaCheck.remove(k);
+
+                    filteredCheckDilema.add(dilemaCheck);
+                    filteredDilema.add(objDilema);
+                    filteredId.add(dilemaId);
+                    filteredPriority.add(max);
+
+                }
+
+
+                if(filteredDilema.size() != 0 && filteredCheckDilema.size() != 0 && filteredId.size() != 0) {
+                    adapterViewPager = new MyPagerAdapter(getChildFragmentManager(), filteredDilema, filteredCheckDilema, filteredId);
+                    Log.d(TAG, "onCreateView: Adapter " + adapterViewPager);
+                    adapterViewPager.notifyDataSetChanged();
+                    vpPager.setAdapter(adapterViewPager);
+                    Log.d(TAG, "onCreateView: after setting adapter");
+                    vpPager.setPageTransformer(true, new RotateUpTransformer());
+                }
+
+
 
 
             }

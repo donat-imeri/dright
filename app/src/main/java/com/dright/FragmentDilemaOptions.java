@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
     private EditText txtComment;
     private TextView txtTitle;
     private LinearLayout linearLayout;
-    private RelativeLayout relativeLayout;
+    private ScrollView scrollViewFr;
     private DatabaseReference mDatabase;
     private static String rdbText = null;
     private String dilemaId;
@@ -77,39 +78,13 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         linearLayout = ProfileView.findViewById(R.id.insideLinear);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
+        scrollViewFr = ProfileView.findViewById(R.id.scrollViewFragmentOptions);
 
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
         txtComment = ProfileView.findViewById(R.id.txtComment);
         txtTitle = ProfileView.findViewById(R.id.txtTitle);
 
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-        DatabaseReference dbRef1 = dbRef.child(dilemaId);
-        allVoters = new ArrayList<>();
-        dbRef1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    allVoters.add(ds.getKey());
-                }
-                int counter = 0;
-                for(int i=0; i<allVoters.size();i++){
-                    if (DilemaTab.currUser.equals(allVoters.get(i))){
-                        counter++;
-                    }
-                }
-                if(counter == 0){
-                    addStuff();
-                }
-                else{
-                    showAnswers();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        addStuff();
 
 
 
@@ -259,7 +234,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
 
     private void addTextViews(Dilema objDil){
             for(int i=0; i<objDil.getDilemaOptions().size();i++){
-                final TextView tv = new TextView(ProfileView.getContext());
+                final TextView tv = new TextView(getActivity());
                 tv.setLayoutParams(lparams);
                 tv.setText(objDil.getDilemaOptions().get(i));
                 tv.setId(i);
@@ -270,7 +245,6 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
                     public void onClick(View v) {
 
                         updateOptionsResult(tv.getText().toString());
-                        showAnswers();
                     }
                 });
                 counter++;
@@ -289,6 +263,39 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
             DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
             DatabaseReference db2 = db1.child(dilemaId);
             db2.child(DilemaTab.currUser).setValue("Voted");
+            DatabaseReference dbRef3 = FirebaseDatabase.getInstance().getReference("Users");
+            DatabaseReference dbRef4 = dbRef3.child(DilemaTab.currUser).child("docents");
+            dbRef4.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    int amount = 0;
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        Log.d(TAG, "onDataChange: inside for child amount");
+                        Log.d(TAG, "onDataChange: "+ (ds.child("amount").getValue(String.class)== null));
+                        if(ds.child("amount").getValue(String.class)== null){
+                         amount = 0;
+                        }else {
+                            amount = ds.child("amount").getValue(Integer.class);
+                        }
+                        Log.d(TAG, "onDataChange: amount = "+amount);
+                    }
+                    amount += 1;
+                    increaseAmount(amount);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            scrollViewFr.removeAllViews();
+
+        }
+        private void increaseAmount(int amount){
+
+            DatabaseReference dbRef5 = FirebaseDatabase.getInstance().getReference("Users");
+            DatabaseReference dbRef6 = dbRef5.child(DilemaTab.currUser).child("docents");
+            dbRef6.child("amount").setValue(amount);
 
         }
 

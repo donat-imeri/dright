@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
     private EditText txtComment;
     private TextView txtTitle;
     private LinearLayout linearLayout;
-    private RelativeLayout relativeLayout;
+    private ScrollView scrollView;
     private String dilemaId;
     private DatabaseReference mDatabase;
     private static String rdbText = null;
@@ -78,11 +79,11 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         linearLayout = ProfileView.findViewById(R.id.insideLinear);
         objDilemaOptions = objDilema.getDilemaOptions();
         objDilemaOptionsResults = objDilema.getOptionsResults();
-        relativeLayout = ProfileView.findViewById(R.id.rlLay);
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
         txtComment = ProfileView.findViewById(R.id.txtComment);
         txtTitle = ProfileView.findViewById(R.id.txtTitle);
 
+        scrollView = ProfileView.findViewById(R.id.scrollView);
         /*DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("DilemaVoters");
         DatabaseReference dbRef1 = dbRef.child(dilemaId);
         allVoters = new ArrayList<>();
@@ -254,7 +255,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
     private void addTextViews(Dilema objDil){
             for(int i=0; i<objDil.getDilemaOptions().size();i++){
-                final ImageView tv = new ImageView(ProfileView.getContext());
+                final ImageView tv = new ImageView(getActivity());
                 tv.setLayoutParams(lparams);
                 Glide.with(getActivity())
                         .load(objDil.getDilemaOptions().get(i))
@@ -270,8 +271,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
                         updateOptionsResult(tv.getId());
                         Toast.makeText(getActivity(),"Click in imageVIew with id: "+tv.getId()+", just happened",Toast.LENGTH_LONG).show();
-                        relativeLayout.removeAllViews();
-                        showAnswers();
+
                     }
 
                 });
@@ -290,6 +290,39 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
             DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
             DatabaseReference db2 = db1.child(dilemaId);
             db2.child(DilemaTab.currUser).setValue("Voted");
+            DatabaseReference dbRef3 = FirebaseDatabase.getInstance().getReference("Users");
+            DatabaseReference dbRef4 = dbRef3.child(DilemaTab.currUser).child("docents");
+            dbRef4.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    int amount = 0;
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        Log.d(TAG, "onDataChange: inside for child amount");
+                        Log.d(TAG, "onDataChange: "+ (ds.child("amount").getValue(Integer.class)== null));
+                        if(ds.child("amount").getValue(String.class)== null){
+                            amount = 0;
+                        }else {
+                            amount = ds.child("amount").getValue(Integer.class);
+                        };
+                        Log.d(TAG, "onDataChange: amount = "+amount);
+                    }
+                    amount += 1;
+                    increaseAmount(amount);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            scrollView.removeAllViews();
         }
 
+    private void increaseAmount(int amount){
+
+        DatabaseReference dbRef5 = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference dbRef6 = dbRef5.child(DilemaTab.currUser).child("docents");
+        dbRef6.child("amount").setValue(amount);
+
+    }
 }

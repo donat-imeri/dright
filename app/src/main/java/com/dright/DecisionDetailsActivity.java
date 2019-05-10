@@ -200,7 +200,8 @@ public class DecisionDetailsActivity extends AppCompatActivity {
         dilemaRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                Users.clear();
+                Comments.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Users.add(ds.getKey().toString());
                     Log.d("wow",Users.size()+"");

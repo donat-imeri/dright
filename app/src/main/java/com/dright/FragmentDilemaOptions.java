@@ -2,6 +2,7 @@ package com.dright;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -72,6 +73,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
     ArrayList<String> Comments = new ArrayList<>();
 
     ArrayList<CommentsModel> UserComments = new ArrayList<>();
+    Handler handler = new Handler();
 
     public static FragmentDilemaOptions newInstance(Dilema objDilema, String dilemaId, List<Dilema> objDilLista, List<String> objDilIdList, List<Boolean> objDilCheck) {
         FragmentDilemaOptions fragment = new FragmentDilemaOptions();
@@ -81,6 +83,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         args.putSerializable("objDilIdList", (Serializable) objDilIdList);
         args.putSerializable("objDilCheckList", (Serializable) objDilCheck);
         args.putString("dilemaId", dilemaId);
+        Log.d("teargumenti",dilemaId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -125,9 +128,8 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         btnCmn.setEnabled(state);
         txtComment.setEnabled(state);
 
-        DatabaseReference dbRef10 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-        DatabaseReference dbRef11 = dbRef10.child(DilemaTab.currUser);
-        dbRef11.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase = FirebaseDatabase.getInstance().getReference("DilemaVoters").child(DilemaTab.currUser);
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int counter = 0;
@@ -141,11 +143,11 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
                 if(counter == 0){
                     if(objDilema.getDilemaOptions()!= null) {
                         addStuff();
-                        Log.d("mestuff",dilemaId+ "   .cila");
+
                     }
                     else{
                         addStuffWithoutOptions();
-                        Log.d("patuff",dilemaId+ "   .cila");
+
                     }
                 }
                 else{
@@ -166,6 +168,67 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
             }
         });
         //addStuff();
+        mDatabase = FirebaseDatabase.getInstance().getReference("DilemaComments").child(dilemaId);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Users.clear();
+                Comments.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Users.add(ds.getKey().toString());
+                    Comments.add(ds.getValue().toString());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+                mDatabase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(Users.size() > 0)
+                        {
+                            for(int i=0;i<Users.size();i++)
+                            {
+                                Log.d("hahahha",Users.size()+"");
+                                String username = dataSnapshot.child(Users.get(i)).child("name").getValue().toString();
+                                String imageUrl = dataSnapshot.child(Users.get(i)).child("imageURL").getValue().toString();
+                                String userhash = Users.get(i);
+                                String comment = Comments.get(i);
+                                CommentsModel commentsModel = new CommentsModel(username,imageUrl,comment,userhash);
+                                UserComments.add(i,commentsModel);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                                final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
+                                recyclerView.setAdapter(adapter);
+                            }
+                        }
+                        else
+                        {
+                            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                            final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
+                            recyclerView.setAdapter(adapter);
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+            }
+        },600);
 
 
 
@@ -205,21 +268,18 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         });
 
 
+
         swipelayout123 = ProfileView.findViewById(R.id.swipe_up_layout_dilema_options);
         slideView123 = ProfileView.findViewById(R.id.slideView_fragment123);
         dim123 = ProfileView.findViewById(R.id.dim_dilema_options);
         slideUp123 = new SlideUp(slideView123);
         slideUp123.hideImmediately();
-/*
+
         recyclerView = ProfileView.findViewById(R.id.dilemma_options_results_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
         recyclerView.setAdapter(adapter);
 
-*/ for(int i=0;i<mDilemaId.size();i++)
-        {
-            Log.d("Dilemaitems",mDilemaId.get(i));
-        }
 
 
         swipelayout123.setOnTouchListener(new OnSwipeTouchListener(ProfileView.getContext())

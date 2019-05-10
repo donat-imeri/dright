@@ -1,6 +1,8 @@
 package com.dright;
 
-public class Docent {
+import java.io.Serializable;
+
+public class Docent implements Serializable {
     private int amount;
 
     public Docent(){

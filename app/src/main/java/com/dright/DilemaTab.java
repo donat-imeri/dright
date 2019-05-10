@@ -2,6 +2,7 @@ package com.dright;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,11 +31,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DilemaTab extends Fragment {
     private static final String TAG = "DilemaTab";
-    private TextView txtCategory;
     private View view;
     private  List<Dilema> listDilema = new ArrayList<>();
     private List<Boolean> listDilemaCheck = new ArrayList<>();
@@ -41,11 +48,11 @@ public class DilemaTab extends Fragment {
     private List<String> listUserFollowing;
     private List<String> listDilemaVoters = new ArrayList<>();
     private List<Integer> listDilemaPriority = new ArrayList<>();
+    private SwipeRefreshLayout mSwipeLayout ;
 
     private List<String> mListDilemaVoters;
 
-    public FragmentStatePagerAdapter adapterViewPager;
-    private Spinner spinner;
+    public static FragmentStatePagerAdapter adapterViewPager;
     private ViewPager vpPager;
     private DatabaseReference mDatabase;
     private FirebaseAuth auth;
@@ -65,14 +72,27 @@ public class DilemaTab extends Fragment {
         Activity activity = getActivity();
 
         vpPager = (ViewPager) activity.findViewById(R.id.vpPager);
-        spinner = activity.findViewById(R.id.spinner);
 
+        mSwipeLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe_refresh_layout);
         auth=FirebaseAuth.getInstance();
 
-        spinner.setAdapter(new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                android.R.layout.simple_spinner_item, itemsCategory));
         currUser = auth.getUid();
         readUserFollowing();
+
+        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+               readUserFollowing();
+
+               new Handler().postDelayed(new Runnable() {
+                   @Override
+                   public void run() {
+                       mSwipeLayout.setRefreshing(false);
+                   }
+               },500);
+            }
+        });
 
 
 
@@ -114,9 +134,9 @@ public class DilemaTab extends Fragment {
 
             Log.d(TAG, "getItem: Inside getItem check = "+check);
             if(mListDilemaCheck.get(position)) {
-                return FragmentDilemaOptions.newInstance(mListDilema.get(position),mListDilemaId.get(position));
+                return FragmentDilemaOptions.newInstance(mListDilema.get(position),mListDilemaId.get(position),mListDilema,mListDilemaId,mListDilemaCheck);
             }else{
-                return FragmentDilemaImageOptions.newInstance(mListDilema.get(position),mListDilemaId.get(position));
+                return FragmentDilemaImageOptions.newInstance(mListDilema.get(position),mListDilemaId.get(position),mListDilema,mListDilemaId,mListDilemaCheck);
             }
            // return FragmentDilemaOptions.newInstance(mListDilema.get(position));
 
@@ -138,7 +158,7 @@ public class DilemaTab extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
         DatabaseReference mDatabase1 = mDatabase.child(currUser);
         DatabaseReference mDatabase2 = mDatabase1.child("following");
-        mDatabase2.addValueEventListener(new ValueEventListener() {
+        mDatabase2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
@@ -154,10 +174,32 @@ public class DilemaTab extends Fragment {
             }
         });
     }
+
     private void hasVoted(final List<String> userFollowing){
+        final List<String> dilemaVoted = new ArrayList<>();
+        DatabaseReference mDb1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
+        DatabaseReference mDb2 = mDb1.child(DilemaTab.currUser);
+        mDb2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    dilemaVoted.add(ds.getKey());
+                }
+
+                readFromDb(dilemaVoted,userFollowing);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /*private void hasVoted(final List<String> userFollowing){
         final List<String> voters = new ArrayList<>();
         DatabaseReference mDb1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-        mDb1.addValueEventListener(new ValueEventListener() {
+        mDb1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
@@ -174,7 +216,7 @@ public class DilemaTab extends Fragment {
 
             }
         });
-    }
+    }*/
     private void readFromDb(final List<String> votedDilema, final List<String> userFollowing){
 
 
@@ -182,7 +224,7 @@ public class DilemaTab extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance().getReference("Dilema/");
         Log.d(TAG, "readFromDatabase: " + mDatabase.getKey());
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -226,6 +268,7 @@ public class DilemaTab extends Fragment {
                                 listDilemaId.add(ds.getKey());
                                 listDilemaPriority.add(ds.child("dilemaPriority").getValue(Integer.class));
                                 Dilema objD = ds.getValue(Dilema.class);
+
                                 listDilema.add(objD);
                                 listDilemaCheck.add(check);
                             }
@@ -241,6 +284,10 @@ public class DilemaTab extends Fragment {
 
 
                 }
+                Collections.reverse(listDilema);
+                Collections.reverse(listDilemaId);
+                Collections.reverse(listDilemaCheck);
+                Collections.reverse(listDilemaPriority);
 
                 Log.d(TAG, "onDataChange: listDilema size: "+listDilema.size());
                 int i=0;
@@ -300,6 +347,274 @@ public class DilemaTab extends Fragment {
 
             }
         });
+
+    }
+    public void getNextItemsPriority5(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList){
+        final List<String> newIdDilemaList = new ArrayList<>();
+
+        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
+        DatabaseReference dbPriority1 = dbPriority.child("5");
+        dbPriority1.startAt(currIdDilema).limitToFirst(10).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                int numOfItemsLeft = 0;
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    int counter = 0;
+                    for(int i=0;i<currDilemaIdList.size();i++){
+                        if(ds.getKey().equals(currDilemaIdList.get(i))){
+                            counter++;
+                        }
+                    }
+                    if(counter==0){
+                        newIdDilemaList.add(ds.getKey());
+                    }
+                    numOfItemsLeft++;
+
+                }
+                if(numOfItemsLeft> 0 && numOfItemsLeft < 10){
+                    getNextItemsPriority4(newIdDilemaList.get(newIdDilemaList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList,newIdDilemaList);
+                }
+                else if(numOfItemsLeft == 10){
+                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,newIdDilemaList);
+                }
+                else if(numOfItemsLeft == 0){
+                    getNextItemsPriority4(newIdDilemaList.get(newIdDilemaList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList,newIdDilemaList);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+    public void getNextItemsPriority4(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
+
+        int limitation = 0;
+        if(continuedDilemaIdList.size() == 0){
+            limitation = 10;
+        }
+        else if(continuedDilemaIdList.size()>0 && continuedDilemaIdList.size()<10){
+            limitation = 10 - continuedDilemaIdList.size();
+        }
+
+        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
+        DatabaseReference dbPriority1 = dbPriority.child("4");
+        dbPriority1.startAt(currIdDilema).limitToFirst(limitation).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                int numOfItemsLeft = 0;
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    int counter = 0;
+                    for(int i=0;i<currDilemaIdList.size();i++){
+                        if(ds.getKey().equals(currDilemaIdList.get(i))){
+                            counter++;
+                        }
+                    }
+                    if(counter==0){
+                        continuedDilemaIdList.add(ds.getKey());
+                    }
+                    numOfItemsLeft++;
+
+                }
+                if(numOfItemsLeft> 0 && numOfItemsLeft < 10){
+                    getNextItemsPriority3(continuedDilemaIdList.get(continuedDilemaIdList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList, continuedDilemaIdList);
+                }
+                else if(numOfItemsLeft == 10){
+                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,continuedDilemaIdList);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getNextItemsPriority3(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
+        int limitation = 0;
+        if(continuedDilemaIdList.size() == 0){
+            limitation = 10;
+        }
+        else if(continuedDilemaIdList.size()>0 && continuedDilemaIdList.size()<10){
+            limitation = 10 - continuedDilemaIdList.size();
+        }
+
+        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
+        DatabaseReference dbPriority1 = dbPriority.child("3");
+        dbPriority1.startAt(currIdDilema).limitToFirst(limitation).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                int numOfItemsLeft = 0;
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    int counter = 0;
+                    for(int i=0;i<currDilemaIdList.size();i++){
+                        if(ds.getKey().equals(currDilemaIdList.get(i))){
+                            counter++;
+                        }
+                    }
+                    if(counter==0){
+                        continuedDilemaIdList.add(ds.getKey());
+                    }
+                    numOfItemsLeft++;
+
+                }
+                if(numOfItemsLeft> 0 && numOfItemsLeft < 10){
+                    getNextItemsPriority2(continuedDilemaIdList.get(continuedDilemaIdList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList, continuedDilemaIdList);
+                }
+                else if(numOfItemsLeft == 10){
+                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,continuedDilemaIdList);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getNextItemsPriority2(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
+        int limitation = 0;
+        if(continuedDilemaIdList.size() == 0){
+            limitation = 10;
+        }
+        else if(continuedDilemaIdList.size()>0 && continuedDilemaIdList.size()<10){
+            limitation = 10 - continuedDilemaIdList.size();
+        }
+
+        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
+        DatabaseReference dbPriority1 = dbPriority.child("2");
+        dbPriority1.startAt(currIdDilema).limitToFirst(limitation).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                int numOfItemsLeft = 0;
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    int counter = 0;
+                    for(int i=0;i<currDilemaIdList.size();i++){
+                        if(ds.getKey().equals(currDilemaIdList.get(i))){
+                            counter++;
+                        }
+                    }
+                    if(counter==0){
+                        continuedDilemaIdList.add(ds.getKey());
+                    }
+                    numOfItemsLeft++;
+
+                }
+                if(numOfItemsLeft> 0 && numOfItemsLeft < 10){
+                    getNextItemsPriority1(continuedDilemaIdList.get(continuedDilemaIdList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList, continuedDilemaIdList);
+                }
+                else if(numOfItemsLeft == 10){
+                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,continuedDilemaIdList);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void getNextItemsPriority1(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
+        int limitation = 0;
+        if(continuedDilemaIdList.size() == 0){
+            limitation = 10;
+        }
+        else if(continuedDilemaIdList.size()>0 && continuedDilemaIdList.size()<10){
+            limitation = 10 - continuedDilemaIdList.size();
+        }
+
+        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
+        DatabaseReference dbPriority1 = dbPriority.child("1");
+        dbPriority1.startAt(currIdDilema).limitToFirst(limitation).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                int numOfItemsLeft = 0;
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    int counter = 0;
+                    for(int i=0;i<currDilemaIdList.size();i++){
+                        if(ds.getKey().equals(currDilemaIdList.get(i))){
+                            counter++;
+                        }
+                    }
+                    if(counter==0){
+                        continuedDilemaIdList.add(ds.getKey());
+                    }
+                    numOfItemsLeft++;
+
+                }
+                if(numOfItemsLeft> 0 && numOfItemsLeft < 10){
+                    getNextItemsPriority0(continuedDilemaIdList.get(continuedDilemaIdList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList, continuedDilemaIdList);
+                }
+                else if(numOfItemsLeft == 10){
+                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,continuedDilemaIdList);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void getNextItemsPriority0(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
+        int limitation = 0;
+        if(continuedDilemaIdList.size() == 0){
+            limitation = 10;
+        }
+        else if(continuedDilemaIdList.size()>0 && continuedDilemaIdList.size()<10){
+            limitation = 10 - continuedDilemaIdList.size();
+        }
+
+        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
+        DatabaseReference dbPriority1 = dbPriority.child("0");
+        dbPriority1.startAt(currIdDilema).limitToFirst(limitation).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                int numOfItemsLeft = 0;
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    int counter = 0;
+                    for(int i=0;i<currDilemaIdList.size();i++){
+                        if(ds.getKey().equals(currDilemaIdList.get(i))){
+                            counter++;
+                        }
+                    }
+                    if(counter==0){
+                        continuedDilemaIdList.add(ds.getKey());
+                    }
+                    numOfItemsLeft++;
+
+                }
+                if(numOfItemsLeft> 0){
+
+                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,continuedDilemaIdList);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void updateList(final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
 
     }
 

@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -29,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -42,20 +45,27 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
     private String dilemaId;
     private DatabaseReference mDatabase;
     private static String rdbText = null;
+    private boolean state = true;
     private boolean check = false;
     private static int counter = 0;
     private List<String> allVoters;
+    private List<Dilema> mDilemaList = new ArrayList<>();
+    private List<String> mDilemaId = new ArrayList<>();
+    private List<Boolean> mDilemaCheck = new ArrayList<>();
     private Dilema objDilema;
-    private List<String> objDilemaOptions;
-    private List<Integer> objDilemaOptionsResults;
+    private ImageButton btnComment;
+    private List<Integer> objDilemaOptionsResults = new ArrayList<>();
     private String dilemaAsker;
     LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-    public static FragmentDilemaImageOptions newInstance(Dilema objDilema, String dilemaId) {
+    public static FragmentDilemaImageOptions newInstance(Dilema objDilema, String dilemaId, List<Dilema> objDilLista, List<String> objDilIdList, List<Boolean> objDilCheck) {
         FragmentDilemaImageOptions fragment = new FragmentDilemaImageOptions();
         Bundle args = new Bundle();
         args.putSerializable("objectDilema", objDilema);
+        args.putSerializable("objDilList", (Serializable) objDilLista);
+        args.putSerializable("objDilIdList", (Serializable) objDilIdList);
+        args.putSerializable("objDilCheckList", (Serializable) objDilCheck);
         args.putString("dilemaId",dilemaId);
         fragment.setArguments(args);
         return fragment;
@@ -67,9 +77,17 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         super.onCreate(savedInstanceState);
         objDilema = (Dilema) getArguments().getSerializable("objectDilema");
         dilemaId = getArguments().getString("dilemaId");
+        mDilemaList = (List<Dilema>) getArguments().getSerializable("objDilList");
+        mDilemaCheck = (List<Boolean>) getArguments().getSerializable("objDilCheckList");
+        mDilemaId = (List<String>) getArguments().getSerializable("objDilIdList");
 
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("state", state);
+    }
 
     View ProfileView;
     @Nullable
@@ -77,71 +95,117 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.fragment_image_dilema_options,container,false);
         linearLayout = ProfileView.findViewById(R.id.insideLinear);
-        objDilemaOptions = objDilema.getDilemaOptions();
         objDilemaOptionsResults = objDilema.getOptionsResults();
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
         txtComment = ProfileView.findViewById(R.id.txtComment);
         txtTitle = ProfileView.findViewById(R.id.txtTitle);
-
+        btnComment = ProfileView.findViewById(R.id.btnComment);
         scrollView = ProfileView.findViewById(R.id.scrollView);
-        /*DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-        DatabaseReference dbRef1 = dbRef.child(dilemaId);
-        allVoters = new ArrayList<>();
-        dbRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+        if (savedInstanceState != null) {
+            //probably orientation change
+            state = savedInstanceState.getBoolean("state");
+        }
+
+        btnComment.setEnabled(state);
+        txtComment.setEnabled(state);
+        DatabaseReference dbRef10 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
+        DatabaseReference dbRef11 = dbRef10.child(DilemaTab.currUser);
+        dbRef11.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    allVoters.add(ds.getKey());
-                }
                 int counter = 0;
-                for(int i=0; i<allVoters.size();i++){
-                    if (DilemaTab.currUser.equals(allVoters.get(i))){
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    if(ds.getKey().equals(dilemaId)){
                         counter++;
                     }
                 }
+                Log.d(TAG, "onDataChange: counter: "+counter);
+
                 if(counter == 0){
-                    addStuff();
+                    if(objDilema.getDilemaOptions()!= null) {
+                        addStuff();
+                    }
+                    else{
+                        addStuffWithoutOptions();
+                    }
                 }
                 else{
-                    showAnswers();
+                    if(objDilema.getDilemaOptions()!= null) {
+                        showResults();
+                    }
+                    else{
+                        //If we want to display comments
+                    }
                 }
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });*/
-        addStuff();
+        });
+        //addStuff();
 
 
 
 
-
-
-
-
-        /*btnVote.setOnClickListener(new View.OnClickListener() {
+        btnComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: rdbText= "+rdbText);
-                if(check ){
-                    if(rdbText != null){
-                        updateOptionsResult(rdbText);
-                        Toast.makeText(getActivity(), "opResult happened op1 res= "+objDilemaOptionsResults.get(0), Toast.LENGTH_SHORT).show();
+                DatabaseReference dataBRef = FirebaseDatabase.getInstance().getReference("DilemaComments");
+                DatabaseReference dataBRef1 = dataBRef.child(dilemaId);
+                dataBRef1.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        int counter = 0;
+                        for(DataSnapshot ds: dataSnapshot.getChildren()){
+                            if(ds.getKey().equals(DilemaTab.currUser)){
+                                counter++;
+                            }
+                        }
+                        if(counter != 0){
+                            btnComment.setEnabled(false);
+                            state = false;
+                            txtComment.setEnabled(false);
+                            txtComment.setText("");
+                            Toast.makeText(getContext(), "You have already voted in this dilema!", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            vote();
+                        }
                     }
 
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                Toast.makeText(getActivity(),"Click happened rdbText "+rdbText,Toast.LENGTH_LONG).show();
+                    }
+                });
 
-                Toast.makeText(getActivity(),"Click happened",Toast.LENGTH_LONG).show();
             }
-        });*/
+        });
+
+
         Log.d(TAG, "onCreateView: Is calling return ProfileView");
         return ProfileView;
 
     }
+    private void vote(){
+        String pattern = "^[a-zA-Z0-9\\.\\,\\-\\_\\!\\?\\(\\)\\s]+$";
+        if(Pattern.matches(pattern,txtComment.getText().toString())){
+
+            DatabaseReference dataB = FirebaseDatabase.getInstance().getReference("DilemaComments");
+            DatabaseReference dataB1 = dataB.child(dilemaId);
+
+            dataB1.child(DilemaTab.currUser).setValue(txtComment.getText().toString());
+            btnComment.setEnabled(false);
+            txtComment.setEnabled(false);
+            state = false;
+            txtComment.setText("");
+            Toast.makeText(getActivity(), "Please also vote on the dilema, if you haven't done it yet!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void addStuff(){
         txtTitle.setText(objDilema.getDilemaDescription());
         dilemaAsker = objDilema.getDilemaAsker();
@@ -176,9 +240,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
 
     }
-    private void showAnswers(){
-        Toast.makeText(getActivity(),"There should display the results",Toast.LENGTH_LONG).show();
-    }
+
 
     private void updateOptionsResult(int id){
 
@@ -191,71 +253,12 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
     }
 
-    private void addRadioButtons(int size,RadioGroup rdGroup){
-       /* for (int row = 0; row < 1; row++) {
-            RadioGroup ll = new RadioGroup(getActivity());
-            ll.setOrientation(LinearLayout.HORIZONTAL);
-*/
-        for (int i = 0; i < size; i++) {
-            RadioButton rdbtn = new RadioButton(getActivity());
-            rdbtn.setId(View.generateViewId());
-
-            rdbtn.setText(objDilemaOptions.get(i));
-            Log.d(TAG, "addRadioButtons: text: "+rdbtn.getText());
-            rdGroup.addView(rdbtn);
-        }
-        //((ViewGroup) ProfileView.findViewById(R.id.radiogroup)).addView(ll);
-        //}
-
-        /*for(int i=0;i < size;i++){
-            TextView txtView = new TextView(getActivity());
-            txtView.setId(i+1);
-            txtView.setPadding(30,30,30,30);
-            txtView.setClickable(true);
-            txtView.setText(objDilemaOptions.get(i));
-            txtView.setTextSize(getResources().getDimension(R.dimen.textsize));
-        }
-*/
-    }
 
 
-    /*
-        public void readFromDatabase(){
-            try{
-                objDilema = new ArrayList<>();
-                mDatabase.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot ds: dataSnapshot.getChildren()){
-                            if(ds.hasChild("numOptions")) {
-                                int numOptions = ds.child("numOptions").getValue(int.class);
-                                if(numOptions == 2){
-                                    check = true;
-                                }
-                                else{
-                                    check = false;
-                                }
-                            }
-                            if(check){
-                                Dilema objD = (Dilema) ds.getValue();
-                                objDilema.add(objD);
-                                check = false;
-                            }
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        */
 
     private void addTextViews(Dilema objDil){
             for(int i=0; i<objDil.getDilemaOptions().size();i++){
-                final ImageView tv = new ImageView(getActivity());
+                final ImageView tv = new ImageView(getContext());
                 tv.setLayoutParams(lparams);
                 Glide.with(getActivity())
                         .load(objDil.getDilemaOptions().get(i))
@@ -264,12 +267,12 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
                         .into(tv);
                 tv.setId(i);
                 tv.setPadding(20,20,20,20);
-                counter++;
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        updateOptionsResult(tv.getId());
+                            updateOptionsResult(tv.getId());
+
                         Toast.makeText(getActivity(),"Click in imageVIew with id: "+tv.getId()+", just happened",Toast.LENGTH_LONG).show();
 
                     }
@@ -288,22 +291,17 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
                 mDatabase1.child("comment").setValue(txtComment.getText().toString());
             }
             DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-            DatabaseReference db2 = db1.child(dilemaId);
-            db2.child(DilemaTab.currUser).setValue("Voted");
+            DatabaseReference db2 = db1.child(DilemaTab.currUser);
+            db2.child(dilemaId).setValue("Voted");
             DatabaseReference dbRef3 = FirebaseDatabase.getInstance().getReference("Users");
             DatabaseReference dbRef4 = dbRef3.child(DilemaTab.currUser).child("docents");
             dbRef4.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    int amount = 0;
+                    Long amount = 0L;
                     for(DataSnapshot ds: dataSnapshot.getChildren()){
-                        Log.d(TAG, "onDataChange: inside for child amount");
-                        Log.d(TAG, "onDataChange: "+ (ds.child("amount").getValue(Integer.class)== null));
-                        if(ds.child("amount").getValue(String.class)== null){
-                            amount = 0;
-                        }else {
-                            amount = ds.child("amount").getValue(Integer.class);
-                        };
+                        Long objD = ds.getValue(Long.class);
+                        amount = objD;
                         Log.d(TAG, "onDataChange: amount = "+amount);
                     }
                     amount += 1;
@@ -315,14 +313,131 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
                 }
             });
-            scrollView.removeAllViews();
+
+            linearLayout.removeAllViews();
+            showResults();
         }
 
-    private void increaseAmount(int amount){
+    private void increaseAmount(Long amount){
 
         DatabaseReference dbRef5 = FirebaseDatabase.getInstance().getReference("Users");
         DatabaseReference dbRef6 = dbRef5.child(DilemaTab.currUser).child("docents");
         dbRef6.child("amount").setValue(amount);
 
+    }
+    private void addStuffWithoutOptions(){
+
+        txtTitle.setText(objDilema.getDilemaDescription());
+        dilemaAsker = objDilema.getDilemaAsker();
+        Log.d(TAG, "onCreateView: Dilema Asker: "+dilemaAsker);
+        Log.d(TAG, "onCreateView: Dilema Asker from txt: "+txtPostedBy.getText().toString());
+        Log.d(TAG, "onCreateView: Dilema Asker is Stay Anonymous: "+ objDilema.isStayAnonymous());
+        if(!objDilema.isStayAnonymous())
+        {
+            dilemaAsker = objDilema.getDilemaAsker();
+            mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+            DatabaseReference mDatabase1 = mDatabase.child(dilemaAsker);
+            DatabaseReference mDatabase2 = mDatabase1.child("name");
+            Log.d(TAG, "onCreateView: onDataChange mDatabase users/ "+mDatabase);
+            mDatabase2.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    /*Log.d(TAG, "onDataChange: Inside users/dilemaAsker/");
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        Log.d(TAG, "onDataChange: dilemaAsker: "+dilemaAsker);
+                        Log.d(TAG, "onDataChange: hasCHild dilemaAsker: "+ds.hasChild(""+dilemaAsker));
+                        if(ds.hasChild(dilemaAsker)){
+                            txtPostedBy.setText(ds.child(dilemaAsker).child("name").getValue(String.class));
+                            Log.d(TAG, "onDataChange: txtPostedBy: "+txtPostedBy.getText().toString());
+                        }
+                    }*/
+                    txtPostedBy.setText(dataSnapshot.getValue(String.class));
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+        else {
+            txtPostedBy.setText("Anonymous");
+        }
+
+    }
+    private void showResults(){
+        if(!objDilema.isStayAnonymous())
+        {
+
+            dilemaAsker = objDilema.getDilemaAsker();
+            mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+            DatabaseReference mDatabase1 = mDatabase.child(dilemaAsker);
+            DatabaseReference mDatabase2 = mDatabase1.child("name");
+            Log.d(TAG, "onCreateView: onDataChange mDatabase users/ "+mDatabase);
+            mDatabase2.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    txtPostedBy.setText(dataSnapshot.getValue(String.class));
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+        else {
+            txtPostedBy.setText("Anonymous");
+        }
+        txtTitle.setText(objDilema.getDilemaDescription());
+        long numVoters = 0;
+        for(int i=0;i<objDilema.getOptionsResults().size();i++){
+            numVoters += objDilema.getOptionsResults().get(i);
+        }
+
+        for(int i=0;i<objDilema.getOptionsResults().size();i++){
+            Log.d(TAG, "showResults: numVoters: "+numVoters);
+
+            LinearLayout layoutInside = new LinearLayout(getContext());
+            layoutInside.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            layoutInside.setOrientation(LinearLayout.VERTICAL);
+            int opResult = objDilema.getOptionsResults().get(i);
+            double opResDouble = opResult*1.0;
+            double numVotersDouble = numVoters*1.0;
+            double percentage = (opResDouble/numVotersDouble)*100;
+            Log.d(TAG, "showResults: percentage before: "+((opResult/numVoters)*1.0));
+            Log.d(TAG, "showResults: opRes: "+opResult);
+            Log.d(TAG, "showResults: percentage: "+percentage);
+            TextView textV = new TextView(getContext());
+            textV.setLayoutParams(lparams);
+            textV.setPadding(20,20,20,20);
+            textV.setTextSize(18);
+            String percentageStr = String.format("%.2f",percentage);
+            textV.setText(percentageStr+ " %");
+            ImageView tv = new ImageView(getContext());
+            tv.setLayoutParams(lparams);
+            Glide.with(getActivity())
+                    .load(objDilema.getDilemaOptions().get(i))
+                    .override(400,300)
+                    .centerCrop()
+                    .into(tv);
+            tv.setId(i);
+            tv.setPadding(20,20,20,20);
+            ProgressBar pg = new ProgressBar(getContext(),null,android.R.attr.progressBarStyleHorizontal);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,50);
+            pg.setLayoutParams(params);
+            pg.setPadding(20,20,20,20);
+            pg.setScaleY(10);
+            pg.setProgress((int)percentage);
+
+            layoutInside.addView(tv);
+            layoutInside.addView(textV);
+            layoutInside.addView(pg);
+            linearLayout.addView(layoutInside);
+        }
     }
 }

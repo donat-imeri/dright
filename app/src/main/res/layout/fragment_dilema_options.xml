@@ -70,6 +70,15 @@
                 android:padding="10dp"
                 android:id="@+id/txtComment"/>
 
+        <ImageButton
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:id="@+id/btnCmn"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/insideLinear"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/rght_arr"
+            android:background="@null"/>
 
 
     </RelativeLayout>

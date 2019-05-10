@@ -25,7 +25,7 @@ public class SlideUpActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_dilema_options);
 
 
-        dim = findViewById(R.id.frag_dil_options);
+        //dim = findViewById(R.id.frag_dil_options);
         slideUp = new SlideUp(slideView);
         slideUp.hideImmediately();
 

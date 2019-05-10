@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/scrollViewFragmentOptions"
     android:background="#ffffff">
 
 
@@ -24,7 +23,9 @@
             android:background="@android:color/black"/>
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/scrollViewFragmentOptions"
+            >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -80,18 +81,20 @@
                 </RadioGroup>
 
             </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Write a comment"
-                android:layout_below="@+id/insideLinear"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:id="@+id/txtComment"/>
-        </LinearLayout>
-        </ScrollView>
-    </RelativeLayout>
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:hint="Write a comment"
+            android:layout_below="@+id/insideLinear"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:id="@+id/txtComment"/>
+
 
         <ImageButton
             android:layout_width="32dp"
@@ -102,6 +105,10 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/rght_arr"
             android:background="@null"/>
+        </LinearLayout>
+        </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
 
 
     <RelativeLayout
@@ -118,7 +125,6 @@
             android:text="Swipe Up"
             android:textSize="20dp" />
     </RelativeLayout>
-
     <include layout="@layout/dilema_content"
 
         />

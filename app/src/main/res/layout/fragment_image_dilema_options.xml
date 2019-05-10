@@ -1,86 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/scrollView"
     android:background="#ffffff">
     <RelativeLayout
         android:layout_width="match_parent"
         android:background="#ffffff"
         android:layout_height="match_parent"
         android:id="@+id/rlLay">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/dim_dilema_image_options"
+            android:alpha="0"
+            android:fitsSystemWindows="true"
+            android:background="@android:color/black"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:id="@+id/lblPostedBy"
-            android:text="Posted by: "
-            android:textSize="14dp"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_toRightOf="@+id/lblPostedBy"
-            android:layout_marginLeft="5dp"
-            android:textSize="14dp"
-            android:id="@+id/txtPostedBy"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scrollView">
 
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtTitle"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
-                android:textSize="16dp"
-                android:padding="20dp"
-                android:background="@drawable/rounded_border_edittext"
-                android:textColor="@android:color/white"
-                android:layout_below="@+id/lblPostedBy"
-                android:textStyle="bold"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/lblPostedBy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Posted by: "
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/txtPostedBy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@+id/lblPostedBy"
+                    android:textSize="14dp" />
 
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtTitle"
-                android:layout_marginTop="20dp"
-                android:id="@+id/scroll">
+                <TextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lblPostedBy"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_border_edittext"
+                    android:padding="20dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+
+                <HorizontalScrollView
+                    android:id="@+id/scroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtTitle"
+                    android:layout_marginTop="20dp">
+
+                    <LinearLayout
+                        android:id="@+id/insideLinear"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:id="@+id/insideLinear">
+                    android:orientation="horizontal">
+
+
+                    <EditText
+                        android:id="@+id/txtComment"
+                        android:layout_width="350dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginTop="10dp"
+                        android:gravity="bottom"
+                        android:hint="Write a comment"
+                        android:padding="10dp" />
+
+                    <ImageButton
+                        android:id="@+id/btnComment"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_below="@+id/scroll"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="10dp"
+                        android:background="@null"
+                        android:foregroundGravity="bottom"
+                        android:padding="10dp"
+                        android:src="@drawable/rght_arr" />
+                </LinearLayout>
+
 
             </LinearLayout>
-            </HorizontalScrollView>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Write a comment"
-                android:gravity="bottom"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:id="@+id/txtComment"/>
-        <ImageButton
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:id="@+id/btnComment"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/scroll"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/rght_arr"
-            android:foregroundGravity="bottom"
-            android:background="@null"/>
-
-
-
+        </ScrollView>
     </RelativeLayout>
-</ScrollView>
+    <RelativeLayout
+        android:id="@+id/swipe_up_layout_dilema_image_options"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom">
+
+        <TextView
+            android:id="@+id/txt_swipeup_dilema"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Swipe Up"
+            android:textSize="20dp" />
+    </RelativeLayout>
+
+    <include
+        layout="@layout/content_slide_up_image_fragment"
+
+        />
+
+</android.support.design.widget.CoordinatorLayout>

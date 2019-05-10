@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mancj.slideup.SlideUp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -58,6 +61,18 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
     LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+    private SlideUp slideUp123;
+    private View dim123;
+    private View slideView123;
+    RelativeLayout swipelayout123;
+    RecyclerView recyclerView;
+
+
+    ArrayList<String> Users = new ArrayList<>();
+    ArrayList<String> Comments = new ArrayList<>();
+
+    ArrayList<CommentsModel> UserComments = new ArrayList<>();
+
     public static FragmentDilemaOptions newInstance(Dilema objDilema, String dilemaId, List<Dilema> objDilLista, List<String> objDilIdList, List<Boolean> objDilCheck) {
         FragmentDilemaOptions fragment = new FragmentDilemaOptions();
         Bundle args = new Bundle();
@@ -84,6 +99,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         dilemaId = getArguments().getString("dilemaId");
         mDilemaCheck = (List<Boolean>) getArguments().getSerializable("objDilCheckList");
         mDilemaId = (List<String>) getArguments().getSerializable("objDilIdList");
+
     }
 
 
@@ -125,9 +141,11 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
                 if(counter == 0){
                     if(objDilema.getDilemaOptions()!= null) {
                         addStuff();
+                        Log.d("mestuff",dilemaId+ "   .cila");
                     }
                     else{
                         addStuffWithoutOptions();
+                        Log.d("patuff",dilemaId+ "   .cila");
                     }
                 }
                 else{
@@ -187,7 +205,51 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         });
 
 
+        swipelayout123 = ProfileView.findViewById(R.id.swipe_up_layout_dilema_options);
+        slideView123 = ProfileView.findViewById(R.id.slideView_fragment123);
+        dim123 = ProfileView.findViewById(R.id.dim_dilema_options);
+        slideUp123 = new SlideUp(slideView123);
+        slideUp123.hideImmediately();
+/*
+        recyclerView = ProfileView.findViewById(R.id.dilemma_options_results_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+        final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
+        recyclerView.setAdapter(adapter);
 
+*/ for(int i=0;i<mDilemaId.size();i++)
+        {
+            Log.d("Dilemaitems",mDilemaId.get(i));
+        }
+
+
+        swipelayout123.setOnTouchListener(new OnSwipeTouchListener(ProfileView.getContext())
+        {
+            public void onSwipeTop()
+            {
+                swipelayout123.setVisibility(View.INVISIBLE);
+                slideUp123.animateIn();
+
+            }
+        });
+
+        slideUp123.setSlideListener(new SlideUp.SlideListener() {
+
+            @Override
+            public void onSlideDown(float v)
+            {
+
+                dim123.setAlpha(1 - (v / 100));
+            }
+
+            @Override
+            public void onVisibilityChanged(int i) {
+                if (i == View.GONE)
+                {
+                    swipelayout123.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
 
 
 

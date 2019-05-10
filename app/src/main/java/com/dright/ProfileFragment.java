@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -84,7 +86,7 @@ public class ProfileFragment extends Fragment {
                 currenttwitter.setText(twitter);
                 currentemail.setText(email);
                 if(!imageURL.equals(""))
-                    Picasso.with(getContext()).load(imageURL).transform(new CircleTransform()).into(profilePicture);
+                    Glide.with(ProfileView.getContext()).load(imageURL).apply(RequestOptions.circleCropTransform()).into(profilePicture);
             }
 
             @Override

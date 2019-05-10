@@ -22,6 +22,7 @@ public class Dilema implements Serializable {
 
     }
 
+
     public Dilema(String dilemaDescription, List<String> dilemaOptions, List<String> dilemaCategories,
                   String dilemaAsker, int dilemaPriority, long dilemaTimeOut, boolean stayAnonymous,
                   List<Integer> optionResults, boolean dilemaText, long timeCreate, boolean hasFinished) {

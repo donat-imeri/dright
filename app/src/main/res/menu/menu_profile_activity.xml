@@ -1,21 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.dright.DecisionsAcitivity"
+    tools:context="com.dright.MyProfileActivity"
     >
     <item
-        android:id="@+id/go_to_my_decisions"
-        android:icon="@drawable/decision_making"
+        android:id="@+id/go_to_dilemmas"
+        android:icon="@drawable/ic_arrow_dilemma"
         app:showAsAction="ifRoom"
-        android:title="Profile"
-        >
-    </item>
-
-    <item
-        android:id="@+id/go_to_profile"
-        android:icon="@drawable/profile"
-        app:showAsAction="ifRoom"
-        android:title="Profile">
+        android:title="Dilemma">
     </item>
     <item
         android:id="@+id/action_settings"

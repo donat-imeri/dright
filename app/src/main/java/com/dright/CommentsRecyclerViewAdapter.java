@@ -36,7 +36,6 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRe
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dilema_comment_items, viewGroup, false);
         final ViewHolder holder = new ViewHolder(view);
         view.setClickable(true);
-
         return holder;
     }
 
@@ -51,7 +50,7 @@ public class CommentsRecyclerViewAdapter extends RecyclerView.Adapter<CommentsRe
 
         }
         else {
-            Glide.with(holder.ProfileView.getContext()).load(commentsModel.image).apply(RequestOptions.circleCropTransform()).
+            Glide.with(holder.ProfileView.getContext()).load(commentsModel.image).apply(RequestOptions.circleCropTransform()).override(30,30).
                     into((ImageView) holder.ProfileView.findViewById(R.id.user_comment_profile));
 
         }

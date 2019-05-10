@@ -15,6 +15,23 @@
         android:focusable="true"
         />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Search_for_Users"
+        android:layout_below="@+id/mSearchText"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textSize="24dp"
+        android:textAlignment="center"
+        android:padding="20dp"
+
+        android:text="Search for Users"
+        android:background="@drawable/rounded_border_edittext"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

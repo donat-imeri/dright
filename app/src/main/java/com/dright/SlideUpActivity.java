@@ -22,12 +22,10 @@ public class SlideUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_slide_up);
+        setContentView(R.layout.fragment_dilema_options);
 
-        swipelayout = findViewById(R.id.swipe_layout);
-        slideView = findViewById(R.id.slideView);
-        dim = findViewById(R.id.dim);
-        txtSwipe = findViewById(R.id.txt_swipeup);
+
+        dim = findViewById(R.id.frag_dil_options);
         slideUp = new SlideUp(slideView);
         slideUp.hideImmediately();
 

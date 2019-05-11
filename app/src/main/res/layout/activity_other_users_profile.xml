@@ -36,24 +36,24 @@
                 android:id="@+id/tab_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile" />
+                android:icon="@drawable/ic_other_profile" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_followers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Followers" />
+                android:icon="@drawable/ic_following_followers" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_following"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Follow" />
+                android:icon="@drawable/ic_following_followers" />
             <android.support.design.widget.TabItem
                 android:id="@+id/tab_dilemmas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Decisions" />
+                android:icon="@drawable/ic_decisions" />
 
         </android.support.design.widget.TabLayout>
     </android.support.design.widget.AppBarLayout>
@@ -64,12 +64,6 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/users_profile_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,6 +1,7 @@
 package com.dright;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,7 @@ public class OtherUsersFollowersFragment extends Fragment {
 
     View ProfileView;
     public ArrayList<ProfileModel> mOtherFollowers = new ArrayList<>();
-    public  ArrayList<String> keys;
+    public  ArrayList<String> keys = new ArrayList<>();
     private DatabaseReference db;
     private FirebaseAuth currentUser;
     RecyclerView recyclerView;
@@ -40,75 +41,73 @@ public class OtherUsersFollowersFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.other_followers,container,false);
         currentUser = FirebaseAuth.getInstance();
-        keys = new ArrayList<>();
+        recyclerView = ProfileView.findViewById(R.id.other_followers_recycler_view);
         Log.d("otherusersfragment","thirret");
         db= FirebaseDatabase.getInstance().getReference("Users").child(OtherUsersProfile.profilekey).child("followers");
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                currentcount = 0;
-                count=0;
-                mOtherFollowers.clear();
                 keys.clear();
-                Log.d("otherusersfragment","hyri ne datachange");
-               if(dataSnapshot.hasChildren()) {
-                   Log.d("otherusersfragment", "hyri ne if");
-
-                   for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                       Log.d("otherusersfragment", "hyri ne for");
-                       String follower = ds.getKey().toString();
-                       Log.d("follower", follower);
-                       Log.d("keyssize",String.valueOf(keys.size()));
-                       keys.add(follower);
-                   }
-
-                   for(int i=0;i<keys.size();i++)
-                   {
-                       db = FirebaseDatabase.getInstance().getReference("Users").child(keys.get(i));
-                       db.addListenerForSingleValueEvent(new ValueEventListener() {
-                           @Override
-                           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                               fullname = dataSnapshot.child("name").getValue(String.class);
-                               profilepic = dataSnapshot.child("imageURL").getValue().toString();
-                               address = dataSnapshot.child("address").getValue().toString();
-                               hash = dataSnapshot.getKey();
-                               ProfileModel profileModel = new ProfileModel(fullname,profilepic,address,hash);
-                               mOtherFollowers.add(profileModel);
-                               recyclerView = ProfileView.findViewById(R.id.other_followers_recycler_view);
-                               final RecyclerViewAdapter adapter = new RecyclerViewAdapter(recyclerView.getContext(), mOtherFollowers);
-                               recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-                               recyclerView.setAdapter(adapter);
-                           }
-                           @Override
-                           public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                           }
-
-
-                       });
-                   }
-
-               }
-
-               else{
-                   recyclerView = ProfileView.findViewById(R.id.other_followers_recycler_view);
-                   final RecyclerViewAdapter adapter = new RecyclerViewAdapter(recyclerView.getContext(),mOtherFollowers);
-                   recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-                   recyclerView.setAdapter(adapter);
-
-               }
-
-
-
-
-
+                mOtherFollowers.clear();
+                for(DataSnapshot ds : dataSnapshot.getChildren())
+                {
+                    keys.add(ds.getKey().toString());
+                }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-
         });
+        db= FirebaseDatabase.getInstance().getReference("Users");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mOtherFollowers.clear();
+                if(keys.size() > 0) {
+                    for (int i = 0; i < keys.size(); i++) {
+                        Log.d("nedatachange2", keys.size() + "");
+                        fullname = dataSnapshot.child(keys.get(i)).child("name").getValue().toString();
+                        profilepic = dataSnapshot.child(keys.get(i)).child("imageURL").getValue().toString();
+                        address = dataSnapshot.child(keys.get(i)).child("address").getValue().toString();
+                        hash = dataSnapshot.child(keys.get(i)).getKey();
+                        ProfileModel profileModel = new ProfileModel(fullname, profilepic, address, hash);
+                        mOtherFollowers.add(profileModel);
+                        final RecyclerViewAdapter adapter = new RecyclerViewAdapter(recyclerView.getContext(), mOtherFollowers);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                        recyclerView.setAdapter(adapter);
+                    }
+                }
+                else
+                {
+                    final RecyclerViewAdapter adapter = new RecyclerViewAdapter(recyclerView.getContext(), mOtherFollowers);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                    recyclerView.setAdapter(adapter);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        Log.d("modeli2","sa");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final RecyclerViewAdapter adapter = new RecyclerViewAdapter(recyclerView.getContext(),mOtherFollowers);
+                recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                recyclerView.setAdapter(adapter);
+
+
+            }
+        },500);
+
 
 
         return ProfileView;

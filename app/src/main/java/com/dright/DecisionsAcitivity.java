@@ -1,11 +1,14 @@
 package com.dright;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -14,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,7 +25,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -46,11 +52,15 @@ public class DecisionsAcitivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private FirebaseAuth auth;
+    String contactText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decisions);
+
+        auth=FirebaseAuth.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -107,6 +117,9 @@ public class DecisionsAcitivity extends AppCompatActivity {
         else if (id==R.id.go_to_my_decisions){
 
         }
+        else if(id==R.id.action_contact_us){
+            contactUs();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -114,6 +127,35 @@ public class DecisionsAcitivity extends AppCompatActivity {
     public  void openProfileActivity(){
         Intent profileIntent=new Intent(DecisionsAcitivity.this, MyProfileActivity.class);
         startActivity(profileIntent);
+    }
+
+    public void contactUs(){
+        contactText="";
+        AlertDialog.Builder builder = new AlertDialog.Builder(DecisionsAcitivity.this);
+        builder.setTitle("Tell us your issue, feedback or advices");
+
+        final View contactView=getLayoutInflater().inflate(R.layout.report_layout, null);
+        final TextInputEditText txtContact=contactView.findViewById(R.id.txt_report_description);
+        builder.setView(contactView);
+
+        // Set up the buttons
+        builder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                contactText=txtContact.getText().toString();
+                DatabaseReference dbReport = FirebaseDatabase.getInstance().getReference("ContactForm").child(auth.getUid());
+                dbReport.push().setValue("");
+                Toast.makeText(DecisionsAcitivity.this, "Message sent. Thank you!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     /**

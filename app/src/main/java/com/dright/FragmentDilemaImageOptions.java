@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,12 +47,11 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
     private DatabaseReference mDatabase;
     private static String rdbText = null;
     private boolean state = true;
+    private String currUser= "";
+    private FirebaseAuth auth;
     private boolean check = false;
     private static int counter = 0;
     private List<String> allVoters;
-    private List<Dilema> mDilemaList = new ArrayList<>();
-    private List<String> mDilemaId = new ArrayList<>();
-    private List<Boolean> mDilemaCheck = new ArrayList<>();
     private Dilema objDilema;
     private ImageButton btnComment;
     private List<Integer> objDilemaOptionsResults = new ArrayList<>();
@@ -59,13 +59,10 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
     LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-    public static FragmentDilemaImageOptions newInstance(Dilema objDilema, String dilemaId, List<Dilema> objDilLista, List<String> objDilIdList, List<Boolean> objDilCheck) {
+    public static FragmentDilemaImageOptions newInstance(Dilema objDilema, String dilemaId) {
         FragmentDilemaImageOptions fragment = new FragmentDilemaImageOptions();
         Bundle args = new Bundle();
         args.putSerializable("objectDilema", objDilema);
-        args.putSerializable("objDilList", (Serializable) objDilLista);
-        args.putSerializable("objDilIdList", (Serializable) objDilIdList);
-        args.putSerializable("objDilCheckList", (Serializable) objDilCheck);
         args.putString("dilemaId",dilemaId);
         fragment.setArguments(args);
         return fragment;
@@ -77,9 +74,6 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         super.onCreate(savedInstanceState);
         objDilema = (Dilema) getArguments().getSerializable("objectDilema");
         dilemaId = getArguments().getString("dilemaId");
-        mDilemaList = (List<Dilema>) getArguments().getSerializable("objDilList");
-        mDilemaCheck = (List<Boolean>) getArguments().getSerializable("objDilCheckList");
-        mDilemaId = (List<String>) getArguments().getSerializable("objDilIdList");
 
     }
 
@@ -98,6 +92,8 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         objDilemaOptionsResults = objDilema.getOptionsResults();
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
         txtComment = ProfileView.findViewById(R.id.txtComment);
+        auth = FirebaseAuth.getInstance();
+        currUser = auth.getUid();
         txtTitle = ProfileView.findViewById(R.id.txtTitle);
         btnComment = ProfileView.findViewById(R.id.btnComment);
         scrollView = ProfileView.findViewById(R.id.scrollView);
@@ -109,7 +105,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         btnComment.setEnabled(state);
         txtComment.setEnabled(state);
         DatabaseReference dbRef10 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-        DatabaseReference dbRef11 = dbRef10.child(DilemaTab.currUser);
+        DatabaseReference dbRef11 = dbRef10.child(currUser);
         dbRef11.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -160,7 +156,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         int counter = 0;
                         for(DataSnapshot ds: dataSnapshot.getChildren()){
-                            if(ds.getKey().equals(DilemaTab.currUser)){
+                            if(ds.getKey().equals(currUser)){
                                 counter++;
                             }
                         }
@@ -197,7 +193,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
             DatabaseReference dataB = FirebaseDatabase.getInstance().getReference("DilemaComments");
             DatabaseReference dataB1 = dataB.child(dilemaId);
 
-            dataB1.child(DilemaTab.currUser).setValue(txtComment.getText().toString());
+            dataB1.child(currUser).setValue(txtComment.getText().toString());
             btnComment.setEnabled(false);
             txtComment.setEnabled(false);
             state = false;
@@ -291,10 +287,9 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
                 mDatabase1.child("comment").setValue(txtComment.getText().toString());
             }
             DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-            DatabaseReference db2 = db1.child(DilemaTab.currUser);
-            db2.child(dilemaId).setValue("Voted");
+            db1.child(currUser).child(dilemaId).setValue("Voted");
             DatabaseReference dbRef3 = FirebaseDatabase.getInstance().getReference("Users");
-            DatabaseReference dbRef4 = dbRef3.child(DilemaTab.currUser).child("docents");
+            DatabaseReference dbRef4 = dbRef3.child(currUser).child("docents");
             dbRef4.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -321,7 +316,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
     private void increaseAmount(Long amount){
 
         DatabaseReference dbRef5 = FirebaseDatabase.getInstance().getReference("Users");
-        DatabaseReference dbRef6 = dbRef5.child(DilemaTab.currUser).child("docents");
+        DatabaseReference dbRef6 = dbRef5.child(currUser).child("docents");
         dbRef6.child("amount").setValue(amount);
 
     }

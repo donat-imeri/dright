@@ -1,36 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/scrollViewFragmentOptions"
     android:background="#ffffff">
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
-        android:id="@+id/relativeLayout_dilema"
-        android:layout_marginBottom="60dp">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/dim_dilema_options"
-            android:alpha="0"
-            android:fitsSystemWindows="true"
-            android:background="@android:color/black"/>
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-
+        android:id="@+id/relativeLayout">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,49 +29,46 @@
             android:textSize="14dp"
             android:id="@+id/txtPostedBy"/>
 
-            <TextView
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtTitle"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:textSize="16dp"
+            android:padding="20dp"
+            android:background="@drawable/rounded_border_edittext"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/lblPostedBy"
+            android:textStyle="bold"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/txtTitle"
+            android:id="@+id/insideLinear"
+            android:layout_marginTop="20dp"
+
+            >
+            <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtTitle"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
-                android:textSize="16dp"
-                android:padding="20dp"
-                android:background="@drawable/rounded_border_edittext"
-                android:textColor="@android:color/white"
-                android:layout_below="@+id/lblPostedBy"
-                android:textStyle="bold"/>
+                android:id="@+id/radiogroup">
 
+            </RadioGroup>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_below="@+id/txtTitle"
-                android:id="@+id/insideLinear"
-                android:layout_marginTop="20dp"
-
-                >
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/radiogroup">
-
-                </RadioGroup>
-
-            </LinearLayout>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Write a comment"
-                android:layout_below="@+id/insideLinear"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:id="@+id/txtComment"/>
         </LinearLayout>
-        </ScrollView>
-    </RelativeLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write a comment"
+            android:layout_below="@+id/insideLinear"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:id="@+id/txtComment"/>
 
         <ImageButton
             android:layout_width="32dp"
@@ -104,23 +81,5 @@
             android:background="@null"/>
 
 
-    <RelativeLayout
-        android:id="@+id/swipe_up_layout_dilema_options"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_gravity="bottom">
-
-        <TextView
-            android:id="@+id/txt_swipeup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Swipe Up"
-            android:textSize="20dp" />
     </RelativeLayout>
-
-    <include layout="@layout/dilema_content"
-
-        />
-
-</android.support.design.widget.CoordinatorLayout>
+</ScrollView>

@@ -43,12 +43,15 @@ public class DilemaTab extends Fragment {
     private View view;
     private  List<Dilema> listDilema = new ArrayList<>();
     private List<Boolean> listDilemaCheck = new ArrayList<>();
-    public static String currUser = "";
+    private String currUser = "";
     private List<String> listDilemaId = new ArrayList<>();
     private List<String> listUserFollowing;
     private List<String> listDilemaVoters = new ArrayList<>();
     private List<Integer> listDilemaPriority = new ArrayList<>();
     private SwipeRefreshLayout mSwipeLayout ;
+    private List<String> dilematFollowing;
+    private static int count = 0;
+    private static int count1 = 0;
 
     private List<String> mListDilemaVoters;
 
@@ -84,6 +87,7 @@ public class DilemaTab extends Fragment {
             @Override
             public void onRefresh() {
                readUserFollowing();
+                Log.d(TAG, "onRefresh: refreshing");
 
                new Handler().postDelayed(new Runnable() {
                    @Override
@@ -105,13 +109,11 @@ public class DilemaTab extends Fragment {
 
     public static class MyPagerAdapter extends FragmentStatePagerAdapter {
         private List<Dilema> mListDilema;
-        private List<Boolean> mListDilemaCheck;
         private List<String> mListDilemaId;
 
-        public MyPagerAdapter(FragmentManager fragmentManager, List<Dilema> mListDilema, List<Boolean> mListDilemaCheck, List<String> mListDilemaId) {
+        public MyPagerAdapter(FragmentManager fragmentManager, List<Dilema> mListDilema,  List<String> mListDilemaId) {
             super(fragmentManager);
             this.mListDilema = mListDilema;
-            this.mListDilemaCheck = mListDilemaCheck;
             this.mListDilemaId = mListDilemaId;
             Log.d(TAG, "MyPagerAdapter: Inside fragmentpageradapter");
         }
@@ -132,11 +134,15 @@ public class DilemaTab extends Fragment {
         @Override
         public Fragment getItem(int position) {
 
-            Log.d(TAG, "getItem: Inside getItem check = "+check);
-            if(mListDilemaCheck.get(position)) {
-                return FragmentDilemaOptions.newInstance(mListDilema.get(position),mListDilemaId.get(position),mListDilema,mListDilemaId,mListDilemaCheck);
+            Log.d(TAG, "getItem: Inside getItem check = "+mListDilema.get(position).isDilemaText());
+            Log.d(TAG, "getItem: inside getItem size: "+mListDilema.size());
+            Log.d(TAG, "getItem: position: "+position);
+            if(mListDilema.get(position).isDilemaText()) {
+                Log.d(TAG, "getItem: inside getItem descr: "+mListDilema.get(position).getDilemaDescription());
+                return FragmentDilemaOptions.newInstance(mListDilema.get(position), mListDilemaId.get(position));
             }else{
-                return FragmentDilemaImageOptions.newInstance(mListDilema.get(position),mListDilemaId.get(position),mListDilema,mListDilemaId,mListDilemaCheck);
+                Log.d(TAG, "getItem: inside getItem descr: "+mListDilema.get(position).getDilemaDescription());
+                return FragmentDilemaImageOptions.newInstance(mListDilema.get(position),mListDilemaId.get(position));
             }
            // return FragmentDilemaOptions.newInstance(mListDilema.get(position));
 
@@ -165,7 +171,9 @@ public class DilemaTab extends Fragment {
 
                     listUserFollowing.add(ds.getKey());
                 }
-                hasVoted(listUserFollowing);
+                //hasVoted(listUserFollowing);
+                Log.d(TAG, "onDataChange: userFollowing: "+listUserFollowing.size());
+                dilemasInProgress(listUserFollowing);
             }
 
             @Override
@@ -174,19 +182,63 @@ public class DilemaTab extends Fragment {
             }
         });
     }
+    //qitu ndryshime
+    private void dilemasInProgress(final List<String> userFollowing){
+        dilematFollowing = new ArrayList<>();
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Users");
 
-    private void hasVoted(final List<String> userFollowing){
+        for(int i=0;i< userFollowing.size();i++){
+            Log.d(TAG, userFollowing.get(i)+"aaaa");
+            db.child(userFollowing.get(i)).child("dilemasInProgress").addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot ds: dataSnapshot.getChildren()) {
+
+                            Log.d(TAG, "onDataChange: dataSnapshotChild: "+ ds.getValue(String.class)+"aaaa");
+                            dilematFollowing.add(ds.getValue(String.class));
+
+                        }
+                        count++;
+                        if(count==userFollowing.size()){
+                            Log.d(TAG, "onDataChange: u thirr: "+dilematFollowing.size());
+
+                            hasVoted(userFollowing,dilematFollowing);
+                        }
+                    Log.d(TAG, "onDataChange: dilematFollowing: "+dilematFollowing.size());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            Log.d(TAG, "dilemasInProgress: inside for loop tek userFollowing: "+dilematFollowing.size());
+        }
+        /*
+        Log.d(TAG, "dilemasInProgress: outside for loop userFollowing: "+dilematFollowing.size());
+        hasVoted(userFollowing,dilematFollowing);*/
+
+
+    }
+
+    private void hasVoted(final List<String> userFollowing, final List<String> dilFollowing){
+        Log.d(TAG, "hasVoted: dilemaFollowingsize: "+ dilFollowing.size());
         final List<String> dilemaVoted = new ArrayList<>();
         DatabaseReference mDb1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-        DatabaseReference mDb2 = mDb1.child(DilemaTab.currUser);
+        DatabaseReference mDb2 = mDb1.child(currUser);
         mDb2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
                     dilemaVoted.add(ds.getKey());
                 }
+                Log.d(TAG, "onDataChange: dilemaVoted: " + dilemaVoted.size());
 
-                readFromDb(dilemaVoted,userFollowing);
+                filterDilematVoted(userFollowing,dilFollowing,dilemaVoted);
+                //readFromDb(dilemaVoted,userFollowing);
             }
 
             @Override
@@ -195,427 +247,147 @@ public class DilemaTab extends Fragment {
             }
         });
     }
+    private void filterDilematVoted(final List<String> userFollowing, final List<String> dilFollowing, final List<String> dilemaVoted){
+        final List<String> neededDilema = new ArrayList<>();
 
-    /*private void hasVoted(final List<String> userFollowing){
-        final List<String> voters = new ArrayList<>();
-        DatabaseReference mDb1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-        mDb1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    if(ds.hasChild(currUser)){
-                        voters.add(ds.getKey());
-                    }
+        for(int i=0; i <dilFollowing.size();i++){
+            int counter = 0;
+            for(int j=0; j<dilemaVoted.size();j++){
+                if(dilFollowing.get(i).equals(dilemaVoted.get(j))){
+                    counter++;
                 }
-
-                readFromDb(voters,userFollowing);
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            if(counter == 0){
+                neededDilema.add(dilFollowing.get(i));
             }
-        });
-    }*/
-    private void readFromDb(final List<String> votedDilema, final List<String> userFollowing){
+        }
+
+        Log.d(TAG, "filterDilematVoted: neededDilema: "+neededDilema.size());
+        getDilemas(neededDilema);
 
 
-        Log.d(TAG, "readFromDatabase: inside ");
-
-        mDatabase = FirebaseDatabase.getInstance().getReference("Dilema/");
-        Log.d(TAG, "readFromDatabase: " + mDatabase.getKey());
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                listDilema = new ArrayList<>();
-                listDilemaCheck = new ArrayList<>();
-                listDilemaId = new ArrayList<>();
-                listDilemaPriority = new ArrayList<>();
-                List<Dilema> filteredDilema = new ArrayList<>();
-                List<Boolean> filteredCheckDilema = new ArrayList<>();
-                List<String> filteredId = new ArrayList<>();
-                List<Integer> filteredPriority = new ArrayList<>();
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    Log.d(TAG, "onDataChange: inside for loop" + ds.getValue(Dilema.class).getDilemaDescription());
-                    Log.d(TAG, "onDataChange: has Child: "+ ds.hasChild("dilemaText"));
-                    Log.d(TAG, "onDataChange: listUserFollowing.size = "+listUserFollowing.size());
-                    Log.d(TAG, "onDataChange: currentUser: "+currUser);
-                    //hasVoted(ds.getKey());
-                    Log.d(TAG, "onDataChange: listDIlemaVoters size: "+listDilemaVoters.size());
-                    for(int i=0; i <listUserFollowing.size();i++)
-                    {
-                        Log.d(TAG, "onDataChange: inside for loop");
-                        Log.d(TAG, "onDataChange: dilemaAsker");
-                        Log.d(TAG, "onDataChange: dilemaASker equals : "+ds.child("dilemaAsker").getValue(String.class).equals(listUserFollowing.get(i)));
-                        if(ds.child("dilemaAsker").getValue(String.class).equals(listUserFollowing.get(i))){
-                            int counter = 0;
-                            for(int j=0;j<votedDilema.size();j++)
-                            {
-                                if(ds.getKey().equals(votedDilema.get(j))){
-                                    counter++;
-                                }
-                            }
-                            if(counter == 0){
-                                if(ds.child("dilemaText").getValue(Boolean.class).toString().equalsIgnoreCase("true")) {
-                                    check = true;
-                                    Log.d(TAG, "onDataChange: inside has Child(dilemaText: "+check);
-                                }
-                                else{
-                                    Log.d(TAG, "onDataChange: inside has Child(dilemaText: "+check);
-                                    check = false;
-                                }
-                                listDilemaId.add(ds.getKey());
-                                listDilemaPriority.add(ds.child("dilemaPriority").getValue(Integer.class));
-                                Dilema objD = ds.getValue(Dilema.class);
-
-                                listDilema.add(objD);
-                                listDilemaCheck.add(check);
-                            }
+    }
 
 
+    //qitu duhet ndryshime
+    private void getDilemas(final List<String> neededDilema){
+        final List<Dilema> insideDilemaList = new ArrayList<>();
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Dilema/");
+        for(int i =0; i<neededDilema.size();i++) {
+            databaseRef.child(neededDilema.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
-
-
-
-                        }
+                    if(dataSnapshot.getValue() != null) {
+                        Dilema objD = (Dilema) dataSnapshot.getValue(Dilema.class);
+                        Log.d(TAG, "onDataChange: dataSnapshot.key: " + dataSnapshot.getKey());
+                        Log.d(TAG, "onDataChange: dataSnapshot." + objD.getDilemaAsker());
+                        Log.d(TAG, "onDataChange: dataSnapshot. timeCreated: "+objD.getTimeCreate());
+                        Log.d(TAG, "onDataChange: dataSnapshot.timeCreated: "+objD.getTimeCreate());
+                        insideDilemaList.add(objD);
+                        count1++;
                     }
-
-
-                }
-                Collections.reverse(listDilema);
-                Collections.reverse(listDilemaId);
-                Collections.reverse(listDilemaCheck);
-                Collections.reverse(listDilemaPriority);
-
-                Log.d(TAG, "onDataChange: listDilema size: "+listDilema.size());
-                int i=0;
-                while (listDilema.size() != 0){
-                    int max = listDilemaPriority.get(i);
-                    String dilemaId = listDilemaId.get(i);
-                    Dilema objDilema = listDilema.get(i);
-                    boolean dilemaCheck = listDilemaCheck.get(i);
-                    int k = 0;
-
-                    for(int j=0; j<listDilema.size();j++)
-                    {
-                        if(listDilemaPriority.get(j)>max){
-                            max = listDilemaPriority.get(j);
-                            dilemaId = listDilemaId.get(j);
-                            dilemaCheck = listDilemaCheck.get(j);
-                            objDilema = listDilema.get(j);
-                            Log.d(TAG, "onDataChange: listDilemacheck(j): "+dilemaCheck);
-                            k=j;
-                            Log.d(TAG, "onDataChange: k = "+k+ "\t j="+j);
-                            Log.d(TAG, "onDataChange: listDilemaCheck(k): "+listDilemaCheck.get(k));
+                        if(count1 == neededDilema.size()){
+                            Log.d(TAG, "onDataChange: u thirr edhe kjo :"+insideDilemaList.size());
+                            //addToAdapter(insideDilemaList,neededDilema);
+                            timeSort(insideDilemaList, neededDilema);
                         }
 
-                    }
 
-                    listDilemaPriority.remove(k);
-                    listDilema.remove(objDilema);
-                    listDilemaId.remove(dilemaId);
-                    listDilemaCheck.remove(k);
-
-                    filteredCheckDilema.add(dilemaCheck);
-                    filteredDilema.add(objDilema);
-                    filteredId.add(dilemaId);
-                    filteredPriority.add(max);
-
+                    Log.d(TAG, "onDataChange: getDilemas: " + insideDilemaList.size());
                 }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                if(filteredDilema.size() != 0 && filteredCheckDilema.size() != 0 && filteredId.size() != 0) {
-                    adapterViewPager = new MyPagerAdapter(getChildFragmentManager(), filteredDilema, filteredCheckDilema, filteredId);
-                    Log.d(TAG, "onCreateView: Adapter " + adapterViewPager);
-                    adapterViewPager.notifyDataSetChanged();
-                    vpPager.setAdapter(adapterViewPager);
-                    Log.d(TAG, "onCreateView: after setting adapter");
-                    vpPager.setPageTransformer(true, new RotateUpTransformer());
                 }
+            });
+            Log.d(TAG, "getDilemas: inside for loop getting dilemas: "+insideDilemaList.size());
+        }
 
 
+        Log.d(TAG, "getDilemas: after getting dilemas: "+insideDilemaList.size());
+    }
+    private void timeSort(List<Dilema> currListDilema, List<String> idDilemas){
+        List<Dilema> timeSortedDilema = new ArrayList<>();
+        List<String> timeSortedId = new ArrayList<>();
 
 
+        while(currListDilema.size() != 0){
+
+            int k = 0;
+            long max = currListDilema.get(k).getTimeCreate();
+            Dilema objD = currListDilema.get(k);
+            String id = "";
+            Log.d(TAG, "timeSort: timeMax: "+max);
+            for(int j=1;j< currListDilema.size();j++)
+            {
+                if(currListDilema.get(j).getTimeCreate()> max){
+                    objD = currListDilema.get(j);
+                    max = objD.getTimeCreate();
+                    id = idDilemas.get(j);
+                    k=j;
+                    Log.d(TAG, "timeSort: k:"+k+", j:"+j);
+                }
             }
-
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+            Log.d(TAG, "timeSort: max after sort: "+max);
+            Log.d(TAG, "timeSort: objDesc"+objD.getDilemaDescription());
+            timeSortedDilema.add(objD);
+            timeSortedId.add(id);
+            currListDilema.remove(k);
+            idDilemas.remove(k);
+            Log.d(TAG, "timeSort: currListDil size: "+currListDilema.size());
+        }
+        Log.d(TAG, "timeSort: timeSortedDilemas: " +timeSortedDilema.size());
+        Log.d(TAG, "timeSort: timeSOrtedId: "+ timeSortedId.size());
+        prioritySort(timeSortedDilema, timeSortedId);
 
     }
-    public void getNextItemsPriority5(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList){
-        final List<String> newIdDilemaList = new ArrayList<>();
+    private void prioritySort(List<Dilema> currListDilema, List<String> currListId){
+        List<Dilema> prioritySortedDilema = new ArrayList<>();
+        List<String> prioritySortedId = new ArrayList<>();
 
-        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
-        DatabaseReference dbPriority1 = dbPriority.child("5");
-        dbPriority1.startAt(currIdDilema).limitToFirst(10).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                int numOfItemsLeft = 0;
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    int counter = 0;
-                    for(int i=0;i<currDilemaIdList.size();i++){
-                        if(ds.getKey().equals(currDilemaIdList.get(i))){
-                            counter++;
-                        }
-                    }
-                    if(counter==0){
-                        newIdDilemaList.add(ds.getKey());
-                    }
-                    numOfItemsLeft++;
-
+        while(currListDilema.size() != 0)
+        {
+            int k=0;
+            Dilema objD = currListDilema.get(k);
+            String id = "";
+            int max = currListDilema.get(k).getDilemaPriority();
+            Log.d(TAG, "prioritySort: priorityMax: "+max);
+            for(int j=1;j<currListDilema.size();j++)
+            {
+                if(currListDilema.get(j).getDilemaPriority() > max){
+                    objD = currListDilema.get(j);
+                    id = currListId.get(j);
+                    max = objD.getDilemaPriority();
+                    k=j;
+                    Log.d(TAG, "prioritySort: k:"+k+", j:"+j);
                 }
-                if(numOfItemsLeft> 0 && numOfItemsLeft < 10){
-                    getNextItemsPriority4(newIdDilemaList.get(newIdDilemaList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList,newIdDilemaList);
-                }
-                else if(numOfItemsLeft == 10){
-                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,newIdDilemaList);
-                }
-                else if(numOfItemsLeft == 0){
-                    getNextItemsPriority4(newIdDilemaList.get(newIdDilemaList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList,newIdDilemaList);
-                }
-
             }
+            Log.d(TAG, "prioritySort: prioritymax: "+max);
+            Log.d(TAG, "prioritySort: objDesc: "+objD.getDilemaDescription());
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
+            prioritySortedDilema.add(objD);
+            prioritySortedId.add(id);
+            currListDilema.remove(k);
+            currListId.remove(k);
+            Log.d(TAG, "prioritySort: currListDil size: "+currListDilema.size());
+        }
+        Log.d(TAG, "prioritySort: prioritySortedDilema: "+ prioritySortedDilema.size());
+        Log.d(TAG, "prioritySort: prioritySortedId: " + prioritySortedId.size());
+        addToAdapter(prioritySortedDilema, prioritySortedId);
+    }
+    private void addToAdapter(List<Dilema> finalDilemaList, List<String> finalIdList){
+        if(finalDilemaList.size() != 0){
+            adapterViewPager = new MyPagerAdapter(getChildFragmentManager(), finalDilemaList, finalIdList);
+            Log.d(TAG, "onCreateView: Adapter " + adapterViewPager);
+            adapterViewPager.notifyDataSetChanged();
+            vpPager.setAdapter(adapterViewPager);
+            Log.d(TAG, "onCreateView: after setting adapter");
+            vpPager.setPageTransformer(true, new RotateUpTransformer());
+        }
 
     }
-    public void getNextItemsPriority4(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
 
-        int limitation = 0;
-        if(continuedDilemaIdList.size() == 0){
-            limitation = 10;
-        }
-        else if(continuedDilemaIdList.size()>0 && continuedDilemaIdList.size()<10){
-            limitation = 10 - continuedDilemaIdList.size();
-        }
-
-        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
-        DatabaseReference dbPriority1 = dbPriority.child("4");
-        dbPriority1.startAt(currIdDilema).limitToFirst(limitation).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                int numOfItemsLeft = 0;
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    int counter = 0;
-                    for(int i=0;i<currDilemaIdList.size();i++){
-                        if(ds.getKey().equals(currDilemaIdList.get(i))){
-                            counter++;
-                        }
-                    }
-                    if(counter==0){
-                        continuedDilemaIdList.add(ds.getKey());
-                    }
-                    numOfItemsLeft++;
-
-                }
-                if(numOfItemsLeft> 0 && numOfItemsLeft < 10){
-                    getNextItemsPriority3(continuedDilemaIdList.get(continuedDilemaIdList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList, continuedDilemaIdList);
-                }
-                else if(numOfItemsLeft == 10){
-                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,continuedDilemaIdList);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void getNextItemsPriority3(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
-        int limitation = 0;
-        if(continuedDilemaIdList.size() == 0){
-            limitation = 10;
-        }
-        else if(continuedDilemaIdList.size()>0 && continuedDilemaIdList.size()<10){
-            limitation = 10 - continuedDilemaIdList.size();
-        }
-
-        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
-        DatabaseReference dbPriority1 = dbPriority.child("3");
-        dbPriority1.startAt(currIdDilema).limitToFirst(limitation).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                int numOfItemsLeft = 0;
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    int counter = 0;
-                    for(int i=0;i<currDilemaIdList.size();i++){
-                        if(ds.getKey().equals(currDilemaIdList.get(i))){
-                            counter++;
-                        }
-                    }
-                    if(counter==0){
-                        continuedDilemaIdList.add(ds.getKey());
-                    }
-                    numOfItemsLeft++;
-
-                }
-                if(numOfItemsLeft> 0 && numOfItemsLeft < 10){
-                    getNextItemsPriority2(continuedDilemaIdList.get(continuedDilemaIdList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList, continuedDilemaIdList);
-                }
-                else if(numOfItemsLeft == 10){
-                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,continuedDilemaIdList);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void getNextItemsPriority2(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
-        int limitation = 0;
-        if(continuedDilemaIdList.size() == 0){
-            limitation = 10;
-        }
-        else if(continuedDilemaIdList.size()>0 && continuedDilemaIdList.size()<10){
-            limitation = 10 - continuedDilemaIdList.size();
-        }
-
-        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
-        DatabaseReference dbPriority1 = dbPriority.child("2");
-        dbPriority1.startAt(currIdDilema).limitToFirst(limitation).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                int numOfItemsLeft = 0;
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    int counter = 0;
-                    for(int i=0;i<currDilemaIdList.size();i++){
-                        if(ds.getKey().equals(currDilemaIdList.get(i))){
-                            counter++;
-                        }
-                    }
-                    if(counter==0){
-                        continuedDilemaIdList.add(ds.getKey());
-                    }
-                    numOfItemsLeft++;
-
-                }
-                if(numOfItemsLeft> 0 && numOfItemsLeft < 10){
-                    getNextItemsPriority1(continuedDilemaIdList.get(continuedDilemaIdList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList, continuedDilemaIdList);
-                }
-                else if(numOfItemsLeft == 10){
-                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,continuedDilemaIdList);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-    public void getNextItemsPriority1(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
-        int limitation = 0;
-        if(continuedDilemaIdList.size() == 0){
-            limitation = 10;
-        }
-        else if(continuedDilemaIdList.size()>0 && continuedDilemaIdList.size()<10){
-            limitation = 10 - continuedDilemaIdList.size();
-        }
-
-        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
-        DatabaseReference dbPriority1 = dbPriority.child("1");
-        dbPriority1.startAt(currIdDilema).limitToFirst(limitation).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                int numOfItemsLeft = 0;
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    int counter = 0;
-                    for(int i=0;i<currDilemaIdList.size();i++){
-                        if(ds.getKey().equals(currDilemaIdList.get(i))){
-                            counter++;
-                        }
-                    }
-                    if(counter==0){
-                        continuedDilemaIdList.add(ds.getKey());
-                    }
-                    numOfItemsLeft++;
-
-                }
-                if(numOfItemsLeft> 0 && numOfItemsLeft < 10){
-                    getNextItemsPriority0(continuedDilemaIdList.get(continuedDilemaIdList.size()-1), currDilemaList, currDilemaCheck, currDilemaIdList, continuedDilemaIdList);
-                }
-                else if(numOfItemsLeft == 10){
-                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,continuedDilemaIdList);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-    public void getNextItemsPriority0(String currIdDilema, final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
-        int limitation = 0;
-        if(continuedDilemaIdList.size() == 0){
-            limitation = 10;
-        }
-        else if(continuedDilemaIdList.size()>0 && continuedDilemaIdList.size()<10){
-            limitation = 10 - continuedDilemaIdList.size();
-        }
-
-        DatabaseReference dbPriority = FirebaseDatabase.getInstance().getReference("DilemaPriorities");
-        DatabaseReference dbPriority1 = dbPriority.child("0");
-        dbPriority1.startAt(currIdDilema).limitToFirst(limitation).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                int numOfItemsLeft = 0;
-                for(DataSnapshot ds: dataSnapshot.getChildren()){
-                    int counter = 0;
-                    for(int i=0;i<currDilemaIdList.size();i++){
-                        if(ds.getKey().equals(currDilemaIdList.get(i))){
-                            counter++;
-                        }
-                    }
-                    if(counter==0){
-                        continuedDilemaIdList.add(ds.getKey());
-                    }
-                    numOfItemsLeft++;
-
-                }
-                if(numOfItemsLeft> 0){
-
-                    updateList(currDilemaList, currDilemaCheck, currDilemaIdList,continuedDilemaIdList);
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void updateList(final List<Dilema> currDilemaList, final List<Boolean> currDilemaCheck, final List<String> currDilemaIdList, final List<String> continuedDilemaIdList){
-
-    }
 
 }

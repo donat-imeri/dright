@@ -79,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null){
-            DilemaTab.currUser = currentUser.toString();
             updateUI(currentUser);
         }
 

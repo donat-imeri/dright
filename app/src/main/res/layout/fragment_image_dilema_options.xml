@@ -31,44 +31,44 @@
             android:id="@+id/txtPostedBy"/>
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/txtTitle"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
-                android:textSize="16dp"
-                android:padding="20dp"
-                android:background="@drawable/rounded_border_edittext"
-                android:textColor="@android:color/white"
-                android:layout_below="@+id/lblPostedBy"
-                android:textStyle="bold"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtTitle"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:textSize="16dp"
+            android:padding="20dp"
+            android:background="@drawable/rounded_border_edittext"
+            android:textColor="@android:color/white"
+            android:layout_below="@+id/lblPostedBy"
+            android:textStyle="bold"/>
 
 
-            <HorizontalScrollView
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtTitle"
+            android:layout_marginTop="20dp"
+            android:id="@+id/scroll">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtTitle"
-                android:layout_marginTop="20dp"
-                android:id="@+id/scroll">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:id="@+id/insideLinear">
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:id="@+id/insideLinear">
 
             </LinearLayout>
-            </HorizontalScrollView>
+        </HorizontalScrollView>
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Write a comment"
-                android:gravity="bottom"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:id="@+id/txtComment"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write a comment"
+            android:gravity="bottom"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:id="@+id/txtComment"/>
         <ImageButton
             android:layout_width="32dp"
             android:layout_height="32dp"

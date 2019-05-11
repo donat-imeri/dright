@@ -413,9 +413,6 @@ public class DilemaTab extends Fragment {
 
     }
 
-    }
-
-
     public static void readNext10(int c, final int p){
         counter=c;
         priority=p;

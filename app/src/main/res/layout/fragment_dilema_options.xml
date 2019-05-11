@@ -18,7 +18,9 @@
             android:id="@+id/dim_dilema_options"
             android:alpha="0"
             android:fitsSystemWindows="true"
-            android:background="@android:color/black"/>
+            android:background="@android:color/black"
+            app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
+            />
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

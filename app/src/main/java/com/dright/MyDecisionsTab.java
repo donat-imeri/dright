@@ -307,7 +307,7 @@ public class MyDecisionsTab extends Fragment {
         Toast.makeText(getActivity(), "You'll make a decision soon", Toast.LENGTH_SHORT).show();
 
         DatabaseReference addDilemaToUser=fb.getReference("Users/"+auth.getUid());
-        addDilemaToUser.child("dilemasInProgress").push().setValue(newRow.getKey());
+        addDilemaToUser.child("dilemasInProgress").child(newRow.getKey()).setValue(newRow.getKey());
 
         DatabaseReference table2=fb.getReference("DilemaVoters/"+newRow.getKey()+"/"+auth.getUid());
         table2.setValue(true);

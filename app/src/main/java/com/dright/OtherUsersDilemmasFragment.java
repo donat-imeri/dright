@@ -29,6 +29,8 @@ public class OtherUsersDilemmasFragment extends Fragment {
     public ArrayList<DilemmaModel> mDilemma = new ArrayList<>();
     public  ArrayList<String> keys = new ArrayList<>();
 
+    public  ArrayList<String> commentsNumber = new ArrayList<>();
+
 
     @Nullable
     @Override
@@ -47,6 +49,24 @@ public class OtherUsersDilemmasFragment extends Fragment {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     keys.add(ds.getValue().toString());
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        db= FirebaseDatabase.getInstance().getReference("DilemaComments");
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                commentsNumber.clear();
+                for(int i=0;i<keys.size();i++)
+                {
+                    commentsNumber.add(String.valueOf(dataSnapshot.child(keys.get(i)).getChildrenCount()));
+                    Log.d("edyte","ok");
+                }
+
             }
 
             @Override

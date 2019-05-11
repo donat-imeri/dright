@@ -80,7 +80,12 @@ public class OtherUsersProfileFragment extends Fragment {
                 imageUrl = dataSnapshot.child("imageURL").getValue().toString();
                 if(!imageUrl.equals(""))
                 {
-                    Glide.with(getContext()).load(imageUrl).apply(RequestOptions.circleCropTransform()).into(profilePicture);
+                    try {
+                        Glide.with(getContext()).load(imageUrl).apply(RequestOptions.circleCropTransform()).into(profilePicture);
+                    }
+                    catch (Exception e){
+
+                    }
                 }
                 if(dataSnapshot.child("followers").hasChild(currentUser.getUid()))
                 {

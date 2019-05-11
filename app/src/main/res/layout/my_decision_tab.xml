@@ -19,7 +19,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1) Tell us your dilema *"
+                android:text="1) Tell us your dilemma *"
                 android:textSize="18sp"
                 android:layout_gravity="left"
                 android:paddingLeft="30sp"
@@ -30,20 +30,21 @@
                 android:id="@+id/txt_dilema_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Type your dilema here..."
+                android:hint="Type your dilemma here..."
                 android:background="@drawable/rounded_border_edittext"
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/solidCircle"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20sp"
                 android:layout_marginRight="20sp"
+                android:inputType="textCapSentences|textMultiLine"
                 android:padding="20dp"/>
 
             <TextView
                 android:id="@+id/lbl_dilema_error3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Please describe your dilema"
+                android:text="Please describe your dilemma"
                 android:textColor="@color/colorRed"
                 android:visibility="invisible"
                 android:layout_marginBottom="10sp"/>
@@ -345,7 +346,7 @@
             android:id="@+id/lbl_total_docent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total docents: $0.0"
+            android:text="Total docents: 0.0 D"
             android:textSize="18sp"
             android:background="@color/colorPrimary"
             android:textColor="@color/colorWhite"

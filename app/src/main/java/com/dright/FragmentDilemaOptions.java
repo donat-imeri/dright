@@ -418,9 +418,11 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         slideUp123 = new SlideUp(slideView123);
         slideUp123.hideImmediately();
 
+
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
         recyclerView.setAdapter(adapter);
+
 
 
 

@@ -45,11 +45,18 @@ public class MyProfileActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        if (getIntent().hasExtra("call_from")){
+            FragmentManager fragmentActivity = getSupportFragmentManager();
+            fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
+                    , new DilemmasinProgressFragment()).commit();
+        }
+        else{
+            FragmentManager fragmentActivity = getSupportFragmentManager();
+            fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
+                    , new ProfileFragment()).commit();
+            Log.d("runnable","thirret");
+        }
 
-        FragmentManager fragmentActivity = getSupportFragmentManager();
-        fragmentActivity.beginTransaction().replace(R.id.profile_content_frame
-                , new ProfileFragment()).commit();
-        Log.d("runnable","thirret");
 
 
 
@@ -90,8 +97,7 @@ public class MyProfileActivity extends AppCompatActivity
             finish();
         }
         else if (id==R.id.go_to_dilemmas){
-            Intent intent = new Intent(MyProfileActivity.this,DecisionsAcitivity.class);
-            startActivity(intent);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

@@ -115,7 +115,9 @@ public class DecisionsAcitivity extends AppCompatActivity {
             openProfileActivity();
         }
         else if (id==R.id.go_to_my_decisions){
-
+            Intent profileIntent=new Intent(DecisionsAcitivity.this, MyProfileActivity.class);
+            profileIntent.putExtra("call_from","true");
+            startActivity(profileIntent);
         }
         else if(id==R.id.action_contact_us){
             contactUs();
@@ -144,7 +146,7 @@ public class DecisionsAcitivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 contactText=txtContact.getText().toString();
                 DatabaseReference dbReport = FirebaseDatabase.getInstance().getReference("ContactForm").child(auth.getUid());
-                dbReport.push().setValue("");
+                dbReport.push().setValue(contactText);
                 Toast.makeText(DecisionsAcitivity.this, "Message sent. Thank you!", Toast.LENGTH_SHORT).show();
             }
         });

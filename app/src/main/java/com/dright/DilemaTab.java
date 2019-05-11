@@ -49,7 +49,6 @@ public class DilemaTab extends Fragment {
     private List<String> listUserFollowing;
     private List<String> listDilemaVoters = new ArrayList<>();
     private List<Integer> listDilemaPriority = new ArrayList<>();
-    private SwipeRefreshLayout mSwipeLayout ;
     public static List<String> dilematFollowing;
     private static int count = 0;
     private static int count1 = 0;
@@ -93,27 +92,10 @@ public class DilemaTab extends Fragment {
 
         vpPager = (ViewPager) activity.findViewById(R.id.vpPager);
 
-        mSwipeLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe_refresh_layout);
         auth=FirebaseAuth.getInstance();
 
         currUser = auth.getUid();
         readUserFollowing();
-
-        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
-            @Override
-            public void onRefresh() {
-               readUserFollowing();
-                Log.d(TAG, "onRefresh: refreshing");
-
-               new Handler().postDelayed(new Runnable() {
-                   @Override
-                   public void run() {
-                       mSwipeLayout.setRefreshing(false);
-                   }
-               },500);
-            }
-        });
 
 
         //donat

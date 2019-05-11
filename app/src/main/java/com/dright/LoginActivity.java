@@ -24,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtEmail;
     private EditText txtPassword;
     private TextView createAccount;
+    private TextView forgotPassword;
 
 
     @Override
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         txtPassword=findViewById(R.id.txt_login_password);
         btnLogin=findViewById(R.id.btn_login);
         createAccount=findViewById(R.id.lbl_create_account);
+        forgotPassword=findViewById(R.id.lbl_forgot_password);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -42,7 +44,16 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signInWithEmailAndPassword(txtEmail.getText().toString(), txtPassword.getText().toString())
+                String email="a";
+                String password="a";
+                if (!txtEmail.getText().toString().isEmpty()){
+                    email=txtEmail.getText().toString();
+                }
+                if (!txtPassword.getText().toString().isEmpty()){
+                    password=txtPassword.getText().toString();
+                }
+
+                mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -70,6 +81,16 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(goToLogin);
             }
         });
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(LoginActivity.this, "Feature not yet implemented!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
     }
 
     @Override

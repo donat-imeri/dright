@@ -50,7 +50,7 @@ public class DilemaTab extends Fragment {
     private List<String> listDilemaVoters = new ArrayList<>();
     private List<Integer> listDilemaPriority = new ArrayList<>();
     private SwipeRefreshLayout mSwipeLayout ;
-    private List<String> dilematFollowing;
+    private static List<String> dilematFollowing;
     private static int count = 0;
     private static int count1 = 0;
 
@@ -59,7 +59,8 @@ public class DilemaTab extends Fragment {
     public static FragmentStatePagerAdapter adapterViewPager;
     private ViewPager vpPager;
     private DatabaseReference mDatabase;
-    private FirebaseAuth auth;
+    private static FirebaseAuth auth;
+    private static FirebaseDatabase fb;
     private static boolean check = false;
     private String[] itemsCategory = {"All", "Food","Sport", "Clothes"};
 
@@ -68,6 +69,10 @@ public class DilemaTab extends Fragment {
     public static List<String> lastDilemaIdList;
     public static List<String> newDilemaList;
     public static int counter, priority;
+    public static boolean firstItem;
+
+    public static List<Dilema> prioritySortedDilema;
+    public static List<String> prioritySortedId;
     //donat
 
 
@@ -110,16 +115,28 @@ public class DilemaTab extends Fragment {
 
 
         //donat
+        fb=FirebaseDatabase.getInstance();
         counter=0;
         priority=5;
+        firstItem=true;
         lastDilemaIdList=new ArrayList<>();
         newDilemaList=new ArrayList<>();
-        lastDilemaIdList.add("-LeAxgnILiW_Ai9ieWq7");
-        lastDilemaIdList.add("-Ld624Fk0XH1e8VHfVNU");
-        lastDilemaIdList.add("-Ld624Fk0XH1e8VHfVNU");
-        lastDilemaIdList.add("-Ld624Fk0XH1e8VHfVNU");
-        lastDilemaIdList.add("-LeBHskAh6I1vEXuCTAO");
-        lastDilemaIdList.add("-LeC6CagoscdIVkOicRg");
+
+
+        DatabaseReference getLastIds=fb.getReference("UserLastId").child(auth.getUid());
+        getLastIds.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    lastDilemaIdList.add(ds.getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         //donat
 
@@ -158,6 +175,12 @@ public class DilemaTab extends Fragment {
         @Override
         public Fragment getItem(int position) {
 
+            Log.d("Called getItem", "posititon: "+position+" - prioritySize="+prioritySortedId.size());
+            if (prioritySortedId.size()==position+1){
+                newDilemaList.clear();
+                readNext10(0,5);
+            }
+
             Log.d(TAG, "getItem: Inside getItem check = "+mListDilema.get(position).isDilemaText());
             Log.d(TAG, "getItem: inside getItem size: "+mListDilema.size());
             Log.d(TAG, "getItem: position: "+position);
@@ -169,6 +192,7 @@ public class DilemaTab extends Fragment {
                 return FragmentDilemaImageOptions.newInstance(mListDilema.get(position),mListDilemaId.get(position));
             }
            // return FragmentDilemaOptions.newInstance(mListDilema.get(position));
+
 
         }
 
@@ -368,8 +392,8 @@ public class DilemaTab extends Fragment {
 
     }
     private void prioritySort(List<Dilema> currListDilema, List<String> currListId){
-        List<Dilema> prioritySortedDilema = new ArrayList<>();
-        List<String> prioritySortedId = new ArrayList<>();
+        prioritySortedDilema = new ArrayList<>();
+        prioritySortedId = new ArrayList<>();
 
         while(currListDilema.size() != 0)
         {
@@ -400,6 +424,7 @@ public class DilemaTab extends Fragment {
         Log.d(TAG, "prioritySort: prioritySortedDilema: "+ prioritySortedDilema.size());
         Log.d(TAG, "prioritySort: prioritySortedId: " + prioritySortedId.size());
         addToAdapter(prioritySortedDilema, prioritySortedId);
+        //readNext10(0,5);
     }
     private void addToAdapter(List<Dilema> finalDilemaList, List<String> finalIdList){
         if(finalDilemaList.size() != 0){
@@ -416,32 +441,72 @@ public class DilemaTab extends Fragment {
     public static void readNext10(int c, final int p){
         counter=c;
         priority=p;
-        newDilemaList.clear();
+        firstItem=true;
 
         Log.d("PRiority", priority +"aaaa");
         Log.d("Counter", counter +"aaaa");
         Query db=FirebaseDatabase.getInstance().getReference("DilemaPriorities").child(String.valueOf(priority))
                 .orderByKey()
-                .startAt(lastDilemaIdList.get(priority)).limitToFirst(10);
+                .startAt(lastDilemaIdList.get(priority)).limitToFirst(11);
 
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot s: dataSnapshot.getChildren()){
+                    if (firstItem) {
+                        firstItem=false;
+                        continue;
+                    }
                     Log.d("Dilma id aaaa", s.getKey()+"aaaa");
 
                     lastDilemaIdList.set(priority,s.getKey());
-                    newDilemaList.add(s.getKey());
-                    counter++;
+
+                    if (!dilematFollowing.contains(s.getKey())){
+                        newDilemaList.add(s.getKey());
+                        prioritySortedId.add(s.getKey());
+                        counter++;
+                    }
+
+                    if (counter>=10) break;
                 }
+                DatabaseReference getLastIds=fb.getReference("UserLastId").child(auth.getUid());
+                getLastIds.child(String.valueOf(priority)).setValue(lastDilemaIdList.get(priority));
+
                 if (counter<10){
                     priority--;
-                    if (priority>=0)
-                    readNext10(counter, priority);
-                }
+                    if (priority>=0){
+                        Log.d("Brenda if","aaaaa");
+                        readNext10(counter, priority);
 
+                    }
+                }
+                if (counter>=10 || priority<0) {
+                    Log.d("Brenda else readNext", "aaaaa");
+                    Log.d("New dilema list size", newDilemaList.size()+" aaaaa");
+                    for (int j = 0; j < newDilemaList.size(); j++) {
+                        DatabaseReference getDilema = FirebaseDatabase.getInstance().getReference("Dilema")
+                                .child(newDilemaList.get(j));
+                        final int finalJ = j;
+                        getDilema.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                prioritySortedDilema.add(dataSnapshot.getValue(Dilema.class));
+                                if (finalJ == newDilemaList.size() - 1) {
+                                    Log.d("Ketu jemi", "aaaaa");
+                                    adapterViewPager.notifyDataSetChanged();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
                 //Notify data set changed
                 //append nweDilemaList to actualDilemaList
+
             }
 
             @Override

@@ -107,63 +107,68 @@ public class DecisionDetailsActivity extends AppCompatActivity {
         dilemaRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                myDilema=dataSnapshot.getValue(Dilema.class);
+                myDilema = dataSnapshot.getValue(Dilema.class);
                 toolbarTitle.setTitle("Decision Details");
                 txtDilemaDescriptionResult.setText(myDilema.getDilemaDescription());
                 ratingBarResult.setRating(3.5f);
-                int max=calculateMax(myDilema.getOptionsResults());
+                int max = 0;
+                if (myDilema.getOptionsResults() != null) {
+                    if (myDilema.getOptionsResults().size() > 0)
+                        max = calculateMax(myDilema.getOptionsResults());
 
-                layoutOptionResults.removeAllViews();
-                List<PieEntry> entries = new ArrayList<>();
-                List<Integer> colorsArray=new ArrayList<>();
 
-                for (int i=0;i<myDilema.getDilemaOptions().size(); i++) {
-                    View textOptionResult= getLayoutInflater().inflate(R.layout.text_options_result_layout,null);
-                    TextView optionTextResult=textOptionResult.findViewById(R.id.txt_text_option_result);
-                    SeekBar optionTextResultSeekBar=textOptionResult.findViewById(R.id.skb_text_option_result);
-                    TextView optionText=textOptionResult.findViewById(R.id.txt_option_description);
-                    ImageView optionImage=textOptionResult.findViewById(R.id.img_option_result);
+                    layoutOptionResults.removeAllViews();
+                    List<PieEntry> entries = new ArrayList<>();
+                    List<Integer> colorsArray = new ArrayList<>();
 
-                    optionTextResult.setText(myDilema.getOptionsResults().get(i)+"%");
-                    optionTextResultSeekBar.setProgress(myDilema.getOptionsResults().get(i));
+                    for (int i = 0; i < myDilema.getDilemaOptions().size(); i++) {
+                        View textOptionResult = getLayoutInflater().inflate(R.layout.text_options_result_layout, null);
+                        TextView optionTextResult = textOptionResult.findViewById(R.id.txt_text_option_result);
+                        SeekBar optionTextResultSeekBar = textOptionResult.findViewById(R.id.skb_text_option_result);
+                        TextView optionText = textOptionResult.findViewById(R.id.txt_option_description);
+                        ImageView optionImage = textOptionResult.findViewById(R.id.img_option_result);
 
-                    if(myDilema.isDilemaText()){
-                        optionText.setText(myDilema.getDilemaOptions().get(i));
-                        optionImage.setVisibility(View.GONE);
+                        optionTextResult.setText(myDilema.getOptionsResults().get(i) + "%");
+                        optionTextResultSeekBar.setProgress(myDilema.getOptionsResults().get(i));
+
+                        if (myDilema.isDilemaText()) {
+                            optionText.setText(myDilema.getDilemaOptions().get(i));
+                            optionImage.setVisibility(View.GONE);
+                        } else {
+                            String s = myDilema.getDilemaOptions().get(i);
+                            Glide.with(optionText.getContext()).
+                                    load(s).override(400, 400).
+                                    into(optionImage);
+                            optionText.setVisibility(View.GONE);
+                        }
+
+                        if (max == myDilema.getOptionsResults().get(i)) {
+                            ConstraintLayout cl = textOptionResult.findViewById(R.id.layout_text_option_results);
+                            cl.setBackground(getResources().getDrawable(R.drawable.rounded_border_green));
+                            entries.add(new PieEntry((float) myDilema.getOptionsResults().get(i), "Most voted"));
+                            colorsArray.add(i, getResources().getColor(R.color.colorGreen));
+                        } else {
+                            entries.add(new PieEntry((float) myDilema.getOptionsResults().get(i), "Option " + (i + 1)));
+                            colorsArray.add(i, getResources().getIntArray(R.array.piechartcolors)[i]);
+                        }
+
+                        layoutOptionResults.addView(textOptionResult);
+
                     }
-                    else{
-                        String s=myDilema.getDilemaOptions().get(i);
-                        Glide.with(optionText.getContext()).
-                        load(s).override(400,400).
-                                into(optionImage);
-                        optionText.setVisibility(View.GONE);
-                    }
+                    PieDataSet set = new PieDataSet(entries, "");
+                    set.setSliceSpace(3);
+                    set.setSelectionShift(5);
 
-                    if (max==myDilema.getOptionsResults().get(i)){
-                        ConstraintLayout cl=textOptionResult.findViewById(R.id.layout_text_option_results);
-                        cl.setBackground(getResources().getDrawable(R.drawable.rounded_border_green));
-                        entries.add(new PieEntry((float)myDilema.getOptionsResults().get(i), "Most voted"));
-                        colorsArray.add(i, getResources().getColor(R.color.colorGreen));
-                    }
-                    else{
-                        entries.add(new PieEntry((float)myDilema.getOptionsResults().get(i), "Option "+(i+1)));
-                        colorsArray.add(i, getResources().getIntArray(R.array.piechartcolors)[i]);
-                    }
+                    set.setColors(colorsArray);
+                    PieData data = new PieData(set);
 
-                    layoutOptionResults.addView(textOptionResult);
-
+                    graphResults.setData(data);
+                    graphResults.invalidate();
                 }
-                PieDataSet set = new PieDataSet(entries, "");
-                set.setSliceSpace(3);
-                set.setSelectionShift(5);
-
-                set.setColors(colorsArray);
-                PieData data = new PieData(set);
-
-                graphResults.setData(data);
-                graphResults.invalidate();
+                else{
+                    btnSpinTheWheel.setEnabled(false);
+                }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

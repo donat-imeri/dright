@@ -56,7 +56,6 @@
 
     <include
         layout="@layout/content_slide_up"
-
         />
 
     <RelativeLayout

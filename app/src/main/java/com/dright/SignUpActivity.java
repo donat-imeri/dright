@@ -30,7 +30,8 @@ public class SignUpActivity extends AppCompatActivity {
     private TextView goToLogin;
     private TextView emailError, passwordError, nameError, passwordMatchError;
     private boolean isError;
-    private DatabaseReference fb;
+    private FirebaseDatabase fb;
+    private DatabaseReference usersRef;
 
 
     @Override
@@ -52,7 +53,8 @@ public class SignUpActivity extends AppCompatActivity {
         passwordMatchError=findViewById(R.id.lbl_password_mach_error);
         isError=false;
 
-        fb=FirebaseDatabase.getInstance().getReference("Users");
+        fb=FirebaseDatabase.getInstance();
+        usersRef=fb.getReference("Users");
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +168,7 @@ public class SignUpActivity extends AppCompatActivity {
         Log.d("userID", userId);
         Docent d=new Docent(0);
         UserProfile user=new UserProfile(email, name, 0, d);
-        DatabaseReference newUser=fb.child(userId);
+        DatabaseReference newUser=usersRef.child(userId);
         newUser.setValue(user);
         newUser.child("address").setValue("");
         newUser.child("phone").setValue("");
@@ -178,6 +180,12 @@ public class SignUpActivity extends AppCompatActivity {
         newUser.child("decisionsMade");
 
         newUser.child("imageURL").setValue("");
+
+
+        DatabaseReference getLastIds=fb.getReference("UserLastId").child(userId);
+        for (int i=0;i<=5;i++){
+            getLastIds.child(String.valueOf(i)).setValue("0");
+        }
     }
 
 

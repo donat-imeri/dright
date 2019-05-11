@@ -108,6 +108,8 @@ public class DilemaTab extends Fragment {
         priorityList=new ArrayList<>();
         myDilemas=new ArrayList<>();
 
+        dilematFollowing=new ArrayList<>();
+
         DatabaseReference db1 =fb.getReference("DilemaVotersTemporary/"+currUser);
         db1.setValue("");
 
@@ -158,7 +160,6 @@ public class DilemaTab extends Fragment {
             super(fragmentManager);
             this.mListDilema = mListDilema;
             this.mListDilemaId = mListDilemaId;
-            Log.d(TAG, "bbbbb"+mListDilemaId.get(0));
         }
 
         // Returns total number of pages
@@ -223,6 +224,8 @@ public class DilemaTab extends Fragment {
                     listUserFollowing.add(ds.getKey());
                 }
                 //hasVoted(listUserFollowing);
+
+
                 Log.d(TAG, "onDataChange: userFollowing: "+listUserFollowing.size());
                 dilemasInProgress(listUserFollowing);
             }
@@ -254,10 +257,9 @@ public class DilemaTab extends Fragment {
                         count++;
                         if(count==userFollowing.size()){
                             Log.d(TAG, "onDataChange: u thirr: "+dilematFollowing.size());
-
-                            hasVoted(userFollowing,dilematFollowing);
-                        }
-                    Log.d(TAG, "onDataChange: dilematFollowing: "+dilematFollowing.size());
+                                hasVoted(userFollowing, dilematFollowing);
+                            }
+                        Log.d(TAG, "onDataChange: dilematFollowing: "+dilematFollowing.size());
                 }
 
                 @Override
@@ -324,6 +326,7 @@ public class DilemaTab extends Fragment {
     //qitu duhet ndryshime
     private void getDilemas(final List<String> neededDilema){
         listDilemaId=neededDilema;
+
         final List<Dilema> insideDilemaList = new ArrayList<>();
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Dilema/");
         for(int i =0; i<neededDilema.size();i++) {
@@ -397,15 +400,16 @@ public class DilemaTab extends Fragment {
 
                     lastDilemaIdList.set(priority,s.getKey());
 
-                    if (!dilematFollowing.contains(s.getKey()) && !myDilemas.contains(s.getKey())){
-                        newDilemaList.add(s.getKey());
-                        listDilemaId.add(s.getKey());
-                        priorityList.add(priority);
-                        counter++;
+
+                    if (!dilematFollowing.contains(s.getKey()) && !myDilemas.contains(s.getKey()))
+                            newDilemaList.add(s.getKey());
+                            listDilemaId.add(s.getKey());
+                            priorityList.add(priority);
+                            counter++;
+
+                        if (counter>=10) break;
                     }
 
-                    if (counter>=10) break;
-                }
                 //donat
                 //DatabaseReference getLastIds=fb.getReference("UserLastId").child(auth.getUid());
                 //getLastIds.child(String.valueOf(priority)).setValue(lastDilemaIdList.get(priority));
@@ -432,7 +436,7 @@ public class DilemaTab extends Fragment {
                                 listDilema.add(d);
                                 if (finalJ == newDilemaList.size() - 1) {
                                     Log.d("Ketu jemi", "aaaaa");
-                                    adapterViewPager.notifyDataSetChanged();
+                                        adapterViewPager.notifyDataSetChanged();
                                 }
                             }
 

@@ -86,12 +86,7 @@ public class ProfileFragment extends Fragment {
                 currenttwitter.setText(twitter);
                 currentemail.setText(email);
                 if(!imageURL.equals(""))
-                    try {
-                        Glide.with(ProfileView.getContext()).load(imageURL).apply(RequestOptions.circleCropTransform()).into(profilePicture);
-                    }
-                    catch (Exception e2){
-
-                    }
+                    Glide.with(ProfileView.getContext()).load(imageURL).apply(RequestOptions.circleCropTransform()).into(profilePicture);
             }
 
             @Override

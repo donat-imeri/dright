@@ -683,9 +683,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
             double opResDouble = opResult*1.0;
             double numVotersDouble = numVoters*1.0;
             double percentage = (opResDouble/numVotersDouble)*100;
-            Log.d(TAG, "showResults: percentage before: "+((opResult/numVoters)*1.0));
-            Log.d(TAG, "showResults: opRes: "+opResult);
-            Log.d(TAG, "showResults: percentage: "+percentage);
+
             TextView tv = new TextView(getContext());
             tv.setLayoutParams(lparams);
             String percentageStr = String.format("%.2f",percentage);

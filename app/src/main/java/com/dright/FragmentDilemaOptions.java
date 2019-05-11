@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -34,6 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mancj.slideup.SlideUp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -72,6 +76,20 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
     private String reportText;
     private int myPosition;
     private int priority;
+
+    private SlideUp slideUp123;
+    private View dim123;
+    private View slideView123;
+    RelativeLayout swipelayout123;
+    RecyclerView recyclerView;
+
+
+    ArrayList<String> Users = new ArrayList<>();
+    ArrayList<String> Comments = new ArrayList<>();
+
+    ArrayList<CommentsModel> UserComments = new ArrayList<>();
+    Handler handler = new Handler();
+
 
 
     public static FragmentDilemaOptions newInstance(Dilema objDilema, String dilemaId, int dilemaPosition, int priority) {
@@ -112,6 +130,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         scrollViewFr = ProfileView.findViewById(R.id.scrollViewFragmentOptions);
+        recyclerView = ProfileView.findViewById(R.id.dilemma_options_results_recycler_view);
 
         auth = FirebaseAuth.getInstance();
         currUser = auth.getUid();
@@ -295,6 +314,67 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         });
         //addStuff();
 
+        mDatabase = FirebaseDatabase.getInstance().getReference("DilemaComments").child(dilemaId);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Users.clear();
+                Comments.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Users.add(ds.getKey().toString());
+                    Comments.add(ds.getValue().toString());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+                mDatabase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(Users.size() > 0)
+                        {
+                            for(int i=0;i<Users.size();i++)
+                            {
+                                Log.d("hahahha",Users.size()+"");
+                                String username = dataSnapshot.child(Users.get(i)).child("name").getValue().toString();
+                                String imageUrl = dataSnapshot.child(Users.get(i)).child("imageURL").getValue().toString();
+                                String userhash = Users.get(i);
+                                String comment = Comments.get(i);
+                                CommentsModel commentsModel = new CommentsModel(username,imageUrl,comment,userhash);
+                                UserComments.add(i,commentsModel);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                                final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
+                                recyclerView.setAdapter(adapter);
+                            }
+                        }
+                        else
+                        {
+                            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                            final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
+                            recyclerView.setAdapter(adapter);
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+            }
+        },600);
 
 
         btnCmn.setOnClickListener(new View.OnClickListener() {
@@ -331,6 +411,49 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
 
             }
         });
+
+        swipelayout123 = ProfileView.findViewById(R.id.swipe_up_layout_dilema_options);
+        slideView123 = ProfileView.findViewById(R.id.slideView_fragment123);
+        dim123 = ProfileView.findViewById(R.id.dim_dilema_options);
+        slideUp123 = new SlideUp(slideView123);
+        slideUp123.hideImmediately();
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+        final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
+        recyclerView.setAdapter(adapter);
+
+
+
+        swipelayout123.setOnTouchListener(new OnSwipeTouchListener(ProfileView.getContext())
+        {
+            public void onSwipeTop()
+            {
+                swipelayout123.setVisibility(View.INVISIBLE);
+                slideUp123.animateIn();
+
+            }
+        });
+
+        slideUp123.setSlideListener(new SlideUp.SlideListener() {
+
+            @Override
+            public void onSlideDown(float v)
+            {
+
+                dim123.setAlpha(1 - (v / 100));
+            }
+
+            @Override
+            public void onVisibilityChanged(int i) {
+                if (i == View.GONE)
+                {
+                    swipelayout123.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+
 
 
 

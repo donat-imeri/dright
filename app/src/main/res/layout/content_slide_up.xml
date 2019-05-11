@@ -7,7 +7,6 @@
     android:id="@+id/content_slide_up"
     tools:context=".SlideUpActivity"
     tools:showIn="@layout/activity_slide_up"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
 
     <LinearLayout

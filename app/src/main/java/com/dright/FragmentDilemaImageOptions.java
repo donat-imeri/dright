@@ -3,10 +3,13 @@ package com.dright;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +34,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mancj.slideup.SlideUp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -70,6 +74,22 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
     private String reportText;
     private int myPosition;
     private int priority;
+
+
+
+    private SlideUp slideUpImage;
+    private View dimImage;
+    private View slideViewImage;
+    RelativeLayout swipelayoutImage;
+
+    RecyclerView recyclerView;
+
+    ArrayList<String> Users = new ArrayList<>();
+    ArrayList<String> Comments = new ArrayList<>();
+
+    ArrayList<CommentsModel> UserComments = new ArrayList<>();
+    Handler handler = new Handler();
+
 
     public static FragmentDilemaImageOptions newInstance(Dilema objDilema, String dilemaId, int dilemaPosition, int priority) {
         FragmentDilemaImageOptions fragment = new FragmentDilemaImageOptions();
@@ -111,7 +131,10 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         currUser = auth.getUid();
         txtTitle = ProfileView.findViewById(R.id.txtTitle);
         btnComment = ProfileView.findViewById(R.id.btnComment);
-        scrollView = ProfileView.findViewById(R.id.scrollView);
+        scrollView = ProfileView.findViewById(R.id.scrollViewFragmentImageOptions);
+
+        recyclerView = ProfileView.findViewById(R.id.dilemma_options_results_image_recycler_view);
+
         if (savedInstanceState != null) {
             //probably orientation change
             state = savedInstanceState.getBoolean("state");
@@ -287,6 +310,70 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         });
         //addStuff();
 
+        mDatabase = FirebaseDatabase.getInstance().getReference("DilemaComments").child(dilemaId);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Users.clear();
+                Comments.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Users.add(ds.getKey().toString());
+                    Comments.add(ds.getValue().toString());
+                    Log.d("iparihyri",Users.size()+"");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+                mDatabase.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(Users.size() > 0)
+                        {
+                            for(int i=0;i<Users.size();i++)
+                            {
+                                Log.d("hahahha",Users.size()+"");
+                                String username = dataSnapshot.child(Users.get(i)).child("name").getValue().toString();
+                                String imageUrl = dataSnapshot.child(Users.get(i)).child("imageURL").getValue().toString();
+                                String userhash = Users.get(i);
+                                String comment = Comments.get(i);
+                                CommentsModel commentsModel = new CommentsModel(username,imageUrl,comment,userhash);
+                                UserComments.add(i,commentsModel);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                                final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
+                                recyclerView.setAdapter(adapter);
+                            }
+                        }
+                        else
+                        {
+                            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                            final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
+                            recyclerView.setAdapter(adapter);
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+            }
+        },600);
 
 
 
@@ -324,6 +411,48 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
             }
         });
+
+        swipelayoutImage = ProfileView.findViewById(R.id.swipe_up_layout_dilema_image_options);
+        slideViewImage = ProfileView.findViewById(R.id.slideView_image_fragment);
+        dimImage = ProfileView.findViewById(R.id.dim_dilema_image_options);
+        slideUpImage = new SlideUp(slideViewImage);
+        slideUpImage.hideImmediately();
+
+
+
+
+
+        swipelayoutImage.setOnTouchListener(new OnSwipeTouchListener(ProfileView.getContext())
+        {
+            public void onSwipeTop()
+            {
+                swipelayoutImage.setVisibility(View.INVISIBLE);
+                slideUpImage.animateIn();
+
+            }
+        });
+
+        slideUpImage.setSlideListener(new SlideUp.SlideListener() {
+
+            @Override
+            public void onSlideDown(float v)
+            {
+
+                dimImage.setAlpha(1 - (v / 100));
+            }
+
+            @Override
+            public void onVisibilityChanged(int i) {
+                if (i == View.GONE)
+                {
+                    swipelayoutImage.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+
+        Log.d(TAG, "onCreateView: Is calling return ProfileView");
 
 
         Log.d(TAG, "onCreateView: Is calling return ProfileView");

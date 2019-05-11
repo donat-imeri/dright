@@ -128,26 +128,35 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         hasReported=false;
 
 
-        DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("Users").child(fa.getUid()).child("following");
-        dbUsers.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot s: dataSnapshot.getChildren()
-                ) {
-                    if (objDilema.getDilemaAsker().equals(s.getKey())&& !isFollowing){
-                        btnFollowUser.setBackground(getResources().getDrawable(R.drawable.rounded_border_no_color));
-                        btnFollowUser.setBackgroundColor(getResources().getColor(R.color.grey));
-                        btnFollowUser.setText("Following");
-                        isFollowing=true;
+        if (!objDilema.isStayAnonymous()) {
+
+            DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("Users").child(fa.getUid()).child("following");
+            dbUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot s : dataSnapshot.getChildren()
+                    ) {
+                        if (objDilema.getDilemaAsker().equals(s.getKey()) && !isFollowing) {
+                            btnFollowUser.setBackground(getResources().getDrawable(R.drawable.rounded_border_no_color));
+                            btnFollowUser.setBackgroundColor(getResources().getColor(R.color.grey));
+                            btnFollowUser.setText("Following");
+                            isFollowing = true;
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
+        else{
+            btnFollowUser.setBackground(getResources().getDrawable(R.drawable.rounded_border_no_color));
+            btnFollowUser.setBackgroundColor(getResources().getColor(R.color.grey));
+            btnFollowUser.setText("Anonymous");
+            isFollowing = true;
+        }
 
 
         btnFollowUser.setOnClickListener(new View.OnClickListener() {

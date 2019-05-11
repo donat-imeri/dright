@@ -69,6 +69,7 @@ public class DilemaTab extends Fragment {
     public static List<String> lastDilemaIdList;
     public static List<String> newDilemaList;
     public static List<Integer> priorityList;
+    public static List<String> myDilemas;
     public static int counter, priority;
     public static boolean firstItem;
 
@@ -123,6 +124,7 @@ public class DilemaTab extends Fragment {
         lastDilemaIdList=new ArrayList<>();
         newDilemaList=new ArrayList<>();
         priorityList=new ArrayList<>();
+        myDilemas=new ArrayList<>();
 
         DatabaseReference db1 =fb.getReference("DilemaVotersTemporary/"+currUser);
         db1.setValue("");
@@ -142,7 +144,21 @@ public class DilemaTab extends Fragment {
             }
         });
 
-        //donat
+        DatabaseReference getMyDecisions=fb.getReference("Users/"+auth.getUid()+"/dilemasInProgress");
+        getMyDecisions.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot d: dataSnapshot.getChildren()){
+                    myDilemas.add(d.getValue(String.class));
+                    Log.d("my dilemas", d.getValue(String.class)+"aaaaaa");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
 
@@ -399,7 +415,7 @@ public class DilemaTab extends Fragment {
 
                     lastDilemaIdList.set(priority,s.getKey());
 
-                    if (!dilematFollowing.contains(s.getKey())){
+                    if (!dilematFollowing.contains(s.getKey()) && !myDilemas.contains(s.getKey())){
                         newDilemaList.add(s.getKey());
                         listDilemaId.add(s.getKey());
                         priorityList.add(priority);
@@ -430,7 +446,8 @@ public class DilemaTab extends Fragment {
                         getDilema.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                listDilema.add(dataSnapshot.getValue(Dilema.class));
+                                Dilema d=dataSnapshot.getValue(Dilema.class);
+                                listDilema.add(d);
                                 if (finalJ == newDilemaList.size() - 1) {
                                     Log.d("Ketu jemi", "aaaaa");
                                     adapterViewPager.notifyDataSetChanged();

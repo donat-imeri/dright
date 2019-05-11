@@ -135,32 +135,40 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         isFollowing=false;
         hasReported=false;
 
+        if (!objDilema.isStayAnonymous()) {
 
-        DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("Users").child(fa.getUid()).child("following");
-        dbUsers.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot s: dataSnapshot.getChildren()
-                ) {
-                    if (objDilema.getDilemaAsker().equals(s.getKey())&& !isFollowing){
-                        btnFollowUser.setBackground(getResources().getDrawable(R.drawable.rounded_border_no_color));
-                        btnFollowUser.setBackgroundColor(getResources().getColor(R.color.grey));
-                        btnFollowUser.setText("Following");
-                        isFollowing=true;
+            DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("Users").child(fa.getUid()).child("following");
+            dbUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot s : dataSnapshot.getChildren()
+                    ) {
+                        if (objDilema.getDilemaAsker().equals(s.getKey()) && !isFollowing) {
+                            btnFollowUser.setBackground(getResources().getDrawable(R.drawable.rounded_border_no_color));
+                            btnFollowUser.setBackgroundColor(getResources().getColor(R.color.grey));
+                            btnFollowUser.setText("Following");
+                            isFollowing = true;
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-
+                }
+            });
+        }
+        else{
+            btnFollowUser.setBackground(getResources().getDrawable(R.drawable.rounded_border_no_color));
+            btnFollowUser.setBackgroundColor(getResources().getColor(R.color.grey));
+            btnFollowUser.setText("Anonymous");
+            isFollowing = true;
+        }
 
         btnFollowUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (!isFollowing){
                     isFollowing=true;
                     btnFollowUser.setEnabled(false);
@@ -175,6 +183,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
 
                     Toast.makeText(getActivity(), "Follow added", Toast.LENGTH_SHORT).show();
                 }
+
 
             }
         });

@@ -68,12 +68,16 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
     private FirebaseAuth fa;
     private boolean isFollowing, hasReported;
     private String reportText;
+    private int myPosition;
+    private int priority;
 
-    public static FragmentDilemaImageOptions newInstance(Dilema objDilema, String dilemaId) {
+    public static FragmentDilemaImageOptions newInstance(Dilema objDilema, String dilemaId, int dilemaPosition, int priority) {
         FragmentDilemaImageOptions fragment = new FragmentDilemaImageOptions();
         Bundle args = new Bundle();
         args.putSerializable("objectDilema", objDilema);
         args.putString("dilemaId",dilemaId);
+        args.putInt("dilemaPosition", dilemaPosition);
+        args.putInt("dilemaPriority", priority);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,7 +88,8 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         super.onCreate(savedInstanceState);
         objDilema = (Dilema) getArguments().getSerializable("objectDilema");
         dilemaId = getArguments().getString("dilemaId");
-
+        myPosition=getArguments().getInt("dilemaPosition");
+        priority=getArguments().getInt("dilemaPriority");
     }
 
     @Override
@@ -226,8 +231,16 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
 
 
-        DatabaseReference dbRef10 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-        DatabaseReference dbRef11 = dbRef10.child(currUser);
+        DatabaseReference dbRef10;
+        DatabaseReference dbRef11;
+
+        if (myPosition<DilemaTab.dilematFollowing.size()){
+            dbRef10= FirebaseDatabase.getInstance().getReference("DilemaVoters");
+        }
+        else{
+            dbRef10= FirebaseDatabase.getInstance().getReference("DilemaVotersTemporary");
+        }
+        dbRef11 = dbRef10.child(currUser);
         dbRef11.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -320,7 +333,22 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
             txtComment.setEnabled(false);
             state = false;
             txtComment.setText("");
-            Toast.makeText(getActivity(), "Please also vote on the dilema, if you haven't done it yet!", Toast.LENGTH_SHORT).show();
+
+            //donat
+            if (myPosition<DilemaTab.dilematFollowing.size()){
+                DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVoters/"+currUser);
+                db1.child(dilemaId).setValue("Voted");
+            }
+            else{
+                DatabaseReference getLastIds=FirebaseDatabase.getInstance().getReference("UserLastId").child(auth.getUid());
+                getLastIds.child(String.valueOf(priority)).setValue(dilemaId);
+
+                DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVotersTemporary/"+currUser);
+                db1.child(dilemaId).setValue("Voted");
+            }
+            //donat
+            Toast.makeText(getActivity(), "Thanks for helping the community!", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -408,8 +436,21 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
             if(!txtComment.getText().equals("")){
                 mDatabase1.child("comment").setValue(txtComment.getText().toString());
             }
-            DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVoters/"+currUser+"/"+dilemaId+"/");
-            db1.setValue("Voted");
+
+            //donat
+            if (myPosition<DilemaTab.dilematFollowing.size()){
+                DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVoters/"+currUser);
+                db1.child(dilemaId).setValue("Voted");
+            }
+            else{
+                DatabaseReference getLastIds=FirebaseDatabase.getInstance().getReference("UserLastId").child(auth.getUid());
+                getLastIds.child(String.valueOf(priority)).setValue(dilemaId);
+
+                DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVotersTemporary/"+currUser);
+                db1.child(dilemaId).setValue("Voted");
+            }
+
+
             DatabaseReference dbRef3 = FirebaseDatabase.getInstance().getReference("Users");
             DatabaseReference dbRef4 = dbRef3.child(currUser).child("docents");
             dbRef4.addListenerForSingleValueEvent(new ValueEventListener() {

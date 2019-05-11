@@ -42,15 +42,15 @@ import java.util.Map;
 public class DilemaTab extends Fragment {
     private static final String TAG = "DilemaTab";
     private View view;
-    private  List<Dilema> listDilema = new ArrayList<>();
+    private static List<Dilema> listDilema = new ArrayList<>();
     private List<Boolean> listDilemaCheck = new ArrayList<>();
     private String currUser = "";
-    private List<String> listDilemaId = new ArrayList<>();
+    private static List<String> listDilemaId = new ArrayList<>();
     private List<String> listUserFollowing;
     private List<String> listDilemaVoters = new ArrayList<>();
     private List<Integer> listDilemaPriority = new ArrayList<>();
     private SwipeRefreshLayout mSwipeLayout ;
-    private static List<String> dilematFollowing;
+    public static List<String> dilematFollowing;
     private static int count = 0;
     private static int count1 = 0;
 
@@ -68,6 +68,7 @@ public class DilemaTab extends Fragment {
     //donat
     public static List<String> lastDilemaIdList;
     public static List<String> newDilemaList;
+    public static List<Integer> priorityList;
     public static int counter, priority;
     public static boolean firstItem;
 
@@ -121,7 +122,10 @@ public class DilemaTab extends Fragment {
         firstItem=true;
         lastDilemaIdList=new ArrayList<>();
         newDilemaList=new ArrayList<>();
+        priorityList=new ArrayList<>();
 
+        DatabaseReference db1 =fb.getReference("DilemaVotersTemporary/"+currUser);
+        db1.setValue("");
 
         DatabaseReference getLastIds=fb.getReference("UserLastId").child(auth.getUid());
         getLastIds.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -156,7 +160,7 @@ public class DilemaTab extends Fragment {
             super(fragmentManager);
             this.mListDilema = mListDilema;
             this.mListDilemaId = mListDilemaId;
-            Log.d(TAG, "MyPagerAdapter: Inside fragmentpageradapter");
+            Log.d(TAG, "bbbbb"+mListDilemaId.get(0));
         }
 
         // Returns total number of pages
@@ -175,21 +179,22 @@ public class DilemaTab extends Fragment {
         @Override
         public Fragment getItem(int position) {
 
-            Log.d("Called getItem", "posititon: "+position+" - prioritySize="+prioritySortedId.size());
-            if (prioritySortedId.size()==position+1){
+            if (mListDilema.size()==position+1){
                 newDilemaList.clear();
                 readNext10(0,5);
             }
 
             Log.d(TAG, "getItem: Inside getItem check = "+mListDilema.get(position).isDilemaText());
-            Log.d(TAG, "getItem: inside getItem size: "+mListDilema.size());
+            Log.d(TAG, "getItem: inside getItem size: "+mListDilemaId.size());
             Log.d(TAG, "getItem: position: "+position);
             if(mListDilema.get(position).isDilemaText()) {
                 Log.d(TAG, "getItem: inside getItem descr: "+mListDilema.get(position).getDilemaDescription());
-                return FragmentDilemaOptions.newInstance(mListDilema.get(position), mListDilemaId.get(position));
+                Log.d(TAG, "dilemaId before sending: "+mListDilemaId.get(position)+"bbbbb");
+
+                return FragmentDilemaOptions.newInstance(mListDilema.get(position), mListDilemaId.get(position), position, priorityList.get(position));
             }else{
                 Log.d(TAG, "getItem: inside getItem descr: "+mListDilema.get(position).getDilemaDescription());
-                return FragmentDilemaImageOptions.newInstance(mListDilema.get(position),mListDilemaId.get(position));
+                return FragmentDilemaImageOptions.newInstance(mListDilema.get(position),mListDilemaId.get(position), position, priorityList.get(position));
             }
            // return FragmentDilemaOptions.newInstance(mListDilema.get(position));
 
@@ -307,6 +312,7 @@ public class DilemaTab extends Fragment {
             }
             if(counter == 0){
                 neededDilema.add(dilFollowing.get(i));
+                priorityList.add(0);
             }
         }
 
@@ -319,6 +325,7 @@ public class DilemaTab extends Fragment {
 
     //qitu duhet ndryshime
     private void getDilemas(final List<String> neededDilema){
+        listDilemaId=neededDilema;
         final List<Dilema> insideDilemaList = new ArrayList<>();
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Dilema/");
         for(int i =0; i<neededDilema.size();i++) {
@@ -337,8 +344,8 @@ public class DilemaTab extends Fragment {
                     }
                         if(count1 == neededDilema.size()){
                             Log.d(TAG, "onDataChange: u thirr edhe kjo :"+insideDilemaList.size());
-                            //addToAdapter(insideDilemaList,neededDilema);
-                            timeSort(insideDilemaList, neededDilema);
+                            listDilema=insideDilemaList;
+                            addToAdapter(listDilema, listDilemaId);
                         }
 
 
@@ -356,80 +363,11 @@ public class DilemaTab extends Fragment {
 
         Log.d(TAG, "getDilemas: after getting dilemas: "+insideDilemaList.size());
     }
-    private void timeSort(List<Dilema> currListDilema, List<String> idDilemas){
-        List<Dilema> timeSortedDilema = new ArrayList<>();
-        List<String> timeSortedId = new ArrayList<>();
 
-
-        while(currListDilema.size() != 0){
-
-            int k = 0;
-            long max = currListDilema.get(k).getTimeCreate();
-            Dilema objD = currListDilema.get(k);
-            String id = "";
-            Log.d(TAG, "timeSort: timeMax: "+max);
-            for(int j=1;j< currListDilema.size();j++)
-            {
-                if(currListDilema.get(j).getTimeCreate()> max){
-                    objD = currListDilema.get(j);
-                    max = objD.getTimeCreate();
-                    id = idDilemas.get(j);
-                    k=j;
-                    Log.d(TAG, "timeSort: k:"+k+", j:"+j);
-                }
-            }
-            Log.d(TAG, "timeSort: max after sort: "+max);
-            Log.d(TAG, "timeSort: objDesc"+objD.getDilemaDescription());
-            timeSortedDilema.add(objD);
-            timeSortedId.add(id);
-            currListDilema.remove(k);
-            idDilemas.remove(k);
-            Log.d(TAG, "timeSort: currListDil size: "+currListDilema.size());
-        }
-        Log.d(TAG, "timeSort: timeSortedDilemas: " +timeSortedDilema.size());
-        Log.d(TAG, "timeSort: timeSOrtedId: "+ timeSortedId.size());
-        prioritySort(timeSortedDilema, timeSortedId);
-
-    }
-    private void prioritySort(List<Dilema> currListDilema, List<String> currListId){
-        prioritySortedDilema = new ArrayList<>();
-        prioritySortedId = new ArrayList<>();
-
-        while(currListDilema.size() != 0)
-        {
-            int k=0;
-            Dilema objD = currListDilema.get(k);
-            String id = "";
-            int max = currListDilema.get(k).getDilemaPriority();
-            Log.d(TAG, "prioritySort: priorityMax: "+max);
-            for(int j=1;j<currListDilema.size();j++)
-            {
-                if(currListDilema.get(j).getDilemaPriority() > max){
-                    objD = currListDilema.get(j);
-                    id = currListId.get(j);
-                    max = objD.getDilemaPriority();
-                    k=j;
-                    Log.d(TAG, "prioritySort: k:"+k+", j:"+j);
-                }
-            }
-            Log.d(TAG, "prioritySort: prioritymax: "+max);
-            Log.d(TAG, "prioritySort: objDesc: "+objD.getDilemaDescription());
-
-            prioritySortedDilema.add(objD);
-            prioritySortedId.add(id);
-            currListDilema.remove(k);
-            currListId.remove(k);
-            Log.d(TAG, "prioritySort: currListDil size: "+currListDilema.size());
-        }
-        Log.d(TAG, "prioritySort: prioritySortedDilema: "+ prioritySortedDilema.size());
-        Log.d(TAG, "prioritySort: prioritySortedId: " + prioritySortedId.size());
-        addToAdapter(prioritySortedDilema, prioritySortedId);
-        //readNext10(0,5);
-    }
     private void addToAdapter(List<Dilema> finalDilemaList, List<String> finalIdList){
         if(finalDilemaList.size() != 0){
             adapterViewPager = new MyPagerAdapter(getChildFragmentManager(), finalDilemaList, finalIdList);
-            Log.d(TAG, "onCreateView: Adapter " + adapterViewPager);
+            Log.d(TAG, "onCreateView: Adapter " + finalIdList.size()+"bbbb");
             adapterViewPager.notifyDataSetChanged();
             vpPager.setAdapter(adapterViewPager);
             Log.d(TAG, "onCreateView: after setting adapter");
@@ -463,14 +401,16 @@ public class DilemaTab extends Fragment {
 
                     if (!dilematFollowing.contains(s.getKey())){
                         newDilemaList.add(s.getKey());
-                        prioritySortedId.add(s.getKey());
+                        listDilemaId.add(s.getKey());
+                        priorityList.add(priority);
                         counter++;
                     }
 
                     if (counter>=10) break;
                 }
-                DatabaseReference getLastIds=fb.getReference("UserLastId").child(auth.getUid());
-                getLastIds.child(String.valueOf(priority)).setValue(lastDilemaIdList.get(priority));
+                //donat
+                //DatabaseReference getLastIds=fb.getReference("UserLastId").child(auth.getUid());
+                //getLastIds.child(String.valueOf(priority)).setValue(lastDilemaIdList.get(priority));
 
                 if (counter<10){
                     priority--;
@@ -490,7 +430,7 @@ public class DilemaTab extends Fragment {
                         getDilema.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                prioritySortedDilema.add(dataSnapshot.getValue(Dilema.class));
+                                listDilema.add(dataSnapshot.getValue(Dilema.class));
                                 if (finalJ == newDilemaList.size() - 1) {
                                     Log.d("Ketu jemi", "aaaaa");
                                     adapterViewPager.notifyDataSetChanged();

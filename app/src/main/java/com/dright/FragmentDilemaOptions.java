@@ -1,9 +1,13 @@
 package com.dright;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -12,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -19,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,6 +56,15 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
     LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+
+    //Follow user
+    private Button btnFollowUser;
+    private ImageView imgReportDilema;
+    private FirebaseAuth fa;
+    private boolean isFollowing, hasReported;
+    private String reportText;
+
+
     public static FragmentDilemaOptions newInstance(Dilema objDilema, String dilemaId) {
         FragmentDilemaOptions fragment = new FragmentDilemaOptions();
         Bundle args = new Bundle();
@@ -71,7 +86,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
     View ProfileView;
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.fragment_dilema_options,container,false);
         linearLayout = ProfileView.findViewById(R.id.insideLinear);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -81,6 +96,122 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
         txtComment = ProfileView.findViewById(R.id.txtComment);
         txtTitle = ProfileView.findViewById(R.id.txtTitle);
+
+        //Follow user
+        btnFollowUser=ProfileView.findViewById(R.id.btn_follow_user);
+        imgReportDilema=ProfileView.findViewById(R.id.img_report_dilema);
+        fa=FirebaseAuth.getInstance();
+        isFollowing=false;
+        hasReported=false;
+
+
+        DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("Users").child(fa.getUid()).child("following");
+        dbUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot s: dataSnapshot.getChildren()
+                     ) {
+                    if (objDilema.getDilemaAsker().equals(s.getKey())&& !isFollowing){
+                        btnFollowUser.setBackground(getResources().getDrawable(R.drawable.rounded_border_no_color));
+                        btnFollowUser.setBackgroundColor(getResources().getColor(R.color.grey));
+                        btnFollowUser.setText("Following");
+                        isFollowing=true;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        btnFollowUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isFollowing){
+                    isFollowing=true;
+                    btnFollowUser.setEnabled(false);
+                    DatabaseReference db = FirebaseDatabase.getInstance().getReference("Users").child(objDilema.getDilemaAsker());
+                    db.child("followers").child(fa.getUid()).setValue("Subbed");
+                    db = FirebaseDatabase.getInstance().getReference("Users").child(fa.getUid());
+                    db.child("following").child(objDilema.getDilemaAsker()).setValue("followed");
+
+                    btnFollowUser.setBackground(getResources().getDrawable(R.drawable.rounded_border_no_color));
+                    btnFollowUser.setBackgroundColor(getResources().getColor(R.color.grey));
+                    btnFollowUser.setText("Following");
+
+                    Toast.makeText(getActivity(), "Follow added", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        DatabaseReference dbReport = FirebaseDatabase.getInstance().getReference("DilemaReported").child(dilemaId);
+        dbReport.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    if (fa.getUid().equals(ds.getKey())){
+                        hasReported=true;
+                        imgReportDilema.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        imgReportDilema.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!hasReported){
+                    reportText="";
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Why are you reporting this?");
+
+                    View reportView=inflater.inflate(R.layout.report_layout, null);
+                    final TextInputEditText txtReport=reportView.findViewById(R.id.txt_report_description);
+                    builder.setView(reportView);
+
+                    // Set up the buttons
+                    builder.setPositiveButton("Report", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            reportText = txtReport.getText().toString();
+                            DatabaseReference dbReport = FirebaseDatabase.getInstance().getReference("DilemaReported").child(dilemaId);
+                            dbReport.child(fa.getUid()).setValue(reportText);
+                            imgReportDilema.setVisibility(View.GONE);
+                            Toast.makeText(getActivity(), "Dilemma Reported. Thank you!", Toast.LENGTH_SHORT).show();
+                            hasReported=true;
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                }
+                else{
+                    Toast.makeText(getActivity(), "Already reported this dilemma", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
+
+
+
+
+
 
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("DilemaVoters");
         DatabaseReference dbRef1 = dbRef.child(dilemaId);

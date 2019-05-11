@@ -19,11 +19,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -48,6 +50,15 @@ public class DilemaTab extends Fragment {
     private DatabaseReference mDatabase;
     private static boolean check = false;
     private String[] itemsCategory = {"All", "Food","Sport", "Clothes"};
+
+
+    //donat
+    public static List<String> lastDilemaIdList;
+    public static List<String> newDilemaList;
+    public static int counter, priority;
+    //donat
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,10 +77,24 @@ public class DilemaTab extends Fragment {
 
         spinner.setAdapter(new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 android.R.layout.simple_spinner_item, itemsCategory));
-        currUser = "2JwEcHmsESfJXHBMJsfRBuj4raU2";
+        currUser = FirebaseAuth.getInstance().getUid();
         readUserFollowing();
         hasVoted();
 
+
+        //donat
+        counter=0;
+        priority=5;
+        lastDilemaIdList=new ArrayList<>();
+        newDilemaList=new ArrayList<>();
+        lastDilemaIdList.add("-LeAxgnILiW_Ai9ieWq7");
+        lastDilemaIdList.add("-Ld624Fk0XH1e8VHfVNU");
+        lastDilemaIdList.add("-Ld624Fk0XH1e8VHfVNU");
+        lastDilemaIdList.add("-Ld624Fk0XH1e8VHfVNU");
+        lastDilemaIdList.add("-LeBHskAh6I1vEXuCTAO");
+        lastDilemaIdList.add("-LeC6CagoscdIVkOicRg");
+
+        //donat
 
 
 
@@ -248,6 +273,45 @@ public class DilemaTab extends Fragment {
             }
         });
 
+    }
+
+
+    public static void readNext10(int c, final int p){
+        counter=c;
+        priority=p;
+        newDilemaList.clear();
+
+        Log.d("PRiority", priority +"aaaa");
+        Log.d("Counter", counter +"aaaa");
+        Query db=FirebaseDatabase.getInstance().getReference("DilemaPriorities").child(String.valueOf(priority))
+                .orderByKey()
+                .startAt(lastDilemaIdList.get(priority)).limitToFirst(10);
+
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot s: dataSnapshot.getChildren()){
+                    Log.d("Dilma id aaaa", s.getKey()+"aaaa");
+
+                    lastDilemaIdList.set(priority,s.getKey());
+                    newDilemaList.add(s.getKey());
+                    counter++;
+                }
+                if (counter<10){
+                    priority--;
+                    if (priority>=0)
+                    readNext10(counter, priority);
+                }
+
+                //Notify data set changed
+                //append nweDilemaList to actualDilemaList
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

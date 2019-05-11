@@ -304,6 +304,9 @@ public class MyDecisionsTab extends Fragment {
         DatabaseReference table2=fb.getReference("DilemaVoters/"+newRow.getKey()+"/"+auth.getUid());
         table2.setValue(true);
 
+        DatabaseReference table3=fb.getReference("DilemaPriorities/"+sbPriority.getProgress()+"/"+newRow.getKey());
+        table3.setValue("");
+
 
         getActivity().finish();
     }

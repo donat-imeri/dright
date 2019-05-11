@@ -286,8 +286,8 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
             if(!txtComment.getText().equals("")){
                 mDatabase1.child("comment").setValue(txtComment.getText().toString());
             }
-            DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVoters");
-            db1.child(currUser).child(dilemaId).setValue("Voted");
+            DatabaseReference db1 = FirebaseDatabase.getInstance().getReference("DilemaVoters/"+currUser+"/"+dilemaId+"/");
+            db1.setValue("Voted");
             DatabaseReference dbRef3 = FirebaseDatabase.getInstance().getReference("Users");
             DatabaseReference dbRef4 = dbRef3.child(currUser).child("docents");
             dbRef4.addListenerForSingleValueEvent(new ValueEventListener() {

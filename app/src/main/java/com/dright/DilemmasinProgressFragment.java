@@ -31,6 +31,7 @@ public class DilemmasinProgressFragment extends Fragment {
     public  ArrayList<String> keys = new ArrayList<>();
     public  ArrayList<String> commentsNumber = new ArrayList<>();
     Handler handler = new Handler();
+    Runnable runnable;
 
     @Nullable
     @Override
@@ -81,7 +82,8 @@ public class DilemmasinProgressFragment extends Fragment {
 
 
         //i think it works this way
-        handler.postDelayed(new Runnable() {
+
+        runnable=new Runnable() {
             @Override
             public void run() {
                 db= FirebaseDatabase.getInstance().getReference("Dilema");
@@ -111,7 +113,9 @@ public class DilemmasinProgressFragment extends Fragment {
                     }
                 });
             }
-        },2000);
+        };
+        handler.removeCallbacks(runnable);
+        handler.postDelayed(runnable,2000);
 
 
 

@@ -385,53 +385,42 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
 
         swipelayout123.setOnTouchListener(new OnSwipeTouchListener(ProfileView.getContext())
         {
-            public void onSwipeTop()
-            {
+            public void onSwipeTop() {
                 swipelayout123.setVisibility(View.INVISIBLE);
                 slideUp123.animateIn();
 
-                handler.postDelayed(new Runnable() {
+                mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+                mDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void run() {
-                        mDatabase = FirebaseDatabase.getInstance().getReference("Users");
-                        mDatabase.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(Users.size() > 0)
-                                {
-                                    for(int i=0;i<Users.size();i++)
-                                    {
-                                        Log.d("hahahha",Users.size()+"");
-                                        String username = dataSnapshot.child(Users.get(i)).child("name").getValue().toString();
-                                        String imageUrl = dataSnapshot.child(Users.get(i)).child("imageURL").getValue().toString();
-                                        String userhash = Users.get(i);
-                                        String comment = Comments.get(i);
-                                        CommentsModel commentsModel = new CommentsModel(username,imageUrl,comment,userhash);
-                                        UserComments.add(i,commentsModel);
-                                        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-                                        final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
-                                        recyclerView.setAdapter(adapter);
-                                    }
-                                }
-                                else
-                                {
-                                    recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-                                    final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
-                                    recyclerView.setAdapter(adapter);
-                                }
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserComments=new ArrayList<>();
 
+                        if (Users.size() > 0) {
+                            for (int i = 0; i < Users.size(); i++) {
+                                Log.d("hahahha", Users.size() + "");
+                                String username = dataSnapshot.child(Users.get(i)).child("name").getValue().toString();
+                                String imageUrl = dataSnapshot.child(Users.get(i)).child("imageURL").getValue().toString();
+                                String userhash = Users.get(i);
+                                String comment = Comments.get(i);
+                                CommentsModel commentsModel = new CommentsModel(username, imageUrl, comment, userhash);
+                                UserComments.add(i, commentsModel);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                                final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(), UserComments);
+                                recyclerView.setAdapter(adapter);
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
+                        } else {
+                            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                            final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(), UserComments);
+                            recyclerView.setAdapter(adapter);
+                        }
 
                     }
-                },600);
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 

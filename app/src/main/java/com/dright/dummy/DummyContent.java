@@ -54,10 +54,6 @@ public class DummyContent {
         DummyItem item2=new DummyItem("2", "How to post a dilema? " , item2Content, R.drawable.logo);
         addItem(item2);
 
-
-        for (int i = 3; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
-        }
     }
 
     private static void addItem(DummyItem item) {

@@ -114,8 +114,8 @@ public class DecisionDetailsActivity extends AppCompatActivity {
                 if (myDilema.getOptionsResults() != null) {
                     if (myDilema.getOptionsResults().size() > 0){
                         max = calculateMax(myDilema.getOptionsResults());
-                        for (int i=0; i<myDilema.getOptionsResults().size();i++){
-                            numberOfVotes+=myDilema.getOptionsResults().get(i);
+                        for (int j=0; j<myDilema.getOptionsResults().size();j++){
+                            numberOfVotes+=myDilema.getOptionsResults().get(j);
                         }
                     }
 
@@ -158,8 +158,10 @@ public class DecisionDetailsActivity extends AppCompatActivity {
                         } else {
                             if (myDilema.getOptionsResults().get(i)!=0){
                                 entries.add(new PieEntry((float) myDilema.getOptionsResults().get(i), "Option " + (i + 1)));
-                                colorsArray.add(i, getResources().getIntArray(R.array.piechartcolors)[i]);
+                            }else{
+                                entries.add(new PieEntry((float) myDilema.getOptionsResults().get(i), ""));
                             }
+                            colorsArray.add(i, getResources().getIntArray(R.array.piechartcolors)[i]);
                         }
 
                         layoutOptionResults.addView(textOptionResult);

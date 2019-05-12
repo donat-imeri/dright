@@ -115,10 +115,12 @@ public class EditProfileFragment extends Fragment {
                 tvaddress.setText(address);
                 currentfollowers.setText(followers);
                 currentfollowing.setText(following);
-                if(!imageUrl.equals(""));
-                    Glide.with(ProfileView.getContext()).load(imageUrl).apply(RequestOptions.circleCropTransform()).into(profilePicture);
+                if(imageUrl!=null) {
+                    if (!imageUrl.equals(""))
+                        if (!getActivity().isFinishing())
+                            Glide.with(ProfileView.getContext()).load(imageUrl).apply(RequestOptions.circleCropTransform()).into(profilePicture);
 
-
+                }
             }
 
             @Override

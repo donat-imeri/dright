@@ -389,13 +389,11 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
                 swipelayoutImage.setVisibility(View.INVISIBLE);
                 slideUpImage.animateIn();
 
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
                         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
                         mDatabase.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                UserComments=new ArrayList<>();
                                 if(Users.size() > 0)
                                 {
                                     for(int i=0;i<Users.size();i++)
@@ -426,11 +424,6 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
                             }
                         });
-
-
-                    }
-                },600);
-
             }
         });
 

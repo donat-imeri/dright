@@ -75,7 +75,8 @@ public class MyProfileActivity extends AppCompatActivity
     }
     @Override
     public void onBackPressed() {
-        finish();
+        Intent intent=new Intent(MyProfileActivity.this,LoginActivity.class);
+        startActivity(intent);
     }
 
 

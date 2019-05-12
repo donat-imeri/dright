@@ -71,7 +71,6 @@ public class OtherUsersProfileFragment extends Fragment {
 
                 userName.setText(dataSnapshot.child("name").getValue().toString());
                 //OtherUsersProfile.toolbar3.setTitle(userName.getText());
-                getActivity().setTitle(userName.getText());
                 userAddress.setText(dataSnapshot.child("address").getValue().toString());
                 userPhone.setText(dataSnapshot.child("phone").getValue().toString());
                 userFacebook.setText(dataSnapshot.child("facebook").getValue().toString());
@@ -80,9 +79,12 @@ public class OtherUsersProfileFragment extends Fragment {
                 userFollowing.setText(String.valueOf(dataSnapshot.child("following").getChildrenCount()));
                 userFollowers.setText(String.valueOf(dataSnapshot.child("followers").getChildrenCount()));
                 imageUrl = dataSnapshot.child("imageURL").getValue().toString();
-                if(!imageUrl.equals(""))
+                if(imageUrl!=null)
                 {
-                    Glide.with(ProfileView.getContext()).load(imageUrl).apply(RequestOptions.circleCropTransform()).into(profilePicture);
+                    if (!imageUrl.equals(""))
+                        if (getActivity()!=null)
+                            if (!getActivity().isFinishing())
+                                Glide.with(ProfileView.getContext()).load(imageUrl).apply(RequestOptions.circleCropTransform()).into(profilePicture);
                 }
                 if(dataSnapshot.child("followers").hasChild(currentUser.getUid()))
                 {

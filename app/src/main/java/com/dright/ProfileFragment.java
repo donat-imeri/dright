@@ -92,7 +92,9 @@ public class ProfileFragment extends Fragment {
                 currentemail.setText(email);
                 if(imageURL!=null){
                     if (!imageURL.equals(""))
-                        Glide.with(ProfileView.getContext()).load(imageURL).apply(RequestOptions.circleCropTransform()).into(profilePicture);
+                        if (getActivity()!=null)
+                            if (!getActivity().isFinishing())
+                                Glide.with(ProfileView.getContext()).load(imageURL).apply(RequestOptions.circleCropTransform()).into(profilePicture);
 
                 }
             }

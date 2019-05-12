@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -54,7 +55,6 @@ public class DecisionDetailsActivity extends AppCompatActivity {
     private Button btnSpinTheWheel;
     private TextView txtDilemaDescriptionResult;
     private ImageView imgSpinWheelArrow;
-    private RatingBar ratingBarResult;
     private CollapsingToolbarLayout toolbarTitle;
 
     //Swipe up
@@ -84,7 +84,6 @@ public class DecisionDetailsActivity extends AppCompatActivity {
         btnSpinTheWheel=(Button) findViewById(R.id.btn_spin_the_wheel);
         txtDilemaDescriptionResult=(TextView) findViewById(R.id.txt_dilema_description_result);
         imgSpinWheelArrow=(ImageView) findViewById(R.id.img_spin_wheel_arrow);
-        ratingBarResult=(RatingBar) findViewById(R.id.rating_bar_result);
         graphResults=(PieChart)findViewById(R.id.graph_results);
         graphResults.setUsePercentValues(true);
         graphResults.setDrawHoleEnabled(true);
@@ -110,12 +109,21 @@ public class DecisionDetailsActivity extends AppCompatActivity {
                 myDilema = dataSnapshot.getValue(Dilema.class);
                 toolbarTitle.setTitle("Decision Details");
                 txtDilemaDescriptionResult.setText(myDilema.getDilemaDescription());
-                ratingBarResult.setRating(3.5f);
                 int max = 0;
+                int numberOfVotes=0;
                 if (myDilema.getOptionsResults() != null) {
-                    if (myDilema.getOptionsResults().size() > 0)
+                    if (myDilema.getOptionsResults().size() > 0){
                         max = calculateMax(myDilema.getOptionsResults());
+                        for (int i=0; i<myDilema.getOptionsResults().size();i++){
+                            numberOfVotes+=myDilema.getOptionsResults().get(i);
+                        }
+                    }
 
+
+                    if (max==0){
+                        btnSpinTheWheel.setEnabled(false);
+                        graphResults.setVisibility(View.GONE);
+                    }
 
                     layoutOptionResults.removeAllViews();
                     List<PieEntry> entries = new ArrayList<>();
@@ -124,12 +132,12 @@ public class DecisionDetailsActivity extends AppCompatActivity {
                     for (int i = 0; i < myDilema.getDilemaOptions().size(); i++) {
                         View textOptionResult = getLayoutInflater().inflate(R.layout.text_options_result_layout, null);
                         TextView optionTextResult = textOptionResult.findViewById(R.id.txt_text_option_result);
-                        SeekBar optionTextResultSeekBar = textOptionResult.findViewById(R.id.skb_text_option_result);
+                        ProgressBar optionTextResultSeekBar = textOptionResult.findViewById(R.id.skb_text_option_result);
                         TextView optionText = textOptionResult.findViewById(R.id.txt_option_description);
                         ImageView optionImage = textOptionResult.findViewById(R.id.img_option_result);
 
-                        optionTextResult.setText(myDilema.getOptionsResults().get(i) + "%");
-                        optionTextResultSeekBar.setProgress(myDilema.getOptionsResults().get(i));
+                        optionTextResult.setText(myDilema.getOptionsResults().get(i) + " votes");
+                        optionTextResultSeekBar.setProgress((int)((myDilema.getOptionsResults().get(i)*100)/numberOfVotes));
 
                         if (myDilema.isDilemaText()) {
                             optionText.setText(myDilema.getDilemaOptions().get(i));
@@ -148,8 +156,10 @@ public class DecisionDetailsActivity extends AppCompatActivity {
                             entries.add(new PieEntry((float) myDilema.getOptionsResults().get(i), "Most voted"));
                             colorsArray.add(i, getResources().getColor(R.color.colorGreen));
                         } else {
-                            entries.add(new PieEntry((float) myDilema.getOptionsResults().get(i), "Option " + (i + 1)));
-                            colorsArray.add(i, getResources().getIntArray(R.array.piechartcolors)[i]);
+                            if (myDilema.getOptionsResults().get(i)!=0){
+                                entries.add(new PieEntry((float) myDilema.getOptionsResults().get(i), "Option " + (i + 1)));
+                                colorsArray.add(i, getResources().getIntArray(R.array.piechartcolors)[i]);
+                            }
                         }
 
                         layoutOptionResults.addView(textOptionResult);
@@ -183,8 +193,7 @@ public class DecisionDetailsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                finish();
             }
         });
 

@@ -54,6 +54,7 @@ public class DecisionsAcitivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private FirebaseAuth auth;
     String contactText;
+    boolean paused;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,11 @@ public class DecisionsAcitivity extends AppCompatActivity {
         setContentView(R.layout.activity_decisions);
 
         auth=FirebaseAuth.getInstance();
+        if (auth.getUid()==null){
+            finish();
+        }
 
+        paused=false;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -79,6 +84,19 @@ public class DecisionsAcitivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Stoped activity","ccccc");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+    }
+
 
     @Override
     public void onBackPressed() {

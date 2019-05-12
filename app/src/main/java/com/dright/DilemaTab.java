@@ -95,7 +95,6 @@ public class DilemaTab extends Fragment {
         auth=FirebaseAuth.getInstance();
 
         currUser = auth.getUid();
-        readUserFollowing();
 
 
         //donat
@@ -113,20 +112,6 @@ public class DilemaTab extends Fragment {
         DatabaseReference db1 =fb.getReference("DilemaVotersTemporary/"+currUser);
         db1.setValue("");
 
-        DatabaseReference getLastIds=fb.getReference("UserLastId").child(auth.getUid());
-        getLastIds.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    lastDilemaIdList.add(ds.getValue(String.class));
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         DatabaseReference getMyDecisions=fb.getReference("Users/"+auth.getUid()+"/dilemasInProgress");
         getMyDecisions.addValueEventListener(new ValueEventListener() {
@@ -136,6 +121,21 @@ public class DilemaTab extends Fragment {
                     myDilemas.add(d.getValue(String.class));
                     Log.d("my dilemas", d.getValue(String.class)+"aaaaaa");
                 }
+
+                DatabaseReference getLastIds=fb.getReference("UserLastId").child(auth.getUid());
+                getLastIds.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds: dataSnapshot.getChildren()){
+                            lastDilemaIdList.add(ds.getValue(String.class));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
@@ -144,13 +144,15 @@ public class DilemaTab extends Fragment {
             }
         });
 
-
+        readUserFollowing();
 
         Log.d(TAG, "onCreateView: after viewpager vpPager = " + vpPager);
 
         Log.d(TAG, "onCreateView: after pagetransformer");
 
     }
+
+
 
     public static class MyPagerAdapter extends FragmentStatePagerAdapter {
         private List<Dilema> mListDilema;
@@ -401,14 +403,16 @@ public class DilemaTab extends Fragment {
                     lastDilemaIdList.set(priority,s.getKey());
 
 
-                    if (!dilematFollowing.contains(s.getKey()) && !myDilemas.contains(s.getKey()))
-                            newDilemaList.add(s.getKey());
-                            listDilemaId.add(s.getKey());
-                            priorityList.add(priority);
-                            counter++;
+                    if (!dilematFollowing.contains(s.getKey()) && !myDilemas.contains(s.getKey())){
+                        Log.d("Dilma put on list", s.getKey()+"aaaa");
+                        newDilemaList.add(s.getKey());
+                        listDilemaId.add(s.getKey());
+                        priorityList.add(priority);
+                        counter++;
 
                         if (counter>=10) break;
                     }
+                }
 
                 //donat
                 //DatabaseReference getLastIds=fb.getReference("UserLastId").child(auth.getUid());

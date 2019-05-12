@@ -97,7 +97,8 @@ public class MyProfileActivity extends AppCompatActivity
             finish();
         }
         else if (id==R.id.go_to_dilemmas){
-            finish();
+            Intent intent=new Intent(MyProfileActivity.this,LoginActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

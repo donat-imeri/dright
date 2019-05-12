@@ -84,6 +84,7 @@ public class EditProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.edit_myprofile,container,false);
+        getActivity().setTitle("Edit Profile");
         currentUser = FirebaseAuth.getInstance();
         db= FirebaseDatabase.getInstance().getReference("Users/"+currentUser.getUid());
         newfullname = ProfileView.findViewById(R.id.txt_input_fullname);

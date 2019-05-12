@@ -36,6 +36,7 @@ public class OtherUsersDilemmasFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.other_users_dilemmas_in_progress,container,false);
+        //OtherUsersProfile.toolbar3.setTitle("Dilemmas in progress");
         recyclerView = ProfileView.findViewById(R.id.other_users_dilemmas_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(ProfileView.getContext()));
         currentUser = FirebaseAuth.getInstance();
@@ -85,7 +86,7 @@ public class OtherUsersDilemmasFragment extends Fragment {
                         String dilemaDesc = dataSnapshot.child(keys.get(i)).child("dilemaDescription").getValue(String.class);
                         Long dilemaTime = dataSnapshot.child(keys.get(i)).child("dilemaTimeOut").getValue(Long.class);
                         //komentet duhet me i mar ktu numrin;
-                        DilemmaModel dilemmaModel = new DilemmaModel(dilemaDesc, "10", String.valueOf(dilemaTime), dilemaId);
+                        DilemmaModel dilemmaModel = new DilemmaModel(dilemaDesc, commentsNumber.get(i), String.valueOf(dilemaTime), dilemaId);
                         mDilemma.add(i, dilemmaModel);
                         Log.d("newdatachange", dilemaId + " . " + dilemaDesc + " . " + dilemaTime);
                         final DilemmaRecyclerViewAdapter adapter = new DilemmaRecyclerViewAdapter(ProfileView.getContext(), mDilemma);
@@ -108,6 +109,7 @@ public class OtherUsersDilemmasFragment extends Fragment {
 
 
         return ProfileView;    }
+
 }
 
 

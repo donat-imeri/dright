@@ -70,6 +70,8 @@ public class OtherUsersProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 userName.setText(dataSnapshot.child("name").getValue().toString());
+                //OtherUsersProfile.toolbar3.setTitle(userName.getText());
+                getActivity().setTitle(userName.getText());
                 userAddress.setText(dataSnapshot.child("address").getValue().toString());
                 userPhone.setText(dataSnapshot.child("phone").getValue().toString());
                 userFacebook.setText(dataSnapshot.child("facebook").getValue().toString());

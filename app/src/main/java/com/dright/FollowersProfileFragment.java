@@ -36,6 +36,7 @@ public class FollowersProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.followers_myprofile,container,false);
+        getActivity().setTitle("Followers");
         currentUser = FirebaseAuth.getInstance();
         db= FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid()).child("followers");
         db.addValueEventListener(new ValueEventListener() {

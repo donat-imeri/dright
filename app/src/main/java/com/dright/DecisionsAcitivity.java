@@ -3,6 +3,7 @@ package com.dright;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.Process;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -76,24 +77,24 @@ public class DecisionsAcitivity extends AppCompatActivity {
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
+
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        new Handler().postDelayed(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                          mSectionsPagerAdapter.notifyDataSetChanged();
+                                      }
+                                  },2000);
+
+                TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("Stoped activity","ccccc");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
+        Log.d("On create called","cccc");
 
     }
 

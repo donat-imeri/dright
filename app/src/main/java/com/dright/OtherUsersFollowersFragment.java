@@ -40,6 +40,7 @@ public class OtherUsersFollowersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.other_followers,container,false);
+        //OtherUsersProfile.toolbar3.setTitle("Followers");
         currentUser = FirebaseAuth.getInstance();
         recyclerView = ProfileView.findViewById(R.id.other_followers_recycler_view);
         Log.d("otherusersfragment","thirret");

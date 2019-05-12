@@ -333,47 +333,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
 
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mDatabase = FirebaseDatabase.getInstance().getReference("Users");
-                mDatabase.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(Users.size() > 0)
-                        {
-                            for(int i=0;i<Users.size();i++)
-                            {
-                                Log.d("hahahha",Users.size()+"");
-                                String username = dataSnapshot.child(Users.get(i)).child("name").getValue().toString();
-                                String imageUrl = dataSnapshot.child(Users.get(i)).child("imageURL").getValue().toString();
-                                String userhash = Users.get(i);
-                                String comment = Comments.get(i);
-                                CommentsModel commentsModel = new CommentsModel(username,imageUrl,comment,userhash);
-                                UserComments.add(i,commentsModel);
-                                recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-                                final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
-                                recyclerView.setAdapter(adapter);
-                            }
-                        }
-                        else
-                        {
-                            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-                            final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
-                            recyclerView.setAdapter(adapter);
-                        }
 
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-
-            }
-        },600);
 
 
 
@@ -429,6 +389,48 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
                 swipelayoutImage.setVisibility(View.INVISIBLE);
                 slideUpImage.animateIn();
 
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDatabase = FirebaseDatabase.getInstance().getReference("Users");
+                        mDatabase.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(Users.size() > 0)
+                                {
+                                    for(int i=0;i<Users.size();i++)
+                                    {
+                                        Log.d("hahahha",Users.size()+"");
+                                        String username = dataSnapshot.child(Users.get(i)).child("name").getValue().toString();
+                                        String imageUrl = dataSnapshot.child(Users.get(i)).child("imageURL").getValue().toString();
+                                        String userhash = Users.get(i);
+                                        String comment = Comments.get(i);
+                                        CommentsModel commentsModel = new CommentsModel(username,imageUrl,comment,userhash);
+                                        UserComments.add(i,commentsModel);
+                                        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                                        final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
+                                        recyclerView.setAdapter(adapter);
+                                    }
+                                }
+                                else
+                                {
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                                    final CommentsRecyclerViewAdapter adapter = new CommentsRecyclerViewAdapter(recyclerView.getContext(),UserComments);
+                                    recyclerView.setAdapter(adapter);
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+                    }
+                },600);
+
             }
         });
 
@@ -460,8 +462,8 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
     }
     private void vote(){
-        String pattern = "^[a-zA-Z0-9\\.\\,\\-\\_\\!\\?\\(\\)\\s]+$";
-        if(Pattern.matches(pattern,txtComment.getText().toString())){
+
+        if(!txtComment.getText().toString().equals("")){
 
             DatabaseReference dataB = FirebaseDatabase.getInstance().getReference("DilemaComments");
             DatabaseReference dataB1 = dataB.child(dilemaId);
@@ -485,6 +487,26 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
                 db1.child(dilemaId).setValue("Voted");
             }
             //donat
+            DatabaseReference dbRef3 = FirebaseDatabase.getInstance().getReference("Users");
+            DatabaseReference dbRef4 = dbRef3.child(currUser).child("docents");
+            dbRef4.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Long amount = 0L;
+                    for(DataSnapshot ds: dataSnapshot.getChildren()){
+                        Long objD = ds.getValue(Long.class);
+                        amount = objD;
+                        Log.d(TAG, "onDataChange: amount = "+amount);
+                    }
+                    amount += 1;
+                    increaseAmount(amount);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
             Toast.makeText(getActivity(), "Thanks for helping the community!", Toast.LENGTH_SHORT).show();
 
         }

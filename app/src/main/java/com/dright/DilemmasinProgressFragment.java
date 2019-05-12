@@ -36,6 +36,7 @@ public class DilemmasinProgressFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.dilemmas_in_progress,container,false);
+        getActivity().setTitle("Your dilemmas");
         recyclerView = ProfileView.findViewById(R.id.dilemmas_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(ProfileView.getContext()));
         currentUser = FirebaseAuth.getInstance();

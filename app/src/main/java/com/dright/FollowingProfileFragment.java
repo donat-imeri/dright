@@ -36,6 +36,7 @@ public class FollowingProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.following_myprofile,container,false);
+        getActivity().setTitle("Following");
         currentUser = FirebaseAuth.getInstance();
         db= FirebaseDatabase.getInstance().getReference("Users").child(currentUser.getUid()).child("following");
         db.addValueEventListener(new ValueEventListener() {

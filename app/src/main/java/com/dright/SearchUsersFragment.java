@@ -37,7 +37,7 @@ public class SearchUsersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.search_users,container,false);
-
+        getActivity().setTitle("Search users");
 
 
         currentUser = FirebaseAuth.getInstance();

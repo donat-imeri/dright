@@ -1,6 +1,7 @@
 package com.dright;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,6 +38,7 @@ public class ProfileFragment extends Fragment {
     TextView currentfollowing;
     TextView currentemail;
     TextView currenttwitter;
+    TextView userDocents;
 
 
     public  String fulltvname = null;
@@ -56,6 +58,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.myprofile,container,false);
+        getActivity().setTitle("Profile");
         currentfullname = ProfileView.findViewById(R.id.tv_name);
         currentaddress  = ProfileView.findViewById(R.id.tv_address);
         currentphone    = ProfileView.findViewById(R.id.txt_current_phone);
@@ -65,6 +68,7 @@ public class ProfileFragment extends Fragment {
         currentfollowers = ProfileView.findViewById(R.id.followers);
         currentfollowing = ProfileView.findViewById(R.id.following);
         profilePicture = ProfileView.findViewById(R.id.myprofile_picture);
+        userDocents = ProfileView.findViewById(R.id.docent_value);
         currentUser = FirebaseAuth.getInstance();
         db= FirebaseDatabase.getInstance().getReference("Users/"+currentUser.getUid());
         db.addValueEventListener(new ValueEventListener() {
@@ -78,6 +82,7 @@ public class ProfileFragment extends Fragment {
                 followers = String.valueOf(dataSnapshot.child("followers").getChildrenCount());
                 following = String.valueOf(dataSnapshot.child("following").getChildrenCount());
                 imageURL = dataSnapshot.child("imageURL").getValue().toString();
+                userDocents.setText(String.valueOf(dataSnapshot.child("docents").child("amount").getValue(Integer.class))+" docents");
                 currentfullname.setText(fulltvname);
                 currentaddress.setText(fulltvaddress);
                 currentfollowers.setText(followers);
@@ -85,8 +90,11 @@ public class ProfileFragment extends Fragment {
                 currentfacebook.setText(facebook);
                 currenttwitter.setText(twitter);
                 currentemail.setText(email);
-                if(!imageURL.equals(""))
-                    Glide.with(ProfileView.getContext()).load(imageURL).apply(RequestOptions.circleCropTransform()).into(profilePicture);
+                if(imageURL!=null){
+                    if (!imageURL.equals(""))
+                        Glide.with(ProfileView.getContext()).load(imageURL).apply(RequestOptions.circleCropTransform()).into(profilePicture);
+
+                }
             }
 
             @Override

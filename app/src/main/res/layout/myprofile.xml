@@ -56,6 +56,19 @@
             android:textColor="@color/address"
             android:textSize="14sp" />
 
+        <TextView
+            android:id="@+id/docent_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_address"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif"
+            android:textAllCaps="true"
+            android:layout_marginTop="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/address"
+            android:textSize="20sp" />
+
 
 
     </RelativeLayout>

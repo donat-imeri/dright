@@ -28,13 +28,15 @@ public class OtherUsersProfile extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter pAdapter;
+    public Toolbar toolbar;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
     public static String profilekey = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,25 +47,67 @@ public class OtherUsersProfile extends AppCompatActivity {
             profilekey = getIntent().getStringExtra("profilekey");
             Log.d("lol2",profilekey);
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
 
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.users_profile_container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
+        //mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        //tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+        pAdapter = new SectionsPagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        mViewPager.setAdapter(pAdapter);
+        toolbar.setTitle("Profile");
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch(tab.getPosition()) {
+                    case 0:
+                        mViewPager.setCurrentItem(0);
+                        toolbar.setTitle("Profile");
+                        break;
+                    case 1:
+                        mViewPager.setCurrentItem(1);
+                        toolbar.setTitle("Followers");
+                        break;
+                    case 2:
+                        mViewPager.setCurrentItem(2);
+                        toolbar.setTitle("Following");
+                        break;
+                    case 3:
+                        mViewPager.setCurrentItem(3);
+                        toolbar.setTitle("Dilemmas");
+                        break;
+
+                    default:
+
+                        mViewPager.setCurrentItem(tab.getPosition());
+                        toolbar.setTitle("Profile");
+                        break;
+                }
 
 
 
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
 
     }
@@ -131,9 +175,11 @@ public class OtherUsersProfile extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        int numOfTabs;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        public SectionsPagerAdapter(FragmentManager fm, int numOfTabs) {
             super(fm);
+            this.numOfTabs=numOfTabs;
         }
 
         @Override

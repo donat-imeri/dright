@@ -50,8 +50,8 @@ public class DilemaTab extends Fragment {
     private List<String> listDilemaVoters = new ArrayList<>();
     private List<Integer> listDilemaPriority = new ArrayList<>();
     public static List<String> dilematFollowing;
-    private static int count = 0;
-    private static int count1 = 0;
+    private int count = 0;
+    private int count1 = 0;
 
     private List<String> mListDilemaVoters;
 
@@ -61,8 +61,6 @@ public class DilemaTab extends Fragment {
     private static FirebaseAuth auth;
     private static FirebaseDatabase fb;
     private static boolean check = false;
-    private String[] itemsCategory = {"All", "Food","Sport", "Clothes"};
-
 
     //donat
     public static List<String> lastDilemaIdList;
@@ -81,7 +79,7 @@ public class DilemaTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.dilema_tab, container, false);
-
+        Log.d("Dilema Tab layout","cccc");
         return view;
     }
 
@@ -89,6 +87,8 @@ public class DilemaTab extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
+
+        Log.d("Dilema Tab","cccc");
 
         vpPager = (ViewPager) activity.findViewById(R.id.vpPager);
 
@@ -257,6 +257,8 @@ public class DilemaTab extends Fragment {
 
                         }
                         count++;
+                        Log.d("userFollowing Size","dddd"+userFollowing.size());
+                        Log.d("count Size","dddd"+count);
                         if(count==userFollowing.size()){
                             Log.d(TAG, "onDataChange: u thirr: "+dilematFollowing.size());
                                 hasVoted(userFollowing, dilematFollowing);
@@ -345,8 +347,11 @@ public class DilemaTab extends Fragment {
                         insideDilemaList.add(objD);
                         count1++;
                     }
+
+                    Log.d("userFollowing Size","dddd"+neededDilema.size());
+                    Log.d("count Size","dddd"+count1);
                         if(count1 == neededDilema.size()){
-                            Log.d(TAG, "onDataChange: u thirr edhe kjo :"+insideDilemaList.size());
+                            Log.d(TAG, "onDataChange: u thirr edhe kjo asa :"+insideDilemaList.size());
                             listDilema=insideDilemaList;
                             addToAdapter(listDilema, listDilemaId);
                         }

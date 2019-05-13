@@ -3,8 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.dright.OtherUsersProfile">
     <item
+        android:id="@+id/go_back"
+        android:icon="@drawable/ic_home_return"
+        app:showAsAction="ifRoom"
+        android:title="Dilemma">
+    </item>
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
 </menu>

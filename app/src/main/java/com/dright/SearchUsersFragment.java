@@ -44,6 +44,8 @@ public class SearchUsersFragment extends Fragment {
         db= FirebaseDatabase.getInstance().getReference("Users");
 
         sv = ProfileView.findViewById(R.id.mSearchText);
+        sv.setQueryHint("Search for users...");
+        sv.setIconified(false);
             db.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

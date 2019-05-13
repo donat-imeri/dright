@@ -33,11 +33,17 @@ public class OtherUsersFollowingFragment extends Fragment {
     String fullname = null;
     String profilepic = null;
     String address = null;
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ProfileView = inflater.inflate(R.layout.other_following,container,false);
         currentUser = FirebaseAuth.getInstance();
+
+
+
         mOtherFollowing.clear();
         db= FirebaseDatabase.getInstance().getReference("Users").child(OtherUsersProfile.profilekey).child("following");
         db.addValueEventListener(new ValueEventListener() {

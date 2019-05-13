@@ -89,6 +89,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
 
     ArrayList<CommentsModel> UserComments = new ArrayList<>();
     Handler handler = new Handler();
+    TextView txtSwipe;
 
 
     public static FragmentDilemaImageOptions newInstance(Dilema objDilema, String dilemaId, int dilemaPosition, int priority) {
@@ -132,7 +133,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
         txtTitle = ProfileView.findViewById(R.id.txtTitle);
         btnComment = ProfileView.findViewById(R.id.btnComment);
         scrollView = ProfileView.findViewById(R.id.scrollViewFragmentImageOptions);
-
+        txtSwipe = ProfileView.findViewById(R.id.txt_swipeup_dilema);
         recyclerView = ProfileView.findViewById(R.id.dilemma_options_results_image_recycler_view);
 
         if (savedInstanceState != null) {
@@ -388,6 +389,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
             {
                 swipelayoutImage.setVisibility(View.INVISIBLE);
                 slideUpImage.animateIn();
+                txtSwipe.setVisibility(View.INVISIBLE);
 
                         mDatabase = FirebaseDatabase.getInstance().getReference("Users");
                         mDatabase.addValueEventListener(new ValueEventListener() {
@@ -441,6 +443,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
                 if (i == View.GONE)
                 {
                     swipelayoutImage.setVisibility(View.VISIBLE);
+                    txtSwipe.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -561,7 +564,7 @@ public class FragmentDilemaImageOptions extends Fragment  implements Serializabl
                 tv.setLayoutParams(lparams);
                 Glide.with(getActivity())
                         .load(objDil.getDilemaOptions().get(i))
-                        .override(400,300)
+                        .override(400,400)
                         .centerCrop()
                         .into(tv);
                 tv.setId(i);

@@ -133,6 +133,11 @@ public class OtherUsersProfile extends AppCompatActivity {
             Intent helpIntent=new Intent(OtherUsersProfile.this, HelpItemListActivity.class);
             startActivity(helpIntent);
         }
+        else
+        {
+            Intent intent=new Intent(OtherUsersProfile.this, LoginActivity.class);
+            startActivity(intent);
+        }
 
         return super.onOptionsItemSelected(item);
     }

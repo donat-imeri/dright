@@ -90,6 +90,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
     ArrayList<CommentsModel> UserComments = new ArrayList<>();
     Handler handler = new Handler();
 
+    TextView txtswipe;
 
 
     public static FragmentDilemaOptions newInstance(Dilema objDilema, String dilemaId, int dilemaPosition, int priority) {
@@ -117,6 +118,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         myPosition=getArguments().getInt("dilemaPosition");
         priority=getArguments().getInt("dilemaPriority");
 
+
         Log.d("Dilema id eshte",dilemaId+"aaaaaa");
     }
 
@@ -132,6 +134,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         scrollViewFr = ProfileView.findViewById(R.id.scrollViewFragmentOptions);
         recyclerView = ProfileView.findViewById(R.id.dilemma_options_results_recycler_view);
 
+        txtswipe = ProfileView.findViewById(R.id.txt_swipeup);
         auth = FirebaseAuth.getInstance();
         currUser = auth.getUid();
         txtPostedBy = ProfileView.findViewById(R.id.txtPostedBy);
@@ -387,6 +390,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
         {
             public void onSwipeTop() {
                 swipelayout123.setVisibility(View.INVISIBLE);
+                txtswipe.setVisibility(View.INVISIBLE);
                 slideUp123.animateIn();
 
                 mDatabase = FirebaseDatabase.getInstance().getReference("Users");
@@ -438,6 +442,7 @@ public class FragmentDilemaOptions extends Fragment  implements Serializable{
                 if (i == View.GONE)
                 {
                     swipelayout123.setVisibility(View.VISIBLE);
+                    txtswipe.setVisibility(View.VISIBLE);
                 }
 
             }

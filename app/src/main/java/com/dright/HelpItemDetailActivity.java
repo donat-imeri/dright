@@ -29,9 +29,8 @@ public class HelpItemDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                finish();
+                Intent intent = new Intent(HelpItemDetailActivity.this,LoginActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -74,7 +73,7 @@ public class HelpItemDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, HelpItemListActivity.class));
+            navigateUpTo(new Intent(this, LoginActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

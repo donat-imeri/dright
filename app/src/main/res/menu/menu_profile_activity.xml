@@ -5,7 +5,7 @@
     >
     <item
         android:id="@+id/go_to_dilemmas"
-        android:icon="@drawable/ic_arrow_dilemma"
+        android:icon="@drawable/ic_home_return"
         app:showAsAction="ifRoom"
         android:title="Dilemma">
     </item>

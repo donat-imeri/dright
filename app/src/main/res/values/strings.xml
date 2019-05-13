@@ -8,8 +8,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Help</string>
     <string name="title_activity_decisions_acitivity">DecisionsAcitivity</string>
-    <string name="tab_text_1">Post a dilema</string>
-    <string name="tab_text_2">Others dilemas</string>
+    <string name="tab_text_1">Post a dilemma</string>
+    <string name="tab_text_2">Others dilemmas</string>
     <string name="tab_text_3">Tab 3</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="signout">Sign out</string>

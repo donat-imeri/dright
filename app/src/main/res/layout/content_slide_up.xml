@@ -16,10 +16,21 @@
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/colorWhite"
+            android:text="Swipe Down"
+            android:drawableLeft="@drawable/arr_32"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:padding="10dp"
+            />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/dilemma_options_recycler_view"
             android:layout_width="match_parent"
-            android:layout_marginTop="30dp"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
 
